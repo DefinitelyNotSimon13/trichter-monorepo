@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-cm
+  labels:
+    app.kubernetes.io/name: argocd-cm
+    app.kubernetes.io/part-of: argocd
+  annotations:
+    kustomize.config.k8s.io/behavior: merge
+data:
+  kustomize.buildOptions: --enable-alpha-plugins
+  url: https://argocd.trichter.hauptspeicher.com
+  oidc.config: |
+    name: Azure
+    issuer: https://login.microsoftonline.com/6945ac9a-b334-49b5-9ca3-ee631ce0fdef/v2.0
+    clientID: bef012d3-f0ae-46dc-97e1-b095320892a4
+    clientSecret: $oidc.azure.clientSecret
+    requestedIDTokenClaims:
+      groups:
+        essential: true
+        value: "ApplicationGroup"
+    requestedScopes:
+      - openid
+      - profile
+      - email

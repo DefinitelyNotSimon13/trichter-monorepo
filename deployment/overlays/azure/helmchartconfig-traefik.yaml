@@ -1,0 +1,24 @@
+apiVersion: helm.cattle.io/v1
+kind: HelmChartConfig
+metadata:
+  name: traefik
+  namespace: kube-system
+spec:
+  valuesContent: |-
+    ingressRoute:
+      dashboard:
+        enabled: true
+        matchRule: Host(`traefik.trichter.hauptspeicher.com`)
+        entryPoints:
+          - websecure
+        middlewares:
+          - name: auth
+        tls:
+          certResolver: myresolver
+    certificatesResolvers:
+      myresolver:
+        acme:
+          email: simon21.blum@gmail.com
+          storage: /data/acme.json
+          httpChallenge:
+            entryPoint: web

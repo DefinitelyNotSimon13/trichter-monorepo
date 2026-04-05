@@ -1,0 +1,7 @@
+apiVersion: viaduct.ai/v1
+kind: ksops
+metadata:
+  name: argocd-secrets-generator
+  namespace: argocd
+files:
+  - config/argocd-secret.secret.yaml

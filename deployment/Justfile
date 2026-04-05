@@ -1,0 +1,15 @@
+test overlay:
+  kubectl kustomize --enable-alpha-plugins overlays/{{overlay}}
+
+apply overlay:
+  kubectl kustomize --enable-alpha-plugins overlays/{{overlay}} | kubectl apply --server-side -f -
+
+delete overlay:
+  kubectl kustomize --enable-alpha-plugins overlays/{{overlay}} | kubectl delete -f -
+
+create-sops-secret keys_file="keys.txt":
+  kubectl -n argocd create secret generic sops-age \
+    --from-file=keys.txt={{keys_file}}
+
+initial-argocd-pass:
+  kubectl get secret -n argocd argocd-initial-admin-secret -o jsonpath='{.data.password}' | base64 -d

@@ -1,0 +1,16 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: api
+  namespace: trichter
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`trichter.hauptspeicher.com`) && PathPrefix(`/api/v2`)
+      kind: Rule
+      services:
+        - name: api
+          port: 8080
+  tls:
+    certResolver: myresolver

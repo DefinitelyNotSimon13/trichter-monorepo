@@ -1,0 +1,10 @@
+apiVersion: viaduct.ai/v1
+kind: ksops
+metadata:
+  name: trichter-secret-generator
+  namespace: trichter
+files:
+  - secrets/app.secret.yaml
+  - secrets/web.secret.yaml
+  - secrets/api.secret.yaml
+  - secrets/traefik.secret.yaml

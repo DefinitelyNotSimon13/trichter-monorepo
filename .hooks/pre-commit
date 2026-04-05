@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+GIT_ROOT=$(git rev-parse --show-toplevel)
+HOOK_DIR=$(dirname "$(readlink -f "$0")")
+DEPLOY_REL=$(realpath --relative-to="$GIT_ROOT" "deployment")
+
+STAGED=$(git diff --cached --name-only --diff-filter=ACMR)
+DEPLOY_STAGED=$(echo "$STAGED" | grep "^${DEPLOY_REL}/" || true)
+
+if [ -z "$DEPLOY_STAGED" ]; then
+    exit 0
+fi
+
+SECRET_FILES=$(echo "$DEPLOY_STAGED" | grep -E '\.secret\.ya?ml$' || true)
+
+if [ -n "$SECRET_FILES" ]; then
+    FAILED=0
+    while IFS= read -r file; do
+        abs_file="$GIT_ROOT/$file"
+        if [ "$(yq '.sops != null' "$abs_file")" != "true" ]; then
+          sops --config "$DEPLOY_REL/.sops.yaml" --encrypt --in-place "$abs_file"
+          git add "$abs_file"
+        fi
+
+        if [ "$(yq '.sops != null' "$abs_file")" != "true" ]; then
+            echo "error: $file is not encrypted with SOPS" >&2
+            echo "  run: sops --encrypt --in-place $abs_file" >&2
+            FAILED=1
+        fi
+    done <<< "$SECRET_FILES"
+    [ "$FAILED" -eq 0 ] || exit 1
+fi
+
+YAML_FILES=$(echo "$DEPLOY_STAGED" | grep -E '\.ya?ml$' | grep -vE '\.secret\.ya?ml$' || true)
+if [ -n "$YAML_FILES" ]; then
+    while IFS= read -r file; do
+        abs_file="$GIT_ROOT/$file"
+        yamlfmt "$abs_file"
+        git add "$abs_file"
+    done <<< "$YAML_FILES"
+fi

@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: argocd-repo-server
+spec:
+  template:
+    spec:
+      volumes:
+        - name: custom-tools
+          emptyDir: {}
+        - name: sops-age
+          secret:
+            secretName: sops-age
+      initContainers:
+        - name: install-ksops
+          image: viaductoss/ksops:v4.3.1
+          command: ["/bin/sh", "-c"]
+          args:
+            - |-
+              echo "Installing ksops"; mv ksops /custom-tools/; mv kustomize /custom-tools/;
+              echo "Done"
+          volumeMounts:
+            - name: custom-tools
+              mountPath: /custom-tools
+      containers:
+        - name: argocd-repo-server
+          env:
+            - name: XDG_CONFIG_HOME
+              value: /.config
+            - name: SOPS_AGE_KEY_FILE
+              value: /.config/sops/age/keys.txt
+          volumeMounts:
+            - name: custom-tools
+              mountPath: /.config/kustomize/plugin/viaduct.ai/v1/ksops/ksops
+              subPath: ksops
+            - name: sops-age
+              mountPath: /.config/sops/age
