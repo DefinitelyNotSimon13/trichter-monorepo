@@ -1,0 +1,12 @@
+spring:
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+  cloud:
+    azure:
+      storage:
+        blob:
+          account-name: ${AZURE_STORAGE_ACCOUNT_NAME}
+          endpoint: ${AZURE_STORAGE_ACCOUNT_ENDPOINT}
+

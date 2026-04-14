@@ -1,0 +1,30 @@
+spring:
+  profiles:
+    default: local
+  application:
+    name: trichter-backend
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: true
+        jdbc:
+          time_zone: UTC
+
+app:
+  storage:
+    azure:
+      container-name: trichter-image
+      key-prefix: runs/images
+
+springdoc:
+  swagger-ui:
+    path: /api/docs
+
+
+logging:
+  level:
+    org.hibernate.SQL: warn
+    org.hibernate.orm.jdbc.bind: warn
