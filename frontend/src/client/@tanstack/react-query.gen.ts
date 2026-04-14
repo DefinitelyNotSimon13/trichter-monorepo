@@ -3,8 +3,8 @@
 import { type DefaultError, type InfiniteData, infiniteQueryOptions, queryOptions, type UseMutationOptions } from '@tanstack/react-query';
 
 import { client } from '../client.gen';
-import { createRun, getRun, getRunImage, getRunImageSignedUrl, getRuns, getRunsByUser, type Options, uploadRunImage } from '../sdk.gen';
-import type { CreateRunData, CreateRunResponse, GetRunData, GetRunImageData, GetRunImageResponse, GetRunImageSignedUrlData, GetRunImageSignedUrlResponse, GetRunResponse, GetRunsByUserData, GetRunsByUserResponse, GetRunsData, GetRunsResponse, UploadRunImageData, UploadRunImageResponse } from '../types.gen';
+import { createRun, getRun, getRunImage, getRunImageSignedUrl, getRuns, getRunsByUser, health, info, links, type Options, uploadRunImage } from '../sdk.gen';
+import type { CreateRunData, CreateRunResponse, GetRunData, GetRunError, GetRunImageData, GetRunImageResponse, GetRunImageSignedUrlData, GetRunImageSignedUrlResponse, GetRunResponse, GetRunsByUserData, GetRunsByUserResponse, GetRunsData, GetRunsResponse, HealthData, HealthResponse, InfoData, InfoResponse, LinksData, LinksResponse, UploadRunImageData, UploadRunImageResponse } from '../types.gen';
 
 export type QueryKey<TOptions extends Options> = [
     Pick<TOptions, 'baseUrl' | 'body' | 'headers' | 'path' | 'query'> & {
@@ -41,6 +41,11 @@ const createQueryKey = <TOptions extends Options>(id: string, options?: TOptions
 
 export const getRunImageQueryKey = (options: Options<GetRunImageData>) => createQueryKey('getRunImage', options);
 
+/**
+ * Download run image
+ *
+ * Returns the raw image bytes
+ */
 export const getRunImageOptions = (options: Options<GetRunImageData>) => queryOptions<GetRunImageResponse, DefaultError, GetRunImageResponse, ReturnType<typeof getRunImageQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
         const { data } = await getRunImage({
@@ -54,6 +59,11 @@ export const getRunImageOptions = (options: Options<GetRunImageData>) => queryOp
     queryKey: getRunImageQueryKey(options)
 });
 
+/**
+ * Upload run image
+ *
+ * Uploads or replaces an image for a run
+ */
 export const uploadRunImageMutation = (options?: Partial<Options<UploadRunImageData>>): UseMutationOptions<UploadRunImageResponse, DefaultError, Options<UploadRunImageData>> => {
     const mutationOptions: UseMutationOptions<UploadRunImageResponse, DefaultError, Options<UploadRunImageData>> = {
         mutationFn: async (fnOptions) => {
@@ -68,9 +78,14 @@ export const uploadRunImageMutation = (options?: Partial<Options<UploadRunImageD
     return mutationOptions;
 };
 
-export const getRunsQueryKey = (options: Options<GetRunsData>) => createQueryKey('getRuns', options);
+export const getRunsQueryKey = (options?: Options<GetRunsData>) => createQueryKey('getRuns', options);
 
-export const getRunsOptions = (options: Options<GetRunsData>) => queryOptions<GetRunsResponse, DefaultError, GetRunsResponse, ReturnType<typeof getRunsQueryKey>>({
+/**
+ * List runs
+ *
+ * Returns paginated runs sorted by creation date (newest first)
+ */
+export const getRunsOptions = (options?: Options<GetRunsData>) => queryOptions<GetRunsResponse, DefaultError, GetRunsResponse, ReturnType<typeof getRunsQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
         const { data } = await getRuns({
             ...options,
@@ -112,16 +127,21 @@ const createInfiniteParams = <K extends Pick<QueryKey<Options>[0], 'body' | 'hea
     return params as unknown as typeof page;
 };
 
-export const getRunsInfiniteQueryKey = (options: Options<GetRunsData>): QueryKey<Options<GetRunsData>> => createQueryKey('getRuns', options, true);
+export const getRunsInfiniteQueryKey = (options?: Options<GetRunsData>): QueryKey<Options<GetRunsData>> => createQueryKey('getRuns', options, true);
 
-export const getRunsInfiniteOptions = (options: Options<GetRunsData>) => infiniteQueryOptions<GetRunsResponse, DefaultError, InfiniteData<GetRunsResponse>, QueryKey<Options<GetRunsData>>, number | Pick<QueryKey<Options<GetRunsData>>[0], 'body' | 'headers' | 'path' | 'query'>>(
+/**
+ * List runs
+ *
+ * Returns paginated runs sorted by creation date (newest first)
+ */
+export const getRunsInfiniteOptions = (options?: Options<GetRunsData>) => infiniteQueryOptions<GetRunsResponse, DefaultError, InfiniteData<GetRunsResponse>, QueryKey<Options<GetRunsData>>, number | Pick<QueryKey<Options<GetRunsData>>[0], 'body' | 'headers' | 'path' | 'query'>>(
 // @ts-ignore
 {
     queryFn: async ({ pageParam, queryKey, signal }) => {
         // @ts-ignore
         const page: Pick<QueryKey<Options<GetRunsData>>[0], 'body' | 'headers' | 'path' | 'query'> = typeof pageParam === 'object' ? pageParam : {
             query: {
-                'pageable.page': pageParam
+                page: pageParam
             }
         };
         const params = createInfiniteParams(queryKey, page);
@@ -136,6 +156,11 @@ export const getRunsInfiniteOptions = (options: Options<GetRunsData>) => infinit
     queryKey: getRunsInfiniteQueryKey(options)
 });
 
+/**
+ * Create a new run
+ *
+ * Creates a run entry without an image
+ */
 export const createRunMutation = (options?: Partial<Options<CreateRunData>>): UseMutationOptions<CreateRunResponse, DefaultError, Options<CreateRunData>> => {
     const mutationOptions: UseMutationOptions<CreateRunResponse, DefaultError, Options<CreateRunData>> = {
         mutationFn: async (fnOptions) => {
@@ -152,6 +177,9 @@ export const createRunMutation = (options?: Partial<Options<CreateRunData>>): Us
 
 export const getRunsByUserQueryKey = (options: Options<GetRunsByUserData>) => createQueryKey('getRunsByUser', options);
 
+/**
+ * List runs by user
+ */
 export const getRunsByUserOptions = (options: Options<GetRunsByUserData>) => queryOptions<GetRunsByUserResponse, DefaultError, GetRunsByUserResponse, ReturnType<typeof getRunsByUserQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
         const { data } = await getRunsByUser({
@@ -167,6 +195,9 @@ export const getRunsByUserOptions = (options: Options<GetRunsByUserData>) => que
 
 export const getRunsByUserInfiniteQueryKey = (options: Options<GetRunsByUserData>): QueryKey<Options<GetRunsByUserData>> => createQueryKey('getRunsByUser', options, true);
 
+/**
+ * List runs by user
+ */
 export const getRunsByUserInfiniteOptions = (options: Options<GetRunsByUserData>) => infiniteQueryOptions<GetRunsByUserResponse, DefaultError, InfiniteData<GetRunsByUserResponse>, QueryKey<Options<GetRunsByUserData>>, number | Pick<QueryKey<Options<GetRunsByUserData>>[0], 'body' | 'headers' | 'path' | 'query'>>(
 // @ts-ignore
 {
@@ -174,7 +205,7 @@ export const getRunsByUserInfiniteOptions = (options: Options<GetRunsByUserData>
         // @ts-ignore
         const page: Pick<QueryKey<Options<GetRunsByUserData>>[0], 'body' | 'headers' | 'path' | 'query'> = typeof pageParam === 'object' ? pageParam : {
             query: {
-                'pageable.page': pageParam
+                page: pageParam
             }
         };
         const params = createInfiniteParams(queryKey, page);
@@ -191,7 +222,10 @@ export const getRunsByUserInfiniteOptions = (options: Options<GetRunsByUserData>
 
 export const getRunQueryKey = (options: Options<GetRunData>) => createQueryKey('getRun', options);
 
-export const getRunOptions = (options: Options<GetRunData>) => queryOptions<GetRunResponse, DefaultError, GetRunResponse, ReturnType<typeof getRunQueryKey>>({
+/**
+ * Get run by ID
+ */
+export const getRunOptions = (options: Options<GetRunData>) => queryOptions<GetRunResponse, GetRunError, GetRunResponse, ReturnType<typeof getRunQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
         const { data } = await getRun({
             ...options,
@@ -206,6 +240,11 @@ export const getRunOptions = (options: Options<GetRunData>) => queryOptions<GetR
 
 export const getRunImageSignedUrlQueryKey = (options: Options<GetRunImageSignedUrlData>) => createQueryKey('getRunImageSignedUrl', options);
 
+/**
+ * Get signed image URL
+ *
+ * Returns a temporary signed URL for accessing the run image
+ */
 export const getRunImageSignedUrlOptions = (options: Options<GetRunImageSignedUrlData>) => queryOptions<GetRunImageSignedUrlResponse, DefaultError, GetRunImageSignedUrlResponse, ReturnType<typeof getRunImageSignedUrlQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
         const { data } = await getRunImageSignedUrl({
@@ -217,4 +256,58 @@ export const getRunImageSignedUrlOptions = (options: Options<GetRunImageSignedUr
         return data;
     },
     queryKey: getRunImageSignedUrlQueryKey(options)
+});
+
+export const linksQueryKey = (options?: Options<LinksData>) => createQueryKey('links', options);
+
+/**
+ * Actuator root web endpoint
+ */
+export const linksOptions = (options?: Options<LinksData>) => queryOptions<LinksResponse, DefaultError, LinksResponse, ReturnType<typeof linksQueryKey>>({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await links({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: linksQueryKey(options)
+});
+
+export const infoQueryKey = (options?: Options<InfoData>) => createQueryKey('info', options);
+
+/**
+ * Actuator web endpoint 'info'
+ */
+export const infoOptions = (options?: Options<InfoData>) => queryOptions<InfoResponse, DefaultError, InfoResponse, ReturnType<typeof infoQueryKey>>({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await info({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: infoQueryKey(options)
+});
+
+export const healthQueryKey = (options?: Options<HealthData>) => createQueryKey('health', options);
+
+/**
+ * Actuator web endpoint 'health'
+ */
+export const healthOptions = (options?: Options<HealthData>) => queryOptions<HealthResponse, DefaultError, HealthResponse, ReturnType<typeof healthQueryKey>>({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await health({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: healthQueryKey(options)
 });

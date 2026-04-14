@@ -1,23 +1,23 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute } from "@tanstack/react-router";
 
-export const Route = createFileRoute('/about')({
-  component: About,
-})
+export const Route = createFileRoute("/about")({
+  component: AboutPage,
+});
 
-function About() {
+function AboutPage() {
   return (
-    <main className="page-wrap px-4 py-12">
-      <section className="island-shell rounded-2xl p-6 sm:p-8">
-        <p className="island-kicker mb-2">About</p>
-        <h1 className="display-title mb-3 text-4xl font-bold text-[var(--sea-ink)] sm:text-5xl">
-          A small starter with room to grow.
+    <main className="mx-auto max-w-4xl px-4 py-16 sm:px-6">
+      <section className="rounded-2xl border p-8">
+        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+          About
+        </p>
+        <h1 className="mt-3 text-4xl font-semibold tracking-tight">
+          New Frontend for Trichter.
         </h1>
-        <p className="m-0 max-w-3xl text-base leading-8 text-[var(--sea-ink-soft)]">
-          TanStack Start gives you type-safe routing, server functions, and
-          modern SSR defaults. Use this as a clean foundation, then layer in
-          your own routes, styling, and add-ons.
+        <p className="mt-4 max-w-2xl text-base leading-7 text-muted-foreground">
+          WIP
         </p>
       </section>
     </main>
-  )
+  );
 }

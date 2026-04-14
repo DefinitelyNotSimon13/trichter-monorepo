@@ -13,7 +13,14 @@ spring:
         jdbc:
           time_zone: UTC
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
 app:
+  build-id: ${buildId}
   storage:
     azure:
       container-name: trichter-image
@@ -22,6 +29,8 @@ app:
 springdoc:
   swagger-ui:
     path: /api/docs
+  show-actuator: true
+
 
 
 logging:

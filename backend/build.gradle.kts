@@ -1,3 +1,5 @@
+import org.apache.commons.io.output.ByteArrayOutputStream
+
 plugins {
     kotlin("jvm") version "2.2.21"
     kotlin("plugin.spring") version "2.2.21"
@@ -89,4 +91,28 @@ tasks.test {
 tasks.asciidoctor {
     inputs.dir(project.extra["snippetsDir"]!!)
     dependsOn(tasks.test)
+}
+val gitCommitShaShort: Provider<String> = providers.exec {
+    commandLine("git", "rev-parse", "--short", "HEAD")
+}.standardOutput.asText.map { it.trim() }
+
+val isDev: Provider<Boolean> = providers.environmentVariable("PROFILE")
+    .map { it == "dev" }
+    .orElse(true)
+
+val buildId: Provider<String> =
+    gitCommitShaShort.zip(isDev) { sha, dev ->
+        if (dev) "$sha-dev" else sha
+    }
+
+tasks.processResources {
+    inputs.property("buildId", buildId)
+
+    filesMatching(listOf("**/application.yml", "**/application.yaml")) {
+        expand(
+            mapOf(
+                "buildId" to buildId.get()
+            )
+        )
+    }
 }

@@ -49,7 +49,7 @@ class Run(
         id = requireNotNull(id),
         user = user?.toUserInfo(),
         data = data,
-        hasImage = !image.isEmpty(),
+        hasImage = !image.isEmpty() && image != "trichter-images/placeholder.jpg",
         imageUrl = if (!image.isEmpty()) "/api/v2/runs/${requireNotNull(id)}/image" else null,
         createdAt = createdAt
     )

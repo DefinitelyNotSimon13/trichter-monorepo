@@ -2,7 +2,7 @@
 
 import { type Client, formDataBodySerializer, type Options as Options2, type TDataShape } from './client';
 import { client } from './client.gen';
-import type { CreateRunData, CreateRunResponses, GetRunData, GetRunImageData, GetRunImageResponses, GetRunImageSignedUrlData, GetRunImageSignedUrlResponses, GetRunResponses, GetRunsByUserData, GetRunsByUserResponses, GetRunsData, GetRunsResponses, UploadRunImageData, UploadRunImageResponses } from './types.gen';
+import type { CreateRunData, CreateRunResponses, GetRunData, GetRunErrors, GetRunImageData, GetRunImageResponses, GetRunImageSignedUrlData, GetRunImageSignedUrlResponses, GetRunResponses, GetRunsByUserData, GetRunsByUserResponses, GetRunsData, GetRunsResponses, HealthData, HealthResponses, InfoData, InfoResponses, LinksData, LinksResponses, UploadRunImageData, UploadRunImageResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean, TResponse = unknown> = Options2<TData, ThrowOnError, TResponse> & {
     /**
@@ -18,8 +18,18 @@ export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends 
     meta?: Record<string, unknown>;
 };
 
+/**
+ * Download run image
+ *
+ * Returns the raw image bytes
+ */
 export const getRunImage = <ThrowOnError extends boolean = false>(options: Options<GetRunImageData, ThrowOnError>) => (options.client ?? client).get<GetRunImageResponses, unknown, ThrowOnError>({ url: '/api/v2/runs/{id}/image', ...options });
 
+/**
+ * Upload run image
+ *
+ * Uploads or replaces an image for a run
+ */
 export const uploadRunImage = <ThrowOnError extends boolean = false>(options: Options<UploadRunImageData, ThrowOnError>) => (options.client ?? client).put<UploadRunImageResponses, unknown, ThrowOnError>({
     ...formDataBodySerializer,
     url: '/api/v2/runs/{id}/image',
@@ -30,8 +40,18 @@ export const uploadRunImage = <ThrowOnError extends boolean = false>(options: Op
     }
 });
 
-export const getRuns = <ThrowOnError extends boolean = false>(options: Options<GetRunsData, ThrowOnError>) => (options.client ?? client).get<GetRunsResponses, unknown, ThrowOnError>({ url: '/api/v2/runs', ...options });
+/**
+ * List runs
+ *
+ * Returns paginated runs sorted by creation date (newest first)
+ */
+export const getRuns = <ThrowOnError extends boolean = false>(options?: Options<GetRunsData, ThrowOnError>) => (options?.client ?? client).get<GetRunsResponses, unknown, ThrowOnError>({ url: '/api/v2/runs', ...options });
 
+/**
+ * Create a new run
+ *
+ * Creates a run entry without an image
+ */
 export const createRun = <ThrowOnError extends boolean = false>(options: Options<CreateRunData, ThrowOnError>) => (options.client ?? client).post<CreateRunResponses, unknown, ThrowOnError>({
     url: '/api/v2/runs',
     ...options,
@@ -41,8 +61,34 @@ export const createRun = <ThrowOnError extends boolean = false>(options: Options
     }
 });
 
+/**
+ * List runs by user
+ */
 export const getRunsByUser = <ThrowOnError extends boolean = false>(options: Options<GetRunsByUserData, ThrowOnError>) => (options.client ?? client).get<GetRunsByUserResponses, unknown, ThrowOnError>({ url: '/api/v2/users/{userId}/runs', ...options });
 
-export const getRun = <ThrowOnError extends boolean = false>(options: Options<GetRunData, ThrowOnError>) => (options.client ?? client).get<GetRunResponses, unknown, ThrowOnError>({ url: '/api/v2/runs/{id}', ...options });
+/**
+ * Get run by ID
+ */
+export const getRun = <ThrowOnError extends boolean = false>(options: Options<GetRunData, ThrowOnError>) => (options.client ?? client).get<GetRunResponses, GetRunErrors, ThrowOnError>({ url: '/api/v2/runs/{id}', ...options });
 
+/**
+ * Get signed image URL
+ *
+ * Returns a temporary signed URL for accessing the run image
+ */
 export const getRunImageSignedUrl = <ThrowOnError extends boolean = false>(options: Options<GetRunImageSignedUrlData, ThrowOnError>) => (options.client ?? client).get<GetRunImageSignedUrlResponses, unknown, ThrowOnError>({ url: '/api/v2/runs/{id}/image/signed-url', ...options });
+
+/**
+ * Actuator root web endpoint
+ */
+export const links = <ThrowOnError extends boolean = false>(options?: Options<LinksData, ThrowOnError>) => (options?.client ?? client).get<LinksResponses, unknown, ThrowOnError>({ url: '/actuator', ...options });
+
+/**
+ * Actuator web endpoint 'info'
+ */
+export const info = <ThrowOnError extends boolean = false>(options?: Options<InfoData, ThrowOnError>) => (options?.client ?? client).get<InfoResponses, unknown, ThrowOnError>({ url: '/actuator/info', ...options });
+
+/**
+ * Actuator web endpoint 'health'
+ */
+export const health = <ThrowOnError extends boolean = false>(options?: Options<HealthData, ThrowOnError>) => (options?.client ?? client).get<HealthResponses, unknown, ThrowOnError>({ url: '/actuator/health', ...options });

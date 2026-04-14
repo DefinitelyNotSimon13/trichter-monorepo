@@ -32,12 +32,6 @@ export type CreateRunRequest = {
     volume?: number;
 };
 
-export type Pageable = {
-    page?: number;
-    size?: number;
-    sort?: Array<string>;
-};
-
 export type PageRunView = {
     totalElements?: number;
     totalPages?: number;
@@ -53,10 +47,10 @@ export type PageRunView = {
 };
 
 export type PageableObject = {
-    unpaged?: boolean;
     paged?: boolean;
     pageNumber?: number;
     pageSize?: number;
+    unpaged?: boolean;
     offset?: number;
     sort?: SortObject;
 };
@@ -77,9 +71,23 @@ export type SignedImageUrl = {
     expiresAt?: string;
 };
 
+export type Link = {
+    href?: string;
+    hreflang?: string;
+    title?: string;
+    type?: string;
+    deprecation?: string;
+    profile?: string;
+    name?: string;
+    templated?: boolean;
+};
+
 export type GetRunImageData = {
     body?: never;
     path: {
+        /**
+         * Run ID
+         */
         id: string;
     };
     query?: never;
@@ -88,7 +96,7 @@ export type GetRunImageData = {
 
 export type GetRunImageResponses = {
     /**
-     * OK
+     * Image returned
      */
     200: Blob | File;
 };
@@ -97,9 +105,15 @@ export type GetRunImageResponse = GetRunImageResponses[keyof GetRunImageResponse
 
 export type UploadRunImageData = {
     body?: {
+        /**
+         * Image file (JPEG recommended)
+         */
         file: Blob | File;
     };
     path: {
+        /**
+         * Run ID
+         */
         id: string;
     };
     query?: never;
@@ -108,7 +122,7 @@ export type UploadRunImageData = {
 
 export type UploadRunImageResponses = {
     /**
-     * OK
+     * Image uploaded
      */
     200: RunView;
 };
@@ -118,8 +132,19 @@ export type UploadRunImageResponse = UploadRunImageResponses[keyof UploadRunImag
 export type GetRunsData = {
     body?: never;
     path?: never;
-    query: {
-        pageable: Pageable;
+    query?: {
+        /**
+         * Zero-based page index (0..N)
+         */
+        page?: number;
+        /**
+         * The size of the page to be returned
+         */
+        size?: number;
+        /**
+         * Sorting criteria in the format: property,(asc|desc). Default sort order is ascending. Multiple sort criteria are supported.
+         */
+        sort?: Array<string>;
     };
     url: '/api/v2/runs';
 };
@@ -134,6 +159,9 @@ export type GetRunsResponses = {
 export type GetRunsResponse = GetRunsResponses[keyof GetRunsResponses];
 
 export type CreateRunData = {
+    /**
+     * Run creation payload
+     */
     body: CreateRunRequest;
     path?: never;
     query?: never;
@@ -142,7 +170,7 @@ export type CreateRunData = {
 
 export type CreateRunResponses = {
     /**
-     * Created
+     * Run created
      */
     201: RunView;
 };
@@ -152,10 +180,24 @@ export type CreateRunResponse = CreateRunResponses[keyof CreateRunResponses];
 export type GetRunsByUserData = {
     body?: never;
     path: {
+        /**
+         * User ID
+         */
         userId: string;
     };
-    query: {
-        pageable: Pageable;
+    query?: {
+        /**
+         * Zero-based page index (0..N)
+         */
+        page?: number;
+        /**
+         * The size of the page to be returned
+         */
+        size?: number;
+        /**
+         * Sorting criteria in the format: property,(asc|desc). Default sort order is ascending. Multiple sort criteria are supported.
+         */
+        sort?: Array<string>;
     };
     url: '/api/v2/users/{userId}/runs';
 };
@@ -172,15 +214,27 @@ export type GetRunsByUserResponse = GetRunsByUserResponses[keyof GetRunsByUserRe
 export type GetRunData = {
     body?: never;
     path: {
+        /**
+         * Run ID
+         */
         id: string;
     };
     query?: never;
     url: '/api/v2/runs/{id}';
 };
 
+export type GetRunErrors = {
+    /**
+     * Run not found
+     */
+    404: RunView;
+};
+
+export type GetRunError = GetRunErrors[keyof GetRunErrors];
+
 export type GetRunResponses = {
     /**
-     * OK
+     * Run found
      */
     200: RunView;
 };
@@ -190,6 +244,9 @@ export type GetRunResponse = GetRunResponses[keyof GetRunResponses];
 export type GetRunImageSignedUrlData = {
     body?: never;
     path: {
+        /**
+         * Run ID
+         */
         id: string;
     };
     query?: never;
@@ -198,9 +255,65 @@ export type GetRunImageSignedUrlData = {
 
 export type GetRunImageSignedUrlResponses = {
     /**
-     * OK
+     * Signed URL returned
      */
     200: SignedImageUrl;
 };
 
 export type GetRunImageSignedUrlResponse = GetRunImageSignedUrlResponses[keyof GetRunImageSignedUrlResponses];
+
+export type LinksData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/actuator';
+};
+
+export type LinksResponses = {
+    /**
+     * OK
+     */
+    200: {
+        [key: string]: {
+            [key: string]: Link;
+        };
+    };
+};
+
+export type LinksResponse = LinksResponses[keyof LinksResponses];
+
+export type InfoData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/actuator/info';
+};
+
+export type InfoResponses = {
+    /**
+     * OK
+     */
+    200: {
+        [key: string]: unknown;
+    };
+};
+
+export type InfoResponse = InfoResponses[keyof InfoResponses];
+
+export type HealthData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/actuator/health';
+};
+
+export type HealthResponses = {
+    /**
+     * OK
+     */
+    200: {
+        [key: string]: unknown;
+    };
+};
+
+export type HealthResponse = HealthResponses[keyof HealthResponses];

@@ -37,14 +37,10 @@ docker build \
   -t "$IMAGE:latest" \
   .
 
-echo "Built:"
+docker push "$IMAGE:$TAG"
+docker push "$IMAGE:latest"
+
+echo
+echo "Pushed:"
 echo "  $IMAGE:$TAG"
 echo "  $IMAGE:latest"
-
-# docker push "$IMAGE:$TAG"
-# docker push "$IMAGE:latest"
-#
-# echo
-# echo "Pushed:"
-# echo "  $IMAGE:$TAG"
-# echo "  $IMAGE:latest"
