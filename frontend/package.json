@@ -42,6 +42,8 @@
   },
   "devDependencies": {
     "@biomejs/biome": "2.4.5",
+    "@hey-api/openapi-ts": "0.96.0",
+    "@hey-api/vite-plugin": "0.3.0",
     "@tailwindcss/typography": "^0.5.16",
     "@tanstack/devtools-event-client": "latest",
     "@tanstack/devtools-vite": "latest",
