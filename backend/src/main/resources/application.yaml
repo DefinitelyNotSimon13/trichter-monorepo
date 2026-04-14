@@ -20,7 +20,7 @@ management:
         include: health,info
 
 app:
-  build-id: ${buildId}
+  build-id: 76787a67
   storage:
     azure:
       container-name: trichter-image

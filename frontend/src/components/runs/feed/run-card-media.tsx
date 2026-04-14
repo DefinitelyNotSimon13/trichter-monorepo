@@ -1,4 +1,3 @@
-import { Image as ImageIcon } from "lucide-react";
 import { env } from "#/env";
 
 function resolveImageUrl(imageUrl?: string) {
@@ -18,21 +17,12 @@ export function RunCardMedia(props: { imageUrl?: string; alt: string }) {
 
   return (
     <div className="border-b bg-muted/20">
-      {src ? (
-        <img
-          src={src}
-          alt={props.alt}
-          loading="lazy"
-          className="h-72 w-full object-cover"
-        />
-      ) : (
-        <div className="flex h-72 items-center justify-center bg-muted/30">
-          <div className="flex flex-col items-center gap-2 text-muted-foreground">
-            <ImageIcon className="size-8" />
-            <span className="text-sm">No image</span>
-          </div>
-        </div>
-      )}
+      <img
+        src={src}
+        alt={props.alt}
+        loading="lazy"
+        className="h-72 w-full object-cover"
+      />
     </div>
   );
 }

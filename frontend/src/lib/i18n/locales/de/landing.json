@@ -1,0 +1,23 @@
+{
+	"hero": {
+		"line1": "Was ist besser",
+		"line2": "als normales",
+		"highlight": "Trinken?",
+		"tagline": "Kompetitives Trinken.",
+		"description": "Verfolge deine Runs, erklimme die Rangliste und teile den Ruhm mit deinen Freunden."
+	},
+	"cards": {
+		"feed": {
+			"title": "Feed",
+			"description": "Sieh dir die neuesten Runs der Community an, die aktuellsten zuerst."
+		},
+		"leaderboard": {
+			"title": "Rangliste",
+			"description": "Wer ist am schnellsten? Finde es heraus und verteidige deine Krone."
+		},
+		"comingSoon": {
+			"title": "Demnächst",
+			"description": "Handy-App und Bild-Uploads sind unterwegs."
+		}
+	}
+}

@@ -16,11 +16,5 @@ EXPOSE 8080
 
 ENTRYPOINT ["java", "-jar", "/app/app.jar"]
 
-ARG REPO_URL
-ARG VCS_REF
-ARG BUILD_DATE
-
-LABEL org.opencontainers.image.source="${REPO_URL}" \
-      org.opencontainers.image.url="${REPO_URL}" \
-      org.opencontainers.image.revision="${VCS_REF}" \
-      org.opencontainers.image.created="${BUILD_DATE}"
+LABEL org.opencontainers.image.source="https://github.com/DefinitelyNotSimon13/trichter-monorepo"
+LABEL org.opencontainers.image.license="MIT"

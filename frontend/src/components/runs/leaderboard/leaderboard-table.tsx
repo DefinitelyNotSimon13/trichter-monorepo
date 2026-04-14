@@ -7,41 +7,14 @@ import {
 import { useMemo } from "react";
 import { Link } from "@tanstack/react-router";
 import type { RunView } from "#/client/types.gen";
-
-function formatDuration(value?: number) {
-  if (typeof value !== "number") {
-    return "—";
-  }
-
-  return `${value.toFixed(3)}s`;
-}
-
-function formatVolume(value?: number) {
-  if (typeof value !== "number") {
-    return "—";
-  }
-
-  return `${value.toFixed(2)}L`;
-}
-
-function formatRate(value?: number) {
-  if (typeof value !== "number") {
-    return "—";
-  }
-
-  return `${value.toFixed(2)}L/min`;
-}
-
-function formatTimestamp(value?: string) {
-  if (!value) {
-    return "Unknown time";
-  }
-
-  return new Intl.DateTimeFormat(undefined, {
-    dateStyle: "medium",
-    timeStyle: "short",
-  }).format(new Date(value));
-}
+import { Badge } from "#/components/ui/badge";
+import {
+  formatDuration,
+  formatRate,
+  formatTimestamp,
+  formatVolume,
+} from "#/lib/formatters";
+import { StatePanel } from "#/components/ui/state-panel";
 
 type LeaderboardRow = {
   rank: number;
@@ -77,11 +50,22 @@ export function LeaderboardTable(props: { runs: RunView[] }) {
       {
         accessorKey: "rank",
         header: "#",
-        cell: ({ row }) => (
-          <span className="font-semibold text-foreground">
-            {row.original.rank}
-          </span>
-        ),
+        cell: ({ row }) => {
+          const rank = row.original.rank;
+          const badgeClass =
+            rank === 1
+              ? "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400"
+              : rank === 2
+                ? "bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300"
+                : "bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400";
+          return rank <= 3 ? (
+            <Badge variant="outline" className={badgeClass}>
+              {rank}
+            </Badge>
+          ) : (
+            <Badge variant="ghost">{rank}</Badge>
+          );
+        },
       },
       {
         accessorKey: "name",
@@ -134,11 +118,7 @@ export function LeaderboardTable(props: { runs: RunView[] }) {
   });
 
   if (data.length === 0) {
-    return (
-      <div className="rounded-2xl border border-dashed p-8 text-sm text-muted-foreground">
-        No runs found.
-      </div>
-    );
+    return <StatePanel>No runs found.</StatePanel>;
   }
 
   return (

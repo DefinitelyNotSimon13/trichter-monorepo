@@ -1,26 +1,17 @@
 import type { RunView } from "#/client/types.gen";
 import { RunCard } from "#/components/runs/feed/run-card";
+import { StatePanel } from "#/components/ui/state-panel";
 
-export function RunFeed(props: { runs: RunView[]; isFetchingMore?: boolean }) {
+export function RunFeed(props: { runs: RunView[] }) {
   if (props.runs.length === 0) {
-    return (
-      <div className="rounded-2xl border border-dashed p-8 text-sm text-muted-foreground">
-        No runs found.
-      </div>
-    );
+    return <StatePanel>No runs found.</StatePanel>;
   }
 
   return (
-    <div className="space-y-4 flex flex-col w-full items-center lg:items-start">
+    <div className="flex flex-col items-center gap-6 w-full">
       {props.runs.map((run) => (
         <RunCard key={run.id} run={run} />
       ))}
-
-      {props.isFetchingMore ? (
-        <div className="py-4 text-center text-sm text-muted-foreground">
-          Loading more runs…
-        </div>
-      ) : null}
     </div>
   );
 }

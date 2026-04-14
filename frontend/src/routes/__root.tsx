@@ -7,12 +7,14 @@ import {
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 import { TanStackDevtools } from "@tanstack/react-devtools";
 import type { QueryClient } from "@tanstack/react-query";
+import { I18nextProvider } from "react-i18next";
 
-import Header from "#/components/Header";
-import Footer from "#/components/Footer";
+import { TooltipProvider } from "#/components/ui/tooltip";
 import TanStackQueryDevtools from "#/integrations/tanstack-query/devtools";
 import TanstackQueryProvider from "#/integrations/tanstack-query/root-provider";
+import { i18n, initI18n } from "#/lib/i18n/config";
 import appCss from "#/styles.css?url";
+import { resolveLocale } from "#/lib/i18n/detect-locale";
 
 interface RouterContext {
   queryClient: QueryClient;
@@ -34,20 +36,23 @@ export const Route = createRootRouteWithContext<RouterContext>()({
 
 function RootDocument() {
   const context = Route.useRouteContext();
+  const locale = resolveLocale();
+
+  initI18n(locale);
 
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang={i18n.language} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
         <HeadContent />
       </head>
       <body className="bg-background font-sans text-foreground antialiased">
         <TanstackQueryProvider queryClient={context.queryClient}>
-          <div className="min-h-svh grid grid-rows-[auto_1fr_auto]">
-            <Header />
-            <Outlet />
-            <Footer />
-          </div>
+          <I18nextProvider i18n={i18n}>
+            <TooltipProvider>
+              <Outlet />
+            </TooltipProvider>
+          </I18nextProvider>
         </TanstackQueryProvider>
 
         {import.meta.env.DEV ? (

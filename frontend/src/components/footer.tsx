@@ -50,7 +50,7 @@ function BackendBuildInfo() {
   return <FooterMetaRow label="Backend build" value={value} />;
 }
 
-export default function Footer() {
+export function Footer() {
   const year = new Date().getFullYear();
   return (
     <footer className="border-t">

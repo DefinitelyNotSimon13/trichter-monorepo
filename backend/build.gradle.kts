@@ -105,14 +105,14 @@ val buildId: Provider<String> =
         if (dev) "$sha-dev" else sha
     }
 
-tasks.processResources {
-    inputs.property("buildId", buildId)
-
-    filesMatching(listOf("**/application.yml", "**/application.yaml")) {
-        expand(
-            mapOf(
-                "buildId" to buildId.get()
-            )
-        )
-    }
-}
+//tasks.processResources {
+//    inputs.property("buildId", buildId)
+//
+//    filesMatching(listOf("**/application.yml", "**/application.yaml")) {
+//        expand(
+//            mapOf(
+//                "buildId" to buildId.get()
+//            )
+//        )
+//    }
+//}

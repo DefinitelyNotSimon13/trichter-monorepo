@@ -1,0 +1,7 @@
+{
+	"appName": "Trichter",
+	"actions": {
+		"openFeed": "Open feed",
+		"viewLeaderboard": "View leaderboard"
+	}
+}

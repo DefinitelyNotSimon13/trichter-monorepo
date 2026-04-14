@@ -1,0 +1,7 @@
+{
+	"appName": "Trichter",
+	"actions": {
+		"openFeed": "Feed öffnen",
+		"viewLeaderboard": "Bestenliste anzeigen"
+	}
+}
