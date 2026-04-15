@@ -8,7 +8,9 @@ export function LeaderboardStats(props: { runs: RunView[] }) {
 
 	const quickestRun = [...props.runs]
 		.filter((run) => typeof run.data?.rate === "number")
-		.sort((a, b) => (b.data?.rate ?? -Infinity) - (a.data?.rate ?? -Infinity))[0];
+		.sort(
+			(a, b) => (b.data?.rate ?? -Infinity) - (a.data?.rate ?? -Infinity),
+		)[0];
 
 	const quickestUser =
 		quickestRun?.user?.name ?? quickestRun?.user?.username ?? "Unknown";
@@ -20,7 +22,9 @@ export function LeaderboardStats(props: { runs: RunView[] }) {
 					<div className="flex items-start justify-between">
 						<div>
 							<p className="text-sm text-muted-foreground">Total Runs</p>
-							<p className="mt-2 text-5xl font-black tracking-tight">{totalRuns}</p>
+							<p className="mt-2 text-5xl font-black tracking-tight">
+								{totalRuns}
+							</p>
 						</div>
 						<div className="rounded-xl bg-primary/10 p-2.5">
 							<Activity className="size-5 text-primary" />
@@ -37,15 +41,21 @@ export function LeaderboardStats(props: { runs: RunView[] }) {
 							<p className="mt-2 text-5xl font-black tracking-tight text-primary">
 								{quickestRun ? formatRate(quickestRun.data?.rate) : "—"}
 							</p>
-							<p className="mt-1.5 text-sm text-muted-foreground">by {quickestUser}</p>
+							<p className="mt-1.5 text-sm text-muted-foreground">
+								by {quickestUser}
+							</p>
 						</div>
 						<div
 							className="rounded-xl p-2.5"
 							style={{
-								backgroundColor: "color-mix(in oklch, var(--highlight) 15%, transparent)",
+								backgroundColor:
+									"color-mix(in oklch, var(--highlight) 15%, transparent)",
 							}}
 						>
-							<Trophy className="size-5" style={{ color: "var(--highlight)" }} />
+							<Trophy
+								className="size-5"
+								style={{ color: "var(--highlight)" }}
+							/>
 						</div>
 					</div>
 				</CardContent>

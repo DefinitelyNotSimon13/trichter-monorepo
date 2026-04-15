@@ -3,5 +3,8 @@
 	"actions": {
 		"openFeed": "Feed öffnen",
 		"viewLeaderboard": "Bestenliste anzeigen"
+	},
+	"auth": {
+		"signIn": "Anmelden"
 	}
 }

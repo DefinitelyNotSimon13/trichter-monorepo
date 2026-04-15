@@ -1,6 +1,6 @@
+import { useInfiniteQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { useCallback, useMemo } from "react";
-import { useInfiniteQuery } from "@tanstack/react-query";
 
 import { getRunsInfiniteOptions } from "#/client/@tanstack/react-query.gen";
 import type { RunView } from "#/client/types.gen";
@@ -20,8 +20,11 @@ function FeedSkeleton() {
 	return (
 		<div className="flex flex-col items-center gap-6 w-full">
 			{Array.from({ length: 3 }).map((_, i) => (
-				// biome-ignore lint/suspicious/noArrayIndexKey: static skeleton list
-				<div key={i} className="w-full max-w-100 overflow-hidden rounded-3xl border">
+				<div
+					// biome-ignore lint/suspicious/noArrayIndexKey: static skeleton list
+					key={i}
+					className="w-full max-w-100 overflow-hidden rounded-3xl border"
+				>
 					<div className="grid grid-cols-3 gap-3 p-3">
 						<Skeleton className="h-16 rounded-xl" />
 						<Skeleton className="h-16 rounded-xl" />
@@ -62,7 +65,12 @@ function FeedPage() {
 	}, [query.hasNextPage, query.isFetchingNextPage, query.fetchNextPage]);
 
 	if (query.isPending) return <FeedSkeleton />;
-	if (query.isError) return <StatePanel tone="destructive">Failed to load runs.</StatePanel>;
+	if (query.isError)
+		return (
+			<StatePanel tone="destructive" onRetry={() => void query.refetch()}>
+				Failed to load runs.
+			</StatePanel>
+		);
 
 	return (
 		<div className="flex flex-col items-center gap-6 lg:items-start">

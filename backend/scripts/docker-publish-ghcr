@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -euo pipefail
+
 SERVICE="backend"
 
 REMOTE_URL="$(git config --get remote.origin.url)"

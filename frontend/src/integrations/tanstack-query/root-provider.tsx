@@ -4,8 +4,8 @@ import {
   QueryClientProvider,
 } from "@tanstack/react-query";
 import { client } from "#/client/client.gen";
-import { env } from "#/env";
 import type { ReactNode } from "react";
+import { clientEnv } from "#/env/client";
 
 function makeQueryClient() {
   return new QueryClient();
@@ -26,7 +26,7 @@ export function getContext() {
   const queryClient = getQueryClient();
 
   client.setConfig({
-    baseUrl: env.VITE_API_BASE_URL,
+    baseUrl: clientEnv.VITE_API_BASE_URL,
   });
 
   return {
@@ -39,7 +39,7 @@ export default function TanstackQueryProvider(props: {
   children: ReactNode;
 }) {
   client.setConfig({
-    baseUrl: env.VITE_API_BASE_URL,
+    baseUrl: clientEnv.VITE_API_BASE_URL,
   });
 
   return (

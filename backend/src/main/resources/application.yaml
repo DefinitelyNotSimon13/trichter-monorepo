@@ -28,7 +28,9 @@ app:
 
 springdoc:
   swagger-ui:
-    path: /api/docs
+    path: /api/v2/docs
+  api-docs:
+    path: /api/v2/api-docs
   show-actuator: true
 
 

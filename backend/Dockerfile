@@ -16,5 +16,5 @@ EXPOSE 8080
 
 ENTRYPOINT ["java", "-jar", "/app/app.jar"]
 
-LABEL org.opencontainers.image.source="https://github.com/DefinitelyNotSimon13/trichter-monorepo"
-LABEL org.opencontainers.image.license="MIT"
+LABEL org.opencontainers.image.source=https://github.com/DefinitelyNotSimon13/trichter-monorepo
+LABEL org.opencontainers.image.license=MIT

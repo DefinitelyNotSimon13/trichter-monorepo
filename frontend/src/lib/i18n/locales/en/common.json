@@ -3,5 +3,8 @@
 	"actions": {
 		"openFeed": "Open feed",
 		"viewLeaderboard": "View leaderboard"
+	},
+	"auth": {
+		"signIn": "Sign In"
 	}
 }

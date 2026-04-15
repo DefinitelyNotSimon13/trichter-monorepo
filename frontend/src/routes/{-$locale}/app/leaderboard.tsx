@@ -1,5 +1,5 @@
-import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
+import { createFileRoute } from "@tanstack/react-router";
 
 import { getRunsOptions } from "#/client/@tanstack/react-query.gen";
 import type { RunView } from "#/client/types.gen";
@@ -40,7 +40,11 @@ function LeaderboardPage() {
 
 	if (query.isPending) return <LeaderboardSkeleton />;
 	if (query.isError)
-		return <StatePanel tone="destructive">Failed to load leaderboard.</StatePanel>;
+		return (
+			<StatePanel tone="destructive" onRetry={() => void query.refetch()}>
+				Failed to load leaderboard.
+			</StatePanel>
+		);
 
 	const runs: RunView[] = query.data.content ?? [];
 

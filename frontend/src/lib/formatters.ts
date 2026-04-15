@@ -32,3 +32,14 @@ export function formatRate(value?: number) {
 
   return `${value.toFixed(2)}L/min`;
 }
+
+export function formatDateTime(value: string | Date) {
+  const date = value instanceof Date ? value : new Date(value);
+
+  if (Number.isNaN(date.getTime())) return "—";
+
+  return new Intl.DateTimeFormat("de-DE", {
+    dateStyle: "medium",
+    timeStyle: "short",
+  }).format(date);
+}

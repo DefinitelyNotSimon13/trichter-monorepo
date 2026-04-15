@@ -1,12 +1,13 @@
+import { type LucideIcon, Monitor, Moon, Sun } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Moon, Sun, Monitor, type LucideIcon } from "lucide-react";
 
 export type ThemeMode = "light" | "dark" | "auto";
 
 function getInitialMode(): ThemeMode {
 	if (typeof window === "undefined") return "auto";
 	const stored = window.localStorage.getItem("theme");
-	if (stored === "light" || stored === "dark" || stored === "auto") return stored;
+	if (stored === "light" || stored === "dark" || stored === "auto")
+		return stored;
 	return "auto";
 }
 
@@ -23,7 +24,11 @@ function applyThemeMode(mode: ThemeMode) {
 	document.documentElement.style.colorScheme = resolved;
 }
 
-export function useTheme(): { mode: ThemeMode; toggle: () => void; icon: LucideIcon } {
+export function useTheme(): {
+	mode: ThemeMode;
+	toggle: () => void;
+	icon: LucideIcon;
+} {
 	const [mode, setMode] = useState<ThemeMode>("auto");
 
 	useEffect(() => {
@@ -41,13 +46,15 @@ export function useTheme(): { mode: ThemeMode; toggle: () => void; icon: LucideI
 	}, [mode]);
 
 	function toggle() {
-		const next: ThemeMode = mode === "light" ? "dark" : mode === "dark" ? "auto" : "light";
+		const next: ThemeMode =
+			mode === "light" ? "dark" : mode === "dark" ? "auto" : "light";
 		setMode(next);
 		applyThemeMode(next);
 		window.localStorage.setItem("theme", next);
 	}
 
-	const icon: LucideIcon = mode === "dark" ? Moon : mode === "light" ? Sun : Monitor;
+	const icon: LucideIcon =
+		mode === "dark" ? Moon : mode === "light" ? Sun : Monitor;
 
 	return { mode, toggle, icon };
 }
