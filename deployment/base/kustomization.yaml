@@ -4,5 +4,5 @@ resources:
   - namespace.yaml
   - app/
   - web/
-  # - api/
+  - api/
   - ingress/

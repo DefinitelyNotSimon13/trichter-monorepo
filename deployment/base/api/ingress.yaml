@@ -7,7 +7,7 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`trichter.hauptspeicher.com`) && PathPrefix(`/api/v2`)
+    - match: Host(`next.trichter.hauptspeicher.com`) && (PathPrefix(`/api/v2`) || PathPrefix(`/actuator`))
       kind: Rule
       services:
         - name: api

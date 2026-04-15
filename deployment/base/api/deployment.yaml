@@ -21,12 +21,12 @@ spec:
     spec:
       containers:
         - name: api
-          image: ghcr.io/tt-trichter/api:latest
+          image: ghcr.io/definitelynotsimon13/trichter-monorepo/backend:latest
           ports:
             - containerPort: 8080
           env:
             - name: SPRING_PROFILES_ACTIVE
-              value: "prod"
+              value: "remote-prod"
           envFrom:
             - secretRef:
                 name: api-secret

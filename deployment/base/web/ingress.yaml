@@ -12,5 +12,10 @@ spec:
       services:
         - name: web
           port: 3000
+    - match: Host(`next.trichter.hauptspeicher.com`) && PathPrefix(`/api/auth`)
+      kind: Rule
+      services:
+        - name: web
+          port: 3000
   tls:
     certResolver: myresolver
