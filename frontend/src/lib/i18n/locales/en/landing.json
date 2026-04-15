@@ -1,23 +1,23 @@
 {
-	"hero": {
-		"line1": "What's better",
-		"line2": "than regular",
-		"highlight": "drinking?",
-		"tagline": "Competitive drinking.",
-		"description": "Track your runs, climb the leaderboard, and share the glory with your friends."
-	},
-	"cards": {
-		"feed": {
-			"title": "Feed",
-			"description": "See all the latest runs from the community, newest first."
-		},
-		"leaderboard": {
-			"title": "Leaderboard",
-			"description": "Who's fastest? Find out and defend your crown."
-		},
-		"comingSoon": {
-			"title": "Coming Soon",
-			"description": "Phone app and image uploads on the way."
-		}
-	}
+  "hero": {
+    "line1": "What's better",
+    "line2": "than regular",
+    "highlight": "drinking?",
+    "tagline": "Competitive drinking.",
+    "description": "Track your runs, climb the leaderboard, and share the glory with your friends."
+  },
+  "cards": {
+    "feed": {
+      "title": "Feed",
+      "description": "See all the latest runs from the community, newest first."
+    },
+    "leaderboard": {
+      "title": "Leaderboard",
+      "description": "Who's fastest? Find out and defend your crown."
+    },
+    "comingSoon": {
+      "title": "Coming Soon",
+      "description": "Phone app and image uploads on the way."
+    }
+  }
 }

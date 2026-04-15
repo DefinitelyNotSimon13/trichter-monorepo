@@ -11,17 +11,17 @@ export type AdminListUsersParams = {
   filterField?: string;
   filterValue?: string | number | boolean | string[] | number[];
   filterOperator?:
-  | "eq"
-  | "ne"
-  | "lt"
-  | "lte"
-  | "gt"
-  | "gte"
-  | "in"
-  | "not_in"
-  | "contains"
-  | "starts_with"
-  | "ends_with";
+    | "eq"
+    | "ne"
+    | "lt"
+    | "lte"
+    | "gt"
+    | "gte"
+    | "in"
+    | "not_in"
+    | "contains"
+    | "starts_with"
+    | "ends_with";
 };
 
 export async function listUsers(params: AdminListUsersParams) {

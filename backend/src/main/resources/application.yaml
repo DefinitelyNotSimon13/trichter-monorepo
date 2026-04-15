@@ -20,7 +20,7 @@ management:
         include: health,info
 
 app:
-  build-id: 76787a67
+  build-id: ${buildId}
   storage:
     azure:
       container-name: trichter-image
@@ -32,8 +32,6 @@ springdoc:
   api-docs:
     path: /api/v2/api-docs
   show-actuator: true
-
-
 
 logging:
   level:

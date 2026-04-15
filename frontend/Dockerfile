@@ -1,36 +1,23 @@
-FROM oven/bun:1 AS base
+FROM oven/bun:1-slim
+
 WORKDIR /app
 
-FROM base AS deps
-COPY package.json bun.lock* ./
-RUN bun install --frozen-lockfile
-
-FROM base AS builder
-WORKDIR /app
-
-COPY --from=deps /app/node_modules ./node_modules
-COPY . .
-COPY .env .env
-
-ARG VITE_BUILD_ID
-ENV VITE_BUILD_ID=$VITE_BUILD_ID
-ENV NODE_ENV=production
-
-RUN bun run build
-
-FROM oven/bun:1-slim AS runner
-WORKDIR /app
+ARG REPO_URL
+ARG VCS_REF
+ARG BUILD_DATE
 
 ENV NODE_ENV=production
 ENV PORT=3000
 
-USER bun
+LABEL org.opencontainers.image.source=$REPO_URL
+LABEL org.opencontainers.image.revision=$VCS_REF
+LABEL org.opencontainers.image.created=$BUILD_DATE
 
-COPY --from=builder --chown=bun:bun /app/.output ./.output
-COPY --from=builder --chown=bun:bun /app/package.json ./package.json
+COPY --chown=bun:bun frontend/.output ./.output
+COPY --chown=bun:bun frontend/package.json ./package.json
+
+USER bun
 
 EXPOSE 3000
 
 CMD ["bun", ".output/server/index.mjs"]
-
-LABEL org.opencontainers.image.source=https://github.com/DefinitelyNotSimon13/trichter-monorepo

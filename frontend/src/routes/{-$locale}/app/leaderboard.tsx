@@ -11,48 +11,48 @@ import { StatePanel } from "#/components/ui/state-panel";
 const PAGE_SIZE = 100;
 
 export const Route = createFileRoute("/{-$locale}/app/leaderboard")({
-	component: LeaderboardPage,
+  component: LeaderboardPage,
 });
 
 function LeaderboardSkeleton() {
-	return (
-		<div className="space-y-8">
-			<div className="grid gap-4 md:grid-cols-2">
-				<Skeleton className="h-32 rounded-2xl" />
-				<Skeleton className="h-32 rounded-2xl" />
-			</div>
-			<div className="border-t" />
-			<Skeleton className="h-64 rounded-2xl" />
-		</div>
-	);
+  return (
+    <div className="space-y-8">
+      <div className="grid gap-4 md:grid-cols-2">
+        <Skeleton className="h-32 rounded-2xl" />
+        <Skeleton className="h-32 rounded-2xl" />
+      </div>
+      <div className="border-t" />
+      <Skeleton className="h-64 rounded-2xl" />
+    </div>
+  );
 }
 
 function LeaderboardPage() {
-	const query = useQuery(
-		getRunsOptions({
-			query: {
-				page: 0,
-				size: PAGE_SIZE,
-				sort: ["createdAt,desc"],
-			},
-		}),
-	);
+  const query = useQuery(
+    getRunsOptions({
+      query: {
+        page: 0,
+        size: PAGE_SIZE,
+        sort: ["createdAt,desc"],
+      },
+    }),
+  );
 
-	if (query.isPending) return <LeaderboardSkeleton />;
-	if (query.isError)
-		return (
-			<StatePanel tone="destructive" onRetry={() => void query.refetch()}>
-				Failed to load leaderboard.
-			</StatePanel>
-		);
+  if (query.isPending) return <LeaderboardSkeleton />;
+  if (query.isError)
+    return (
+      <StatePanel tone="destructive" onRetry={() => void query.refetch()}>
+        Failed to load leaderboard.
+      </StatePanel>
+    );
 
-	const runs: RunView[] = query.data.content ?? [];
+  const runs: RunView[] = query.data.content ?? [];
 
-	return (
-		<div className="space-y-8">
-			<LeaderboardStats runs={runs} />
-			<div className="border-t" />
-			<LeaderboardTable runs={runs} />
-		</div>
-	);
+  return (
+    <div className="space-y-8">
+      <LeaderboardStats runs={runs} />
+      <div className="border-t" />
+      <LeaderboardTable runs={runs} />
+    </div>
+  );
 }

@@ -11,119 +11,119 @@ import { emailValidator } from "#/lib/validators";
 import { AuthCard } from "./auth-card";
 
 type ForgotPasswordFormValues = {
-	email: string;
+  email: string;
 };
 
 type ForgotPasswordFormProps = React.ComponentProps<"div"> & LocaleProps;
 
 export function ForgotPasswordForm({
-	locale,
-	className,
-	...props
+  locale,
+  className,
+  ...props
 }: ForgotPasswordFormProps) {
-	const {
-		error: formError,
-		setError,
-		success: successMessage,
-		setSuccess,
-		clear,
-	} = useFormMessages();
-	const { ref: turnstileRef, getFetchOptions } = useTurnstile();
+  const {
+    error: formError,
+    setError,
+    success: successMessage,
+    setSuccess,
+    clear,
+  } = useFormMessages();
+  const { ref: turnstileRef, getFetchOptions } = useTurnstile();
 
-	const form = useAppForm({
-		defaultValues: {
-			email: "",
-		} satisfies ForgotPasswordFormValues,
-		onSubmit: async ({ value }) => {
-			clear();
+  const form = useAppForm({
+    defaultValues: {
+      email: "",
+    } satisfies ForgotPasswordFormValues,
+    onSubmit: async ({ value }) => {
+      clear();
 
-			const fetchOptions = getFetchOptions();
+      const fetchOptions = getFetchOptions();
 
-			const result = await authClient.requestPasswordReset({
-				email: value.email.trim(),
-				redirectTo: `${window.location.origin}/${locale}/reset-password`,
-				fetchOptions,
-			});
+      const result = await authClient.requestPasswordReset({
+        email: value.email.trim(),
+        redirectTo: `${window.location.origin}/${locale}/reset-password`,
+        fetchOptions,
+      });
 
-			if (result.error) {
-				setError(result.error.message ?? "Could not send reset email");
-				return;
-			}
+      if (result.error) {
+        setError(result.error.message ?? "Could not send reset email");
+        return;
+      }
 
-			setSuccess(
-				"If an account with that email exists, a password reset link has been sent.",
-			);
-		},
-	});
+      setSuccess(
+        "If an account with that email exists, a password reset link has been sent.",
+      );
+    },
+  });
 
-	return (
-		<AuthCard
-			className={className}
-			title="Forgot your password?"
-			description="Enter your email address and we will send you a reset link."
-			footer={
-				<>
-					Remembered it?{" "}
-					<Link
-						to="/{-$locale}/login"
-						params={{ locale }}
-						className="underline underline-offset-4"
-					>
-						Back to login
-					</Link>
-				</>
-			}
-			{...props}
-		>
-			<form
-				onSubmit={(e) => {
-					e.preventDefault();
-					e.stopPropagation();
-					void form.handleSubmit();
-				}}
-			>
-				<FieldGroup>
-					<form.AppField name="email" validators={emailValidator}>
-						{(field) => (
-							<field.FormTextInput
-								label="Email"
-								type="email"
-								placeholder="m@example.com"
-								autoComplete="email"
-							/>
-						)}
-					</form.AppField>
+  return (
+    <AuthCard
+      className={className}
+      title="Forgot your password?"
+      description="Enter your email address and we will send you a reset link."
+      footer={
+        <>
+          Remembered it?{" "}
+          <Link
+            to="/{-$locale}/login"
+            params={{ locale }}
+            className="underline underline-offset-4"
+          >
+            Back to login
+          </Link>
+        </>
+      }
+      {...props}
+    >
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          void form.handleSubmit();
+        }}
+      >
+        <FieldGroup>
+          <form.AppField name="email" validators={emailValidator}>
+            {(field) => (
+              <field.FormTextInput
+                label="Email"
+                type="email"
+                placeholder="m@example.com"
+                autoComplete="email"
+              />
+            )}
+          </form.AppField>
 
-					<div className="flex w-full justify-center">
-						<Turnstile
-							ref={turnstileRef}
-							siteKey={clientEnv.VITE_TURNSTYLE_SITE_KEY}
-						/>
-					</div>
+          <div className="flex w-full justify-center">
+            <Turnstile
+              ref={turnstileRef}
+              siteKey={clientEnv.VITE_TURNSTYLE_SITE_KEY}
+            />
+          </div>
 
-					{formError ? (
-						<Field>
-							<FieldDescription className="text-center text-destructive">
-								{formError}
-							</FieldDescription>
-						</Field>
-					) : null}
+          {formError ? (
+            <Field>
+              <FieldDescription className="text-center text-destructive">
+                {formError}
+              </FieldDescription>
+            </Field>
+          ) : null}
 
-					{successMessage ? (
-						<Field>
-							<FieldDescription className="text-center text-primary">
-								{successMessage}
-							</FieldDescription>
-						</Field>
-					) : null}
+          {successMessage ? (
+            <Field>
+              <FieldDescription className="text-center text-primary">
+                {successMessage}
+              </FieldDescription>
+            </Field>
+          ) : null}
 
-					<Field>
-						<form.AppForm>
-							<form.FormSubmitButton label="Send reset link" />
-						</form.AppForm>
-					</Field>
-				</FieldGroup>
-			</form>
-		</AuthCard>
-	);
+          <Field>
+            <form.AppForm>
+              <form.FormSubmitButton label="Send reset link" />
+            </form.AppForm>
+          </Field>
+        </FieldGroup>
+      </form>
+    </AuthCard>
+  );
 }

@@ -9,4 +9,3 @@ spring:
         blob:
           container-name: ${AZURE_CONTAINER_NAME}
           connection-string: ${AZURE_STORAGE_CONNECTION_STRING}
-

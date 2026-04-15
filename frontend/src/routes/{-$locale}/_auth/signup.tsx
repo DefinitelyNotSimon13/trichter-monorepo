@@ -3,15 +3,15 @@ import { AuthCardWrapper } from "#/components/auth/auth-card-wrapper";
 import { SignupForm } from "#/components/auth/signup-form";
 
 export const Route = createFileRoute("/{-$locale}/_auth/signup")({
-	component: SignupPage,
+  component: SignupPage,
 });
 
 function SignupPage() {
-	const { locale } = Route.useParams();
+  const { locale } = Route.useParams();
 
-	return (
-		<AuthCardWrapper locale={locale ?? ""}>
-			<SignupForm locale={locale ?? ""} />
-		</AuthCardWrapper>
-	);
+  return (
+    <AuthCardWrapper locale={locale ?? ""}>
+      <SignupForm locale={locale ?? ""} />
+    </AuthCardWrapper>
+  );
 }

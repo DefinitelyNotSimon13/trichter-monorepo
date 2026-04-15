@@ -92,27 +92,19 @@ tasks.asciidoctor {
     inputs.dir(project.extra["snippetsDir"]!!)
     dependsOn(tasks.test)
 }
-val gitCommitShaShort: Provider<String> = providers.exec {
-    commandLine("git", "rev-parse", "--short", "HEAD")
-}.standardOutput.asText.map { it.trim() }
 
-val isDev: Provider<Boolean> = providers.environmentVariable("PROFILE")
-    .map { it == "dev" }
-    .orElse(true)
+val buildId = providers
+    .gradleProperty("buildId")
+    .orElse("dev")
 
-val buildId: Provider<String> =
-    gitCommitShaShort.zip(isDev) { sha, dev ->
-        if (dev) "$sha-dev" else sha
+tasks.named<ProcessResources>("processResources") {
+    inputs.property("buildId", buildId)
+
+    filesMatching("application.yaml") {
+        expand(
+            mapOf(
+                "buildId" to buildId.get()
+            )
+        )
     }
-
-//tasks.processResources {
-//    inputs.property("buildId", buildId)
-//
-//    filesMatching(listOf("**/application.yml", "**/application.yaml")) {
-//        expand(
-//            mapOf(
-//                "buildId" to buildId.get()
-//            )
-//        )
-//    }
-//}
+}

@@ -1,15 +1,61 @@
+keys_file := justfile_directory() + "/keys.txt"
+
 test overlay:
-  kubectl kustomize --enable-alpha-plugins overlays/{{overlay}}
+    kubectl kustomize --enable-alpha-plugins overlays/{{overlay}}
 
 apply overlay:
-  kubectl kustomize --enable-alpha-plugins overlays/{{overlay}} | kubectl apply --server-side -f -
+    kubectl kustomize --enable-alpha-plugins overlays/{{overlay}} | kubectl apply --server-side -f -
 
 delete overlay:
-  kubectl kustomize --enable-alpha-plugins overlays/{{overlay}} | kubectl delete -f -
+    kubectl kustomize --enable-alpha-plugins overlays/{{overlay}} | kubectl delete -f -
 
 create-sops-secret keys_file="keys.txt":
-  kubectl -n argocd create secret generic sops-age \
-    --from-file=keys.txt={{keys_file}}
+    kubectl -n argocd create secret generic sops-age \
+      --from-file=keys.txt={{keys_file}}
 
 initial-argocd-pass:
-  kubectl get secret -n argocd argocd-initial-admin-secret -o jsonpath='{.data.password}' | base64 -d
+    kubectl get secret -n argocd argocd-initial-admin-secret -o jsonpath='{.data.password}' | base64 -d
+
+print-sops-key:
+    @echo "{{keys_file}}"
+
+encrypt *files:
+    @for file in {{files}}; do \
+      echo "Encrypting $$file"; \
+      SOPS_AGE_KEY_FILE="{{keys_file}}" sops --encrypt --in-place "$$file"; \
+    done
+
+decrypt *files:
+    @for file in {{files}}; do \
+      echo "Decrypting $$file"; \
+      SOPS_AGE_KEY_FILE="{{keys_file}}" sops --decrypt --in-place "$$file"; \
+    done
+
+encrypt-dir dir:
+    @find "{{dir}}" -type f \( -name '*.secret.yaml' -o -name '*.secret.yml' \) -print0 | \
+    while IFS= read -r -d '' file; do \
+      echo "Encrypting $file"; \
+      SOPS_AGE_KEY_FILE="{{keys_file}}" sops --encrypt --in-place "$file"; \
+    done
+
+decrypt-dir dir:
+    @find "{{dir}}" -type f \( -name '*.secret.yaml' -o -name '*.secret.yml' \) -print0 | \
+    while IFS= read -r -d '' file; do \
+      echo "Decrypting $file"; \
+      SOPS_AGE_KEY_FILE="{{keys_file}}" sops --decrypt --in-place "$file"; \
+    done
+
+encrypt-all-yaml dir:
+    @find "{{dir}}" -type f \( -name '*.yaml' -o -name '*.yml' \) -print0 | \
+    while IFS= read -r -d '' file; do \
+      echo "Encrypting $file"; \
+      SOPS_AGE_KEY_FILE="{{keys_file}}" sops --encrypt --in-place "$file"; \
+    done
+
+decrypt-all-yaml dir:
+    @find "{{dir}}" -type f \( -name '*.yaml' -o -name '*.yml' \) -print0 | \
+    while IFS= read -r -d '' file; do \
+      echo "Decrypting $file"; \
+      SOPS_AGE_KEY_FILE="{{keys_file}}" sops --decrypt --in-place "$file"; \
+    done
+

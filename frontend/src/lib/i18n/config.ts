@@ -14,41 +14,41 @@ export type AppLocale = (typeof SUPPORTED_LOCALES)[number];
 export const DEFAULT_LOCALE: AppLocale = "en";
 
 export const resources = {
-	en: {
-		common: enCommon,
-		landing: enLanding,
-		app: enApp,
-	},
-	de: {
-		common: deCommon,
-		landing: deLanding,
-		app: deApp,
-	},
+  en: {
+    common: enCommon,
+    landing: enLanding,
+    app: enApp,
+  },
+  de: {
+    common: deCommon,
+    landing: deLanding,
+    app: deApp,
+  },
 } as const;
 
 let initialized = false;
 
 export function initI18n(locale: AppLocale) {
-	if (!initialized) {
-		i18n.use(initReactI18next).init({
-			resources,
-			lng: locale,
-			fallbackLng: DEFAULT_LOCALE,
-			supportedLngs: SUPPORTED_LOCALES,
-			defaultNS: "common",
-			ns: ["common", "landing", "app"],
-			interpolation: {
-				escapeValue: false,
-			},
-			returnNull: false,
-		});
+  if (!initialized) {
+    i18n.use(initReactI18next).init({
+      resources,
+      lng: locale,
+      fallbackLng: DEFAULT_LOCALE,
+      supportedLngs: SUPPORTED_LOCALES,
+      defaultNS: "common",
+      ns: ["common", "landing", "app"],
+      interpolation: {
+        escapeValue: false,
+      },
+      returnNull: false,
+    });
 
-		initialized = true;
-	} else if (i18n.language !== locale) {
-		void i18n.changeLanguage(locale);
-	}
+    initialized = true;
+  } else if (i18n.language !== locale) {
+    void i18n.changeLanguage(locale);
+  }
 
-	return i18n;
+  return i18n;
 }
 
 export { i18n };

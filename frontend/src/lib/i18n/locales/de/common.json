@@ -1,10 +1,10 @@
 {
-	"appName": "Trichter",
-	"actions": {
-		"openFeed": "Feed öffnen",
-		"viewLeaderboard": "Bestenliste anzeigen"
-	},
-	"auth": {
-		"signIn": "Anmelden"
-	}
+  "appName": "Trichter",
+  "actions": {
+    "openFeed": "Feed öffnen",
+    "viewLeaderboard": "Bestenliste anzeigen"
+  },
+  "auth": {
+    "signIn": "Anmelden"
+  }
 }

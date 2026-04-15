@@ -6,15 +6,15 @@ import { cn } from "#/lib/utils";
  * Applied at layout level so every route transition gets the same effect.
  */
 export function PageWrapper({
-	children,
-	className,
+  children,
+  className,
 }: {
-	children: ReactNode;
-	className?: string;
+  children: ReactNode;
+  className?: string;
 }) {
-	return (
-		<div className={cn("animate-[page-enter_300ms_ease-out]", className)}>
-			{children}
-		</div>
-	);
+  return (
+    <div className={cn("animate-[page-enter_300ms_ease-out]", className)}>
+      {children}
+    </div>
+  );
 }

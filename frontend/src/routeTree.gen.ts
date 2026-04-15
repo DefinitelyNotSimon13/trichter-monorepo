@@ -8,429 +8,429 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { Route as rootRouteImport } from './routes/__root'
-import { Route as Char123LocaleChar125RouteRouteImport } from './routes/{-$locale}/route'
-import { Route as Char123LocaleChar125IndexRouteImport } from './routes/{-$locale}/index'
-import { Route as Char123LocaleChar125AppRouteImport } from './routes/{-$locale}/app'
-import { Route as Char123LocaleChar125AboutRouteImport } from './routes/{-$locale}/about'
-import { Route as DemoTanstackQueryRouteImport } from './routes/demo/tanstack-query'
-import { Route as DemoStoreRouteImport } from './routes/demo/store'
-import { Route as DemoBetterAuthRouteImport } from './routes/demo/better-auth'
-import { Route as Char123LocaleChar125AppIndexRouteImport } from './routes/{-$locale}/app/index'
-import { Route as Char123LocaleChar125AppLeaderboardRouteImport } from './routes/{-$locale}/app/leaderboard'
-import { Route as Char123LocaleChar125AppFeedRouteImport } from './routes/{-$locale}/app/feed'
-import { Route as Char123LocaleChar125AppAdminRouteImport } from './routes/{-$locale}/app/admin'
-import { Route as Char123LocaleChar125AuthSignupRouteImport } from './routes/{-$locale}/_auth/signup'
-import { Route as Char123LocaleChar125AuthResetPasswordRouteImport } from './routes/{-$locale}/_auth/reset-password'
-import { Route as Char123LocaleChar125AuthLoginRouteImport } from './routes/{-$locale}/_auth/login'
-import { Route as Char123LocaleChar125AuthForgotPasswordRouteImport } from './routes/{-$locale}/_auth/forgot-password'
-import { Route as DemoFormSimpleRouteImport } from './routes/demo/form.simple'
-import { Route as DemoFormAddressRouteImport } from './routes/demo/form.address'
-import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
-import { Route as Char123LocaleChar125AppAdminUsersRouteImport } from './routes/{-$locale}/app/admin/users'
+import { Route as rootRouteImport } from "./routes/__root";
+import { Route as Char123LocaleChar125RouteRouteImport } from "./routes/{-$locale}/route";
+import { Route as Char123LocaleChar125IndexRouteImport } from "./routes/{-$locale}/index";
+import { Route as Char123LocaleChar125AppRouteImport } from "./routes/{-$locale}/app";
+import { Route as Char123LocaleChar125AboutRouteImport } from "./routes/{-$locale}/about";
+import { Route as DemoTanstackQueryRouteImport } from "./routes/demo/tanstack-query";
+import { Route as DemoStoreRouteImport } from "./routes/demo/store";
+import { Route as DemoBetterAuthRouteImport } from "./routes/demo/better-auth";
+import { Route as Char123LocaleChar125AppIndexRouteImport } from "./routes/{-$locale}/app/index";
+import { Route as Char123LocaleChar125AppLeaderboardRouteImport } from "./routes/{-$locale}/app/leaderboard";
+import { Route as Char123LocaleChar125AppFeedRouteImport } from "./routes/{-$locale}/app/feed";
+import { Route as Char123LocaleChar125AppAdminRouteImport } from "./routes/{-$locale}/app/admin";
+import { Route as Char123LocaleChar125AuthSignupRouteImport } from "./routes/{-$locale}/_auth/signup";
+import { Route as Char123LocaleChar125AuthResetPasswordRouteImport } from "./routes/{-$locale}/_auth/reset-password";
+import { Route as Char123LocaleChar125AuthLoginRouteImport } from "./routes/{-$locale}/_auth/login";
+import { Route as Char123LocaleChar125AuthForgotPasswordRouteImport } from "./routes/{-$locale}/_auth/forgot-password";
+import { Route as DemoFormSimpleRouteImport } from "./routes/demo/form.simple";
+import { Route as DemoFormAddressRouteImport } from "./routes/demo/form.address";
+import { Route as ApiAuthSplatRouteImport } from "./routes/api/auth/$";
+import { Route as Char123LocaleChar125AppAdminUsersRouteImport } from "./routes/{-$locale}/app/admin/users";
 
 const Char123LocaleChar125RouteRoute =
   Char123LocaleChar125RouteRouteImport.update({
-    id: '/{-$locale}',
-    path: '/{-$locale}',
+    id: "/{-$locale}",
+    path: "/{-$locale}",
     getParentRoute: () => rootRouteImport,
-  } as any)
+  } as any);
 const Char123LocaleChar125IndexRoute =
   Char123LocaleChar125IndexRouteImport.update({
-    id: '/',
-    path: '/',
+    id: "/",
+    path: "/",
     getParentRoute: () => Char123LocaleChar125RouteRoute,
-  } as any)
+  } as any);
 const Char123LocaleChar125AppRoute = Char123LocaleChar125AppRouteImport.update({
-  id: '/app',
-  path: '/app',
+  id: "/app",
+  path: "/app",
   getParentRoute: () => Char123LocaleChar125RouteRoute,
-} as any)
+} as any);
 const Char123LocaleChar125AboutRoute =
   Char123LocaleChar125AboutRouteImport.update({
-    id: '/about',
-    path: '/about',
+    id: "/about",
+    path: "/about",
     getParentRoute: () => Char123LocaleChar125RouteRoute,
-  } as any)
+  } as any);
 const DemoTanstackQueryRoute = DemoTanstackQueryRouteImport.update({
-  id: '/demo/tanstack-query',
-  path: '/demo/tanstack-query',
+  id: "/demo/tanstack-query",
+  path: "/demo/tanstack-query",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const DemoStoreRoute = DemoStoreRouteImport.update({
-  id: '/demo/store',
-  path: '/demo/store',
+  id: "/demo/store",
+  path: "/demo/store",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const DemoBetterAuthRoute = DemoBetterAuthRouteImport.update({
-  id: '/demo/better-auth',
-  path: '/demo/better-auth',
+  id: "/demo/better-auth",
+  path: "/demo/better-auth",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const Char123LocaleChar125AppIndexRoute =
   Char123LocaleChar125AppIndexRouteImport.update({
-    id: '/',
-    path: '/',
+    id: "/",
+    path: "/",
     getParentRoute: () => Char123LocaleChar125AppRoute,
-  } as any)
+  } as any);
 const Char123LocaleChar125AppLeaderboardRoute =
   Char123LocaleChar125AppLeaderboardRouteImport.update({
-    id: '/leaderboard',
-    path: '/leaderboard',
+    id: "/leaderboard",
+    path: "/leaderboard",
     getParentRoute: () => Char123LocaleChar125AppRoute,
-  } as any)
+  } as any);
 const Char123LocaleChar125AppFeedRoute =
   Char123LocaleChar125AppFeedRouteImport.update({
-    id: '/feed',
-    path: '/feed',
+    id: "/feed",
+    path: "/feed",
     getParentRoute: () => Char123LocaleChar125AppRoute,
-  } as any)
+  } as any);
 const Char123LocaleChar125AppAdminRoute =
   Char123LocaleChar125AppAdminRouteImport.update({
-    id: '/admin',
-    path: '/admin',
+    id: "/admin",
+    path: "/admin",
     getParentRoute: () => Char123LocaleChar125AppRoute,
-  } as any)
+  } as any);
 const Char123LocaleChar125AuthSignupRoute =
   Char123LocaleChar125AuthSignupRouteImport.update({
-    id: '/_auth/signup',
-    path: '/signup',
+    id: "/_auth/signup",
+    path: "/signup",
     getParentRoute: () => Char123LocaleChar125RouteRoute,
-  } as any)
+  } as any);
 const Char123LocaleChar125AuthResetPasswordRoute =
   Char123LocaleChar125AuthResetPasswordRouteImport.update({
-    id: '/_auth/reset-password',
-    path: '/reset-password',
+    id: "/_auth/reset-password",
+    path: "/reset-password",
     getParentRoute: () => Char123LocaleChar125RouteRoute,
-  } as any)
+  } as any);
 const Char123LocaleChar125AuthLoginRoute =
   Char123LocaleChar125AuthLoginRouteImport.update({
-    id: '/_auth/login',
-    path: '/login',
+    id: "/_auth/login",
+    path: "/login",
     getParentRoute: () => Char123LocaleChar125RouteRoute,
-  } as any)
+  } as any);
 const Char123LocaleChar125AuthForgotPasswordRoute =
   Char123LocaleChar125AuthForgotPasswordRouteImport.update({
-    id: '/_auth/forgot-password',
-    path: '/forgot-password',
+    id: "/_auth/forgot-password",
+    path: "/forgot-password",
     getParentRoute: () => Char123LocaleChar125RouteRoute,
-  } as any)
+  } as any);
 const DemoFormSimpleRoute = DemoFormSimpleRouteImport.update({
-  id: '/demo/form/simple',
-  path: '/demo/form/simple',
+  id: "/demo/form/simple",
+  path: "/demo/form/simple",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const DemoFormAddressRoute = DemoFormAddressRouteImport.update({
-  id: '/demo/form/address',
-  path: '/demo/form/address',
+  id: "/demo/form/address",
+  path: "/demo/form/address",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
-  id: '/api/auth/$',
-  path: '/api/auth/$',
+  id: "/api/auth/$",
+  path: "/api/auth/$",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const Char123LocaleChar125AppAdminUsersRoute =
   Char123LocaleChar125AppAdminUsersRouteImport.update({
-    id: '/users',
-    path: '/users',
+    id: "/users",
+    path: "/users",
     getParentRoute: () => Char123LocaleChar125AppAdminRoute,
-  } as any)
+  } as any);
 
 export interface FileRoutesByFullPath {
-  '/{-$locale}': typeof Char123LocaleChar125RouteRouteWithChildren
-  '/demo/better-auth': typeof DemoBetterAuthRoute
-  '/demo/store': typeof DemoStoreRoute
-  '/demo/tanstack-query': typeof DemoTanstackQueryRoute
-  '/{-$locale}/about': typeof Char123LocaleChar125AboutRoute
-  '/{-$locale}/app': typeof Char123LocaleChar125AppRouteWithChildren
-  '/{-$locale}/': typeof Char123LocaleChar125IndexRoute
-  '/api/auth/$': typeof ApiAuthSplatRoute
-  '/demo/form/address': typeof DemoFormAddressRoute
-  '/demo/form/simple': typeof DemoFormSimpleRoute
-  '/{-$locale}/forgot-password': typeof Char123LocaleChar125AuthForgotPasswordRoute
-  '/{-$locale}/login': typeof Char123LocaleChar125AuthLoginRoute
-  '/{-$locale}/reset-password': typeof Char123LocaleChar125AuthResetPasswordRoute
-  '/{-$locale}/signup': typeof Char123LocaleChar125AuthSignupRoute
-  '/{-$locale}/app/admin': typeof Char123LocaleChar125AppAdminRouteWithChildren
-  '/{-$locale}/app/feed': typeof Char123LocaleChar125AppFeedRoute
-  '/{-$locale}/app/leaderboard': typeof Char123LocaleChar125AppLeaderboardRoute
-  '/{-$locale}/app/': typeof Char123LocaleChar125AppIndexRoute
-  '/{-$locale}/app/admin/users': typeof Char123LocaleChar125AppAdminUsersRoute
+  "/{-$locale}": typeof Char123LocaleChar125RouteRouteWithChildren;
+  "/demo/better-auth": typeof DemoBetterAuthRoute;
+  "/demo/store": typeof DemoStoreRoute;
+  "/demo/tanstack-query": typeof DemoTanstackQueryRoute;
+  "/{-$locale}/about": typeof Char123LocaleChar125AboutRoute;
+  "/{-$locale}/app": typeof Char123LocaleChar125AppRouteWithChildren;
+  "/{-$locale}/": typeof Char123LocaleChar125IndexRoute;
+  "/api/auth/$": typeof ApiAuthSplatRoute;
+  "/demo/form/address": typeof DemoFormAddressRoute;
+  "/demo/form/simple": typeof DemoFormSimpleRoute;
+  "/{-$locale}/forgot-password": typeof Char123LocaleChar125AuthForgotPasswordRoute;
+  "/{-$locale}/login": typeof Char123LocaleChar125AuthLoginRoute;
+  "/{-$locale}/reset-password": typeof Char123LocaleChar125AuthResetPasswordRoute;
+  "/{-$locale}/signup": typeof Char123LocaleChar125AuthSignupRoute;
+  "/{-$locale}/app/admin": typeof Char123LocaleChar125AppAdminRouteWithChildren;
+  "/{-$locale}/app/feed": typeof Char123LocaleChar125AppFeedRoute;
+  "/{-$locale}/app/leaderboard": typeof Char123LocaleChar125AppLeaderboardRoute;
+  "/{-$locale}/app/": typeof Char123LocaleChar125AppIndexRoute;
+  "/{-$locale}/app/admin/users": typeof Char123LocaleChar125AppAdminUsersRoute;
 }
 export interface FileRoutesByTo {
-  '/demo/better-auth': typeof DemoBetterAuthRoute
-  '/demo/store': typeof DemoStoreRoute
-  '/demo/tanstack-query': typeof DemoTanstackQueryRoute
-  '/{-$locale}/about': typeof Char123LocaleChar125AboutRoute
-  '/{-$locale}': typeof Char123LocaleChar125IndexRoute
-  '/api/auth/$': typeof ApiAuthSplatRoute
-  '/demo/form/address': typeof DemoFormAddressRoute
-  '/demo/form/simple': typeof DemoFormSimpleRoute
-  '/{-$locale}/forgot-password': typeof Char123LocaleChar125AuthForgotPasswordRoute
-  '/{-$locale}/login': typeof Char123LocaleChar125AuthLoginRoute
-  '/{-$locale}/reset-password': typeof Char123LocaleChar125AuthResetPasswordRoute
-  '/{-$locale}/signup': typeof Char123LocaleChar125AuthSignupRoute
-  '/{-$locale}/app/admin': typeof Char123LocaleChar125AppAdminRouteWithChildren
-  '/{-$locale}/app/feed': typeof Char123LocaleChar125AppFeedRoute
-  '/{-$locale}/app/leaderboard': typeof Char123LocaleChar125AppLeaderboardRoute
-  '/{-$locale}/app': typeof Char123LocaleChar125AppIndexRoute
-  '/{-$locale}/app/admin/users': typeof Char123LocaleChar125AppAdminUsersRoute
+  "/demo/better-auth": typeof DemoBetterAuthRoute;
+  "/demo/store": typeof DemoStoreRoute;
+  "/demo/tanstack-query": typeof DemoTanstackQueryRoute;
+  "/{-$locale}/about": typeof Char123LocaleChar125AboutRoute;
+  "/{-$locale}": typeof Char123LocaleChar125IndexRoute;
+  "/api/auth/$": typeof ApiAuthSplatRoute;
+  "/demo/form/address": typeof DemoFormAddressRoute;
+  "/demo/form/simple": typeof DemoFormSimpleRoute;
+  "/{-$locale}/forgot-password": typeof Char123LocaleChar125AuthForgotPasswordRoute;
+  "/{-$locale}/login": typeof Char123LocaleChar125AuthLoginRoute;
+  "/{-$locale}/reset-password": typeof Char123LocaleChar125AuthResetPasswordRoute;
+  "/{-$locale}/signup": typeof Char123LocaleChar125AuthSignupRoute;
+  "/{-$locale}/app/admin": typeof Char123LocaleChar125AppAdminRouteWithChildren;
+  "/{-$locale}/app/feed": typeof Char123LocaleChar125AppFeedRoute;
+  "/{-$locale}/app/leaderboard": typeof Char123LocaleChar125AppLeaderboardRoute;
+  "/{-$locale}/app": typeof Char123LocaleChar125AppIndexRoute;
+  "/{-$locale}/app/admin/users": typeof Char123LocaleChar125AppAdminUsersRoute;
 }
 export interface FileRoutesById {
-  __root__: typeof rootRouteImport
-  '/{-$locale}': typeof Char123LocaleChar125RouteRouteWithChildren
-  '/demo/better-auth': typeof DemoBetterAuthRoute
-  '/demo/store': typeof DemoStoreRoute
-  '/demo/tanstack-query': typeof DemoTanstackQueryRoute
-  '/{-$locale}/about': typeof Char123LocaleChar125AboutRoute
-  '/{-$locale}/app': typeof Char123LocaleChar125AppRouteWithChildren
-  '/{-$locale}/': typeof Char123LocaleChar125IndexRoute
-  '/api/auth/$': typeof ApiAuthSplatRoute
-  '/demo/form/address': typeof DemoFormAddressRoute
-  '/demo/form/simple': typeof DemoFormSimpleRoute
-  '/{-$locale}/_auth/forgot-password': typeof Char123LocaleChar125AuthForgotPasswordRoute
-  '/{-$locale}/_auth/login': typeof Char123LocaleChar125AuthLoginRoute
-  '/{-$locale}/_auth/reset-password': typeof Char123LocaleChar125AuthResetPasswordRoute
-  '/{-$locale}/_auth/signup': typeof Char123LocaleChar125AuthSignupRoute
-  '/{-$locale}/app/admin': typeof Char123LocaleChar125AppAdminRouteWithChildren
-  '/{-$locale}/app/feed': typeof Char123LocaleChar125AppFeedRoute
-  '/{-$locale}/app/leaderboard': typeof Char123LocaleChar125AppLeaderboardRoute
-  '/{-$locale}/app/': typeof Char123LocaleChar125AppIndexRoute
-  '/{-$locale}/app/admin/users': typeof Char123LocaleChar125AppAdminUsersRoute
+  __root__: typeof rootRouteImport;
+  "/{-$locale}": typeof Char123LocaleChar125RouteRouteWithChildren;
+  "/demo/better-auth": typeof DemoBetterAuthRoute;
+  "/demo/store": typeof DemoStoreRoute;
+  "/demo/tanstack-query": typeof DemoTanstackQueryRoute;
+  "/{-$locale}/about": typeof Char123LocaleChar125AboutRoute;
+  "/{-$locale}/app": typeof Char123LocaleChar125AppRouteWithChildren;
+  "/{-$locale}/": typeof Char123LocaleChar125IndexRoute;
+  "/api/auth/$": typeof ApiAuthSplatRoute;
+  "/demo/form/address": typeof DemoFormAddressRoute;
+  "/demo/form/simple": typeof DemoFormSimpleRoute;
+  "/{-$locale}/_auth/forgot-password": typeof Char123LocaleChar125AuthForgotPasswordRoute;
+  "/{-$locale}/_auth/login": typeof Char123LocaleChar125AuthLoginRoute;
+  "/{-$locale}/_auth/reset-password": typeof Char123LocaleChar125AuthResetPasswordRoute;
+  "/{-$locale}/_auth/signup": typeof Char123LocaleChar125AuthSignupRoute;
+  "/{-$locale}/app/admin": typeof Char123LocaleChar125AppAdminRouteWithChildren;
+  "/{-$locale}/app/feed": typeof Char123LocaleChar125AppFeedRoute;
+  "/{-$locale}/app/leaderboard": typeof Char123LocaleChar125AppLeaderboardRoute;
+  "/{-$locale}/app/": typeof Char123LocaleChar125AppIndexRoute;
+  "/{-$locale}/app/admin/users": typeof Char123LocaleChar125AppAdminUsersRoute;
 }
 export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath
+  fileRoutesByFullPath: FileRoutesByFullPath;
   fullPaths:
-    | '/{-$locale}'
-    | '/demo/better-auth'
-    | '/demo/store'
-    | '/demo/tanstack-query'
-    | '/{-$locale}/about'
-    | '/{-$locale}/app'
-    | '/{-$locale}/'
-    | '/api/auth/$'
-    | '/demo/form/address'
-    | '/demo/form/simple'
-    | '/{-$locale}/forgot-password'
-    | '/{-$locale}/login'
-    | '/{-$locale}/reset-password'
-    | '/{-$locale}/signup'
-    | '/{-$locale}/app/admin'
-    | '/{-$locale}/app/feed'
-    | '/{-$locale}/app/leaderboard'
-    | '/{-$locale}/app/'
-    | '/{-$locale}/app/admin/users'
-  fileRoutesByTo: FileRoutesByTo
+    | "/{-$locale}"
+    | "/demo/better-auth"
+    | "/demo/store"
+    | "/demo/tanstack-query"
+    | "/{-$locale}/about"
+    | "/{-$locale}/app"
+    | "/{-$locale}/"
+    | "/api/auth/$"
+    | "/demo/form/address"
+    | "/demo/form/simple"
+    | "/{-$locale}/forgot-password"
+    | "/{-$locale}/login"
+    | "/{-$locale}/reset-password"
+    | "/{-$locale}/signup"
+    | "/{-$locale}/app/admin"
+    | "/{-$locale}/app/feed"
+    | "/{-$locale}/app/leaderboard"
+    | "/{-$locale}/app/"
+    | "/{-$locale}/app/admin/users";
+  fileRoutesByTo: FileRoutesByTo;
   to:
-    | '/demo/better-auth'
-    | '/demo/store'
-    | '/demo/tanstack-query'
-    | '/{-$locale}/about'
-    | '/{-$locale}'
-    | '/api/auth/$'
-    | '/demo/form/address'
-    | '/demo/form/simple'
-    | '/{-$locale}/forgot-password'
-    | '/{-$locale}/login'
-    | '/{-$locale}/reset-password'
-    | '/{-$locale}/signup'
-    | '/{-$locale}/app/admin'
-    | '/{-$locale}/app/feed'
-    | '/{-$locale}/app/leaderboard'
-    | '/{-$locale}/app'
-    | '/{-$locale}/app/admin/users'
+    | "/demo/better-auth"
+    | "/demo/store"
+    | "/demo/tanstack-query"
+    | "/{-$locale}/about"
+    | "/{-$locale}"
+    | "/api/auth/$"
+    | "/demo/form/address"
+    | "/demo/form/simple"
+    | "/{-$locale}/forgot-password"
+    | "/{-$locale}/login"
+    | "/{-$locale}/reset-password"
+    | "/{-$locale}/signup"
+    | "/{-$locale}/app/admin"
+    | "/{-$locale}/app/feed"
+    | "/{-$locale}/app/leaderboard"
+    | "/{-$locale}/app"
+    | "/{-$locale}/app/admin/users";
   id:
-    | '__root__'
-    | '/{-$locale}'
-    | '/demo/better-auth'
-    | '/demo/store'
-    | '/demo/tanstack-query'
-    | '/{-$locale}/about'
-    | '/{-$locale}/app'
-    | '/{-$locale}/'
-    | '/api/auth/$'
-    | '/demo/form/address'
-    | '/demo/form/simple'
-    | '/{-$locale}/_auth/forgot-password'
-    | '/{-$locale}/_auth/login'
-    | '/{-$locale}/_auth/reset-password'
-    | '/{-$locale}/_auth/signup'
-    | '/{-$locale}/app/admin'
-    | '/{-$locale}/app/feed'
-    | '/{-$locale}/app/leaderboard'
-    | '/{-$locale}/app/'
-    | '/{-$locale}/app/admin/users'
-  fileRoutesById: FileRoutesById
+    | "__root__"
+    | "/{-$locale}"
+    | "/demo/better-auth"
+    | "/demo/store"
+    | "/demo/tanstack-query"
+    | "/{-$locale}/about"
+    | "/{-$locale}/app"
+    | "/{-$locale}/"
+    | "/api/auth/$"
+    | "/demo/form/address"
+    | "/demo/form/simple"
+    | "/{-$locale}/_auth/forgot-password"
+    | "/{-$locale}/_auth/login"
+    | "/{-$locale}/_auth/reset-password"
+    | "/{-$locale}/_auth/signup"
+    | "/{-$locale}/app/admin"
+    | "/{-$locale}/app/feed"
+    | "/{-$locale}/app/leaderboard"
+    | "/{-$locale}/app/"
+    | "/{-$locale}/app/admin/users";
+  fileRoutesById: FileRoutesById;
 }
 export interface RootRouteChildren {
-  Char123LocaleChar125RouteRoute: typeof Char123LocaleChar125RouteRouteWithChildren
-  DemoBetterAuthRoute: typeof DemoBetterAuthRoute
-  DemoStoreRoute: typeof DemoStoreRoute
-  DemoTanstackQueryRoute: typeof DemoTanstackQueryRoute
-  ApiAuthSplatRoute: typeof ApiAuthSplatRoute
-  DemoFormAddressRoute: typeof DemoFormAddressRoute
-  DemoFormSimpleRoute: typeof DemoFormSimpleRoute
+  Char123LocaleChar125RouteRoute: typeof Char123LocaleChar125RouteRouteWithChildren;
+  DemoBetterAuthRoute: typeof DemoBetterAuthRoute;
+  DemoStoreRoute: typeof DemoStoreRoute;
+  DemoTanstackQueryRoute: typeof DemoTanstackQueryRoute;
+  ApiAuthSplatRoute: typeof ApiAuthSplatRoute;
+  DemoFormAddressRoute: typeof DemoFormAddressRoute;
+  DemoFormSimpleRoute: typeof DemoFormSimpleRoute;
 }
 
-declare module '@tanstack/react-router' {
+declare module "@tanstack/react-router" {
   interface FileRoutesByPath {
-    '/{-$locale}': {
-      id: '/{-$locale}'
-      path: '/{-$locale}'
-      fullPath: '/{-$locale}'
-      preLoaderRoute: typeof Char123LocaleChar125RouteRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/{-$locale}/': {
-      id: '/{-$locale}/'
-      path: '/'
-      fullPath: '/{-$locale}/'
-      preLoaderRoute: typeof Char123LocaleChar125IndexRouteImport
-      parentRoute: typeof Char123LocaleChar125RouteRoute
-    }
-    '/{-$locale}/app': {
-      id: '/{-$locale}/app'
-      path: '/app'
-      fullPath: '/{-$locale}/app'
-      preLoaderRoute: typeof Char123LocaleChar125AppRouteImport
-      parentRoute: typeof Char123LocaleChar125RouteRoute
-    }
-    '/{-$locale}/about': {
-      id: '/{-$locale}/about'
-      path: '/about'
-      fullPath: '/{-$locale}/about'
-      preLoaderRoute: typeof Char123LocaleChar125AboutRouteImport
-      parentRoute: typeof Char123LocaleChar125RouteRoute
-    }
-    '/demo/tanstack-query': {
-      id: '/demo/tanstack-query'
-      path: '/demo/tanstack-query'
-      fullPath: '/demo/tanstack-query'
-      preLoaderRoute: typeof DemoTanstackQueryRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/demo/store': {
-      id: '/demo/store'
-      path: '/demo/store'
-      fullPath: '/demo/store'
-      preLoaderRoute: typeof DemoStoreRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/demo/better-auth': {
-      id: '/demo/better-auth'
-      path: '/demo/better-auth'
-      fullPath: '/demo/better-auth'
-      preLoaderRoute: typeof DemoBetterAuthRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/{-$locale}/app/': {
-      id: '/{-$locale}/app/'
-      path: '/'
-      fullPath: '/{-$locale}/app/'
-      preLoaderRoute: typeof Char123LocaleChar125AppIndexRouteImport
-      parentRoute: typeof Char123LocaleChar125AppRoute
-    }
-    '/{-$locale}/app/leaderboard': {
-      id: '/{-$locale}/app/leaderboard'
-      path: '/leaderboard'
-      fullPath: '/{-$locale}/app/leaderboard'
-      preLoaderRoute: typeof Char123LocaleChar125AppLeaderboardRouteImport
-      parentRoute: typeof Char123LocaleChar125AppRoute
-    }
-    '/{-$locale}/app/feed': {
-      id: '/{-$locale}/app/feed'
-      path: '/feed'
-      fullPath: '/{-$locale}/app/feed'
-      preLoaderRoute: typeof Char123LocaleChar125AppFeedRouteImport
-      parentRoute: typeof Char123LocaleChar125AppRoute
-    }
-    '/{-$locale}/app/admin': {
-      id: '/{-$locale}/app/admin'
-      path: '/admin'
-      fullPath: '/{-$locale}/app/admin'
-      preLoaderRoute: typeof Char123LocaleChar125AppAdminRouteImport
-      parentRoute: typeof Char123LocaleChar125AppRoute
-    }
-    '/{-$locale}/_auth/signup': {
-      id: '/{-$locale}/_auth/signup'
-      path: '/signup'
-      fullPath: '/{-$locale}/signup'
-      preLoaderRoute: typeof Char123LocaleChar125AuthSignupRouteImport
-      parentRoute: typeof Char123LocaleChar125RouteRoute
-    }
-    '/{-$locale}/_auth/reset-password': {
-      id: '/{-$locale}/_auth/reset-password'
-      path: '/reset-password'
-      fullPath: '/{-$locale}/reset-password'
-      preLoaderRoute: typeof Char123LocaleChar125AuthResetPasswordRouteImport
-      parentRoute: typeof Char123LocaleChar125RouteRoute
-    }
-    '/{-$locale}/_auth/login': {
-      id: '/{-$locale}/_auth/login'
-      path: '/login'
-      fullPath: '/{-$locale}/login'
-      preLoaderRoute: typeof Char123LocaleChar125AuthLoginRouteImport
-      parentRoute: typeof Char123LocaleChar125RouteRoute
-    }
-    '/{-$locale}/_auth/forgot-password': {
-      id: '/{-$locale}/_auth/forgot-password'
-      path: '/forgot-password'
-      fullPath: '/{-$locale}/forgot-password'
-      preLoaderRoute: typeof Char123LocaleChar125AuthForgotPasswordRouteImport
-      parentRoute: typeof Char123LocaleChar125RouteRoute
-    }
-    '/demo/form/simple': {
-      id: '/demo/form/simple'
-      path: '/demo/form/simple'
-      fullPath: '/demo/form/simple'
-      preLoaderRoute: typeof DemoFormSimpleRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/demo/form/address': {
-      id: '/demo/form/address'
-      path: '/demo/form/address'
-      fullPath: '/demo/form/address'
-      preLoaderRoute: typeof DemoFormAddressRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/auth/$': {
-      id: '/api/auth/$'
-      path: '/api/auth/$'
-      fullPath: '/api/auth/$'
-      preLoaderRoute: typeof ApiAuthSplatRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/{-$locale}/app/admin/users': {
-      id: '/{-$locale}/app/admin/users'
-      path: '/users'
-      fullPath: '/{-$locale}/app/admin/users'
-      preLoaderRoute: typeof Char123LocaleChar125AppAdminUsersRouteImport
-      parentRoute: typeof Char123LocaleChar125AppAdminRoute
-    }
+    "/{-$locale}": {
+      id: "/{-$locale}";
+      path: "/{-$locale}";
+      fullPath: "/{-$locale}";
+      preLoaderRoute: typeof Char123LocaleChar125RouteRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/{-$locale}/": {
+      id: "/{-$locale}/";
+      path: "/";
+      fullPath: "/{-$locale}/";
+      preLoaderRoute: typeof Char123LocaleChar125IndexRouteImport;
+      parentRoute: typeof Char123LocaleChar125RouteRoute;
+    };
+    "/{-$locale}/app": {
+      id: "/{-$locale}/app";
+      path: "/app";
+      fullPath: "/{-$locale}/app";
+      preLoaderRoute: typeof Char123LocaleChar125AppRouteImport;
+      parentRoute: typeof Char123LocaleChar125RouteRoute;
+    };
+    "/{-$locale}/about": {
+      id: "/{-$locale}/about";
+      path: "/about";
+      fullPath: "/{-$locale}/about";
+      preLoaderRoute: typeof Char123LocaleChar125AboutRouteImport;
+      parentRoute: typeof Char123LocaleChar125RouteRoute;
+    };
+    "/demo/tanstack-query": {
+      id: "/demo/tanstack-query";
+      path: "/demo/tanstack-query";
+      fullPath: "/demo/tanstack-query";
+      preLoaderRoute: typeof DemoTanstackQueryRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/demo/store": {
+      id: "/demo/store";
+      path: "/demo/store";
+      fullPath: "/demo/store";
+      preLoaderRoute: typeof DemoStoreRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/demo/better-auth": {
+      id: "/demo/better-auth";
+      path: "/demo/better-auth";
+      fullPath: "/demo/better-auth";
+      preLoaderRoute: typeof DemoBetterAuthRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/{-$locale}/app/": {
+      id: "/{-$locale}/app/";
+      path: "/";
+      fullPath: "/{-$locale}/app/";
+      preLoaderRoute: typeof Char123LocaleChar125AppIndexRouteImport;
+      parentRoute: typeof Char123LocaleChar125AppRoute;
+    };
+    "/{-$locale}/app/leaderboard": {
+      id: "/{-$locale}/app/leaderboard";
+      path: "/leaderboard";
+      fullPath: "/{-$locale}/app/leaderboard";
+      preLoaderRoute: typeof Char123LocaleChar125AppLeaderboardRouteImport;
+      parentRoute: typeof Char123LocaleChar125AppRoute;
+    };
+    "/{-$locale}/app/feed": {
+      id: "/{-$locale}/app/feed";
+      path: "/feed";
+      fullPath: "/{-$locale}/app/feed";
+      preLoaderRoute: typeof Char123LocaleChar125AppFeedRouteImport;
+      parentRoute: typeof Char123LocaleChar125AppRoute;
+    };
+    "/{-$locale}/app/admin": {
+      id: "/{-$locale}/app/admin";
+      path: "/admin";
+      fullPath: "/{-$locale}/app/admin";
+      preLoaderRoute: typeof Char123LocaleChar125AppAdminRouteImport;
+      parentRoute: typeof Char123LocaleChar125AppRoute;
+    };
+    "/{-$locale}/_auth/signup": {
+      id: "/{-$locale}/_auth/signup";
+      path: "/signup";
+      fullPath: "/{-$locale}/signup";
+      preLoaderRoute: typeof Char123LocaleChar125AuthSignupRouteImport;
+      parentRoute: typeof Char123LocaleChar125RouteRoute;
+    };
+    "/{-$locale}/_auth/reset-password": {
+      id: "/{-$locale}/_auth/reset-password";
+      path: "/reset-password";
+      fullPath: "/{-$locale}/reset-password";
+      preLoaderRoute: typeof Char123LocaleChar125AuthResetPasswordRouteImport;
+      parentRoute: typeof Char123LocaleChar125RouteRoute;
+    };
+    "/{-$locale}/_auth/login": {
+      id: "/{-$locale}/_auth/login";
+      path: "/login";
+      fullPath: "/{-$locale}/login";
+      preLoaderRoute: typeof Char123LocaleChar125AuthLoginRouteImport;
+      parentRoute: typeof Char123LocaleChar125RouteRoute;
+    };
+    "/{-$locale}/_auth/forgot-password": {
+      id: "/{-$locale}/_auth/forgot-password";
+      path: "/forgot-password";
+      fullPath: "/{-$locale}/forgot-password";
+      preLoaderRoute: typeof Char123LocaleChar125AuthForgotPasswordRouteImport;
+      parentRoute: typeof Char123LocaleChar125RouteRoute;
+    };
+    "/demo/form/simple": {
+      id: "/demo/form/simple";
+      path: "/demo/form/simple";
+      fullPath: "/demo/form/simple";
+      preLoaderRoute: typeof DemoFormSimpleRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/demo/form/address": {
+      id: "/demo/form/address";
+      path: "/demo/form/address";
+      fullPath: "/demo/form/address";
+      preLoaderRoute: typeof DemoFormAddressRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/api/auth/$": {
+      id: "/api/auth/$";
+      path: "/api/auth/$";
+      fullPath: "/api/auth/$";
+      preLoaderRoute: typeof ApiAuthSplatRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/{-$locale}/app/admin/users": {
+      id: "/{-$locale}/app/admin/users";
+      path: "/users";
+      fullPath: "/{-$locale}/app/admin/users";
+      preLoaderRoute: typeof Char123LocaleChar125AppAdminUsersRouteImport;
+      parentRoute: typeof Char123LocaleChar125AppAdminRoute;
+    };
   }
 }
 
 interface Char123LocaleChar125AppAdminRouteChildren {
-  Char123LocaleChar125AppAdminUsersRoute: typeof Char123LocaleChar125AppAdminUsersRoute
+  Char123LocaleChar125AppAdminUsersRoute: typeof Char123LocaleChar125AppAdminUsersRoute;
 }
 
 const Char123LocaleChar125AppAdminRouteChildren: Char123LocaleChar125AppAdminRouteChildren =
   {
     Char123LocaleChar125AppAdminUsersRoute:
       Char123LocaleChar125AppAdminUsersRoute,
-  }
+  };
 
 const Char123LocaleChar125AppAdminRouteWithChildren =
   Char123LocaleChar125AppAdminRoute._addFileChildren(
     Char123LocaleChar125AppAdminRouteChildren,
-  )
+  );
 
 interface Char123LocaleChar125AppRouteChildren {
-  Char123LocaleChar125AppAdminRoute: typeof Char123LocaleChar125AppAdminRouteWithChildren
-  Char123LocaleChar125AppFeedRoute: typeof Char123LocaleChar125AppFeedRoute
-  Char123LocaleChar125AppLeaderboardRoute: typeof Char123LocaleChar125AppLeaderboardRoute
-  Char123LocaleChar125AppIndexRoute: typeof Char123LocaleChar125AppIndexRoute
+  Char123LocaleChar125AppAdminRoute: typeof Char123LocaleChar125AppAdminRouteWithChildren;
+  Char123LocaleChar125AppFeedRoute: typeof Char123LocaleChar125AppFeedRoute;
+  Char123LocaleChar125AppLeaderboardRoute: typeof Char123LocaleChar125AppLeaderboardRoute;
+  Char123LocaleChar125AppIndexRoute: typeof Char123LocaleChar125AppIndexRoute;
 }
 
 const Char123LocaleChar125AppRouteChildren: Char123LocaleChar125AppRouteChildren =
@@ -441,21 +441,21 @@ const Char123LocaleChar125AppRouteChildren: Char123LocaleChar125AppRouteChildren
     Char123LocaleChar125AppLeaderboardRoute:
       Char123LocaleChar125AppLeaderboardRoute,
     Char123LocaleChar125AppIndexRoute: Char123LocaleChar125AppIndexRoute,
-  }
+  };
 
 const Char123LocaleChar125AppRouteWithChildren =
   Char123LocaleChar125AppRoute._addFileChildren(
     Char123LocaleChar125AppRouteChildren,
-  )
+  );
 
 interface Char123LocaleChar125RouteRouteChildren {
-  Char123LocaleChar125AboutRoute: typeof Char123LocaleChar125AboutRoute
-  Char123LocaleChar125AppRoute: typeof Char123LocaleChar125AppRouteWithChildren
-  Char123LocaleChar125IndexRoute: typeof Char123LocaleChar125IndexRoute
-  Char123LocaleChar125AuthForgotPasswordRoute: typeof Char123LocaleChar125AuthForgotPasswordRoute
-  Char123LocaleChar125AuthLoginRoute: typeof Char123LocaleChar125AuthLoginRoute
-  Char123LocaleChar125AuthResetPasswordRoute: typeof Char123LocaleChar125AuthResetPasswordRoute
-  Char123LocaleChar125AuthSignupRoute: typeof Char123LocaleChar125AuthSignupRoute
+  Char123LocaleChar125AboutRoute: typeof Char123LocaleChar125AboutRoute;
+  Char123LocaleChar125AppRoute: typeof Char123LocaleChar125AppRouteWithChildren;
+  Char123LocaleChar125IndexRoute: typeof Char123LocaleChar125IndexRoute;
+  Char123LocaleChar125AuthForgotPasswordRoute: typeof Char123LocaleChar125AuthForgotPasswordRoute;
+  Char123LocaleChar125AuthLoginRoute: typeof Char123LocaleChar125AuthLoginRoute;
+  Char123LocaleChar125AuthResetPasswordRoute: typeof Char123LocaleChar125AuthResetPasswordRoute;
+  Char123LocaleChar125AuthSignupRoute: typeof Char123LocaleChar125AuthSignupRoute;
 }
 
 const Char123LocaleChar125RouteRouteChildren: Char123LocaleChar125RouteRouteChildren =
@@ -469,12 +469,12 @@ const Char123LocaleChar125RouteRouteChildren: Char123LocaleChar125RouteRouteChil
     Char123LocaleChar125AuthResetPasswordRoute:
       Char123LocaleChar125AuthResetPasswordRoute,
     Char123LocaleChar125AuthSignupRoute: Char123LocaleChar125AuthSignupRoute,
-  }
+  };
 
 const Char123LocaleChar125RouteRouteWithChildren =
   Char123LocaleChar125RouteRoute._addFileChildren(
     Char123LocaleChar125RouteRouteChildren,
-  )
+  );
 
 const rootRouteChildren: RootRouteChildren = {
   Char123LocaleChar125RouteRoute: Char123LocaleChar125RouteRouteWithChildren,
@@ -484,16 +484,16 @@ const rootRouteChildren: RootRouteChildren = {
   ApiAuthSplatRoute: ApiAuthSplatRoute,
   DemoFormAddressRoute: DemoFormAddressRoute,
   DemoFormSimpleRoute: DemoFormSimpleRoute,
-}
+};
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
-  ._addFileTypes<FileRouteTypes>()
+  ._addFileTypes<FileRouteTypes>();
 
-import type { getRouter } from './router.tsx'
-import type { createStart } from '@tanstack/react-start'
-declare module '@tanstack/react-start' {
+import type { getRouter } from "./router.tsx";
+import type { createStart } from "@tanstack/react-start";
+declare module "@tanstack/react-start" {
   interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
+    ssr: true;
+    router: Awaited<ReturnType<typeof getRouter>>;
   }
 }

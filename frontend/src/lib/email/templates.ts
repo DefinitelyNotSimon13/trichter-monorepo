@@ -8,7 +8,7 @@ const BRAND_COLOR = "#0f172a"; // slate-900 – matches the app's primary
 const BUTTON_COLOR = "#6366f1"; // indigo-500 – primary action colour
 
 function emailBase(content: string): string {
-	return `<!DOCTYPE html>
+  return `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -51,7 +51,7 @@ function emailBase(content: string): string {
 }
 
 function ctaButton(label: string, url: string): string {
-	return `<table role="presentation" cellpadding="0" cellspacing="0" style="margin:28px auto 0;">
+  return `<table role="presentation" cellpadding="0" cellspacing="0" style="margin:28px auto 0;">
     <tr>
       <td align="center" style="border-radius:8px;background-color:${BUTTON_COLOR};">
         <a href="${url}" target="_blank"
@@ -64,13 +64,13 @@ function ctaButton(label: string, url: string): string {
 }
 
 function fallbackLink(url: string): string {
-	return `<p style="margin:20px 0 0;font-size:12px;color:#94a3b8;word-break:break-all;">
+  return `<p style="margin:20px 0 0;font-size:12px;color:#94a3b8;word-break:break-all;">
     Or copy this link: <a href="${url}" style="color:#6366f1;">${url}</a>
   </p>`;
 }
 
 export function verificationEmailHtml(url: string): string {
-	const content = `
+  const content = `
     <h1 style="margin:0 0 8px;font-size:20px;font-weight:700;color:${BRAND_COLOR};letter-spacing:-0.02em;">
       Verify your email
     </h1>
@@ -83,11 +83,11 @@ export function verificationEmailHtml(url: string): string {
       If you didn't create an account with ${APP_NAME}, you can safely ignore this email.
     </p>`;
 
-	return emailBase(content);
+  return emailBase(content);
 }
 
 export function passwordResetEmailHtml(url: string): string {
-	const content = `
+  const content = `
     <h1 style="margin:0 0 8px;font-size:20px;font-weight:700;color:${BRAND_COLOR};letter-spacing:-0.02em;">
       Reset your password
     </h1>
@@ -102,5 +102,5 @@ export function passwordResetEmailHtml(url: string): string {
       Your password will not be changed.
     </p>`;
 
-	return emailBase(content);
+  return emailBase(content);
 }
