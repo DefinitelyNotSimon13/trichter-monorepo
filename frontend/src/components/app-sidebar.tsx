@@ -1,5 +1,12 @@
-import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
-import { CircleUser, LogIn, LogOut, Rss, Trophy } from "lucide-react";
+import { useNavigate, useRouterState } from "@tanstack/react-router";
+import {
+  CircleUser,
+  LogIn,
+  LogOut,
+  Rss,
+  Settings2,
+  Trophy,
+} from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -10,9 +17,9 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "#/components/ui/sidebar";
-import { useRouteLocale } from "#/hooks/use-route-locale";
 import { useTheme } from "#/hooks/use-theme";
 import { authClient } from "#/lib/auth-client";
+import { LocalizedLink } from "./localized-link";
 
 const navItems = [
   {
@@ -27,21 +34,22 @@ const navItems = [
     icon: Trophy,
     label: "Leaderboard",
   },
+  {
+    to: "/{-$locale}/app/settings" as const,
+    activePath: "/app/settings",
+    icon: Settings2,
+    label: "Settings",
+  },
 ];
 
-function SidebarLogo(props: { locale: string | undefined }) {
+function SidebarLogo() {
   const { state } = useSidebar();
-  const { locale } = props;
 
   return (
     <SidebarHeader className="border-b px-4 py-4">
-      <Link
-        to="/{-$locale}"
-        params={{ locale }}
-        className="font-black tracking-tight text-foreground"
-      >
+      <LocalizedLink className="font-black tracking-tight text-foreground">
         {state === "collapsed" ? "T" : "Trichter"}
-      </Link>
+      </LocalizedLink>
     </SidebarHeader>
   );
 }
@@ -65,7 +73,7 @@ function SidebarThemeButton() {
   );
 }
 
-function SidebarUserSection(props: { locale: string | undefined }) {
+function SidebarUserSection() {
   const navigate = useNavigate();
   const { state } = useSidebar();
   const { data: session, isPending } = authClient.useSession();
@@ -77,7 +85,6 @@ function SidebarUserSection(props: { locale: string | undefined }) {
     await authClient.signOut();
     await navigate({
       to: "/{-$locale}",
-      params: { locale: props.locale },
       replace: true,
     });
   };
@@ -109,16 +116,12 @@ function SidebarUserSection(props: { locale: string | undefined }) {
             tooltip="Log In"
             className="h-auto min-h-11"
           >
-            <Link
-              to="/{-$locale}/login"
-              params={{ locale: props.locale }}
-              viewTransition
-            >
+            <LocalizedLink to="/login" viewTransition>
               <LogIn />
               <span className="leading-[normal] truncate group-data-[collapsible=icon]:hidden">
                 {state === "collapsed" ? "Log In" : "Log In"}
               </span>
-            </Link>
+            </LocalizedLink>
           </SidebarMenuButton>
         </SidebarMenuItem>
         <SidebarMenuItem>
@@ -136,16 +139,12 @@ function SidebarUserSection(props: { locale: string | undefined }) {
           tooltip={profileLabel}
           className="h-auto min-h-11"
         >
-          <Link
-            to="/{-$locale}/app/profile"
-            params={{ locale: props.locale }}
-            viewTransition
-          >
+          <LocalizedLink to="/app/profile" viewTransition>
             <CircleUser />
             <span className="truncate group-data-[collapsible=icon]:hidden">
               {state === "collapsed" ? "Profile" : profileLabel}
             </span>
-          </Link>
+          </LocalizedLink>
         </SidebarMenuButton>
       </SidebarMenuItem>
 
@@ -169,11 +168,10 @@ function SidebarUserSection(props: { locale: string | undefined }) {
 
 export function AppSidebar() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
-  const locale = useRouteLocale();
 
   return (
     <Sidebar collapsible="icon">
-      <SidebarLogo locale={locale} />
+      <SidebarLogo />
 
       <SidebarContent className="justify-center">
         <SidebarMenu className="px-2">
@@ -184,12 +182,12 @@ export function AppSidebar() {
                 isActive={pathname.startsWith(activePath)}
                 tooltip={label}
               >
-                <Link to={to} params={{ locale }} viewTransition>
+                <LocalizedLink to={to} viewTransition>
                   <Icon />
                   <span className="truncate group-data-[collapsible=icon]:hidden">
                     {label}
                   </span>
-                </Link>
+                </LocalizedLink>
               </SidebarMenuButton>
             </SidebarMenuItem>
           ))}
@@ -198,7 +196,7 @@ export function AppSidebar() {
 
       <SidebarFooter className="border-t">
         <SidebarMenu>
-          <SidebarUserSection locale={locale} />
+          <SidebarUserSection />
         </SidebarMenu>
       </SidebarFooter>
     </Sidebar>

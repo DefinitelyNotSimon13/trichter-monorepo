@@ -2,7 +2,8 @@
   "appName": "Trichter",
   "actions": {
     "openFeed": "Open feed",
-    "viewLeaderboard": "View leaderboard"
+    "viewLeaderboard": "View leaderboard",
+    "getStarted": "Get Started"
   },
   "auth": {
     "signIn": "Sign In"

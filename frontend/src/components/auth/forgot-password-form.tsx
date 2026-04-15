@@ -1,23 +1,20 @@
-import { Turnstile } from "@marsidev/react-turnstile";
-import { Link } from "@tanstack/react-router";
 import { Field, FieldDescription, FieldGroup } from "#/components/ui/field";
-import { clientEnv } from "#/env/client";
 import { useAppForm } from "#/hooks/form";
 import { useFormMessages } from "#/hooks/use-form-error";
 import { useTurnstile } from "#/hooks/use-turnstile";
 import { authClient } from "#/lib/auth-client";
-import type { LocaleProps } from "#/lib/utils";
 import { emailValidator } from "#/lib/validators";
 import { AuthCard } from "./auth-card";
+import { TurnstileWidget } from "./turnstile-widget";
+import { LocalizedLink } from "../localized-link";
 
 type ForgotPasswordFormValues = {
   email: string;
 };
 
-type ForgotPasswordFormProps = React.ComponentProps<"div"> & LocaleProps;
+type ForgotPasswordFormProps = React.ComponentProps<"div">;
 
 export function ForgotPasswordForm({
-  locale,
   className,
   ...props
 }: ForgotPasswordFormProps) {
@@ -41,7 +38,7 @@ export function ForgotPasswordForm({
 
       const result = await authClient.requestPasswordReset({
         email: value.email.trim(),
-        redirectTo: `${window.location.origin}/${locale}/reset-password`,
+        redirectTo: `${window.location.origin}/reset-password`,
         fetchOptions,
       });
 
@@ -64,13 +61,9 @@ export function ForgotPasswordForm({
       footer={
         <>
           Remembered it?{" "}
-          <Link
-            to="/{-$locale}/login"
-            params={{ locale }}
-            className="underline underline-offset-4"
-          >
+          <LocalizedLink to="/login" className="underline underline-offset-4">
             Back to login
-          </Link>
+          </LocalizedLink>
         </>
       }
       {...props}
@@ -94,12 +87,10 @@ export function ForgotPasswordForm({
             )}
           </form.AppField>
 
-          <div className="flex w-full justify-center">
-            <Turnstile
-              ref={turnstileRef}
-              siteKey={clientEnv.VITE_TURNSTYLE_SITE_KEY}
-            />
-          </div>
+          <TurnstileWidget
+            ref={turnstileRef}
+            className="flex w-full justify-center"
+          />
 
           {formError ? (
             <Field>

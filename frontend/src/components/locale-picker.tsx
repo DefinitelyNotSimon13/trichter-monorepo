@@ -1,5 +1,5 @@
+import { persistLocale } from "#/lib/i18n/locale";
 import { useNavigate, useParams } from "@tanstack/react-router";
-import { persistLocale } from "#/lib/i18n/detect-locale";
 
 export function LocalePicker() {
   const navigate = useNavigate();

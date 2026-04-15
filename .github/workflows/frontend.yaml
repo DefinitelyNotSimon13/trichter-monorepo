@@ -5,7 +5,7 @@ on:
     branches: [main]
     paths:
       - "frontend/**"
-      - ".github/workflows/frontend-image.yml"
+      - ".github/workflows/frontend.yaml"
       - "Justfile"
   workflow_dispatch:
 
@@ -43,12 +43,18 @@ jobs:
           VITE_GOOGLE_CLIENT_ID: ${{ vars.VITE_GOOGLE_CLIENT_ID }}
         run: bun run build
 
+      - name: Verify build output
+        run: |
+          ls -la
+          test -d .output
+          find .output -maxdepth 2 -type f | head -50
+
       - name: Upload frontend artifact
         uses: actions/upload-artifact@v4
         with:
           name: frontend-output
           path: |
-            frontend/.output
+            frontend/.output/**
             frontend/package.json
           include-hidden-files: true
           if-no-files-found: error
@@ -66,6 +72,11 @@ jobs:
         with:
           name: frontend-output
           path: frontend
+
+      - name: Verify downloaded files
+        run: |
+          ls -la frontend
+          find frontend/.output -maxdepth 2 -type f | head -50
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3

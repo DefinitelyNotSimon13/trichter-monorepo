@@ -1,24 +1,19 @@
-import { Turnstile } from "@marsidev/react-turnstile";
-import { Link } from "@tanstack/react-router";
+import { useRouter } from "@tanstack/react-router";
 import {
   Field,
   FieldDescription,
   FieldGroup,
   FieldSeparator,
 } from "#/components/ui/field";
-import { clientEnv } from "#/env/client";
 import { useAppForm } from "#/hooks/form";
 import { useFormError } from "#/hooks/use-form-error";
 import { useTurnstile } from "#/hooks/use-turnstile";
 import { authClient } from "#/lib/auth-client";
-import type { LocaleProps } from "#/lib/utils";
-import {
-  emailValidator,
-  passwordConfirmValidator,
-  passwordValidator,
-} from "#/lib/validators";
+import { emailValidator, passwordValidator } from "#/lib/validators";
 import { AuthCard } from "./auth-card";
 import { SocialLoginButton } from "./social-login-button";
+import { TurnstileWidget } from "./turnstile-widget";
+import { LocalizedLink } from "../localized-link";
 
 type SignupFormValues = {
   name: string;
@@ -28,15 +23,16 @@ type SignupFormValues = {
   confirmPassword: string;
 };
 
-type SignupFormProps = React.ComponentProps<"div"> & LocaleProps;
+type SignupFormProps = React.ComponentProps<"div">;
 
-export function SignupForm({ className, locale, ...props }: SignupFormProps) {
+export function SignupForm({ className, ...props }: SignupFormProps) {
   const {
     error: formError,
     setError: setFormError,
     clearError,
   } = useFormError();
   const { ref: turnstileRef, getFetchOptions } = useTurnstile();
+  const router = useRouter();
 
   const form = useAppForm({
     defaultValues: {
@@ -57,13 +53,19 @@ export function SignupForm({ className, locale, ...props }: SignupFormProps) {
         username: value.username.trim(),
         displayUsername: value.username.trim(),
         password: value.password,
-        callbackURL: `/${locale}/app/feed`,
+        callbackURL: `/app/feed`,
         fetchOptions,
       });
 
       if (result.error) {
         setFormError(result.error.message ?? "Sign up failed");
+        return;
       }
+
+      await router.navigate({
+        to: "/{-$locale}/app/feed",
+        search: { newUser: "1" },
+      });
     },
   });
 
@@ -74,22 +76,14 @@ export function SignupForm({ className, locale, ...props }: SignupFormProps) {
       description="Sign up with Google or create an account with email and username"
       footer={
         <>
-          By clicking continue, you agree to our{" "}
-          <Link
-            to="/{-$locale}/terms"
-            params={{ locale }}
-            className="underline underline-offset-4"
-          >
+          By clicking continue, you agree to our
+          <LocalizedLink to="/terms" className="underline underline-offset-4">
             Terms of Service
-          </Link>{" "}
-          and{" "}
-          <Link
-            to="/{-$locale}/privacy"
-            params={{ locale }}
-            className="underline underline-offset-4"
-          >
+          </LocalizedLink>
+          and
+          <LocalizedLink to="/privacy" className="underline underline-offset-4">
             Privacy Policy
-          </Link>
+          </LocalizedLink>
           .
         </>
       }
@@ -106,7 +100,7 @@ export function SignupForm({ className, locale, ...props }: SignupFormProps) {
           <Field>
             <SocialLoginButton
               label="Sign up with Google"
-              callbackURL={`/${locale}/app/feed`}
+              callbackURL={`/app/feed`}
             />
           </Field>
 
@@ -181,7 +175,17 @@ export function SignupForm({ className, locale, ...props }: SignupFormProps) {
 
             <form.AppField
               name="confirmPassword"
-              validators={passwordConfirmValidator}
+              validators={{
+                onChangeListenTo: ["password"] as const,
+                onChange: ({ value, fieldApi }) => {
+                  if (!value) return "Please confirm your password";
+                  const password = fieldApi.form.getFieldValue(
+                    "password",
+                  ) as string;
+                  if (value !== password) return "Passwords do not match";
+                  return undefined;
+                },
+              }}
             >
               {(field) => (
                 <field.FormPasswordInput
@@ -192,12 +196,10 @@ export function SignupForm({ className, locale, ...props }: SignupFormProps) {
             </form.AppField>
           </Field>
 
-          <div className="flex w-full justify-center">
-            <Turnstile
-              ref={turnstileRef}
-              siteKey={clientEnv.VITE_TURNSTYLE_SITE_KEY}
-            />
-          </div>
+          <TurnstileWidget
+            ref={turnstileRef}
+            className="flex w-full justify-center"
+          />
 
           {formError ? (
             <Field>
@@ -214,13 +216,12 @@ export function SignupForm({ className, locale, ...props }: SignupFormProps) {
 
             <FieldDescription className="text-center">
               Already have an account?{" "}
-              <Link
-                to="/{-$locale}/login"
-                params={{ locale }}
+              <LocalizedLink
+                to="/login"
                 className="underline underline-offset-4"
               >
                 Sign in
-              </Link>
+              </LocalizedLink>
             </FieldDescription>
           </Field>
         </FieldGroup>

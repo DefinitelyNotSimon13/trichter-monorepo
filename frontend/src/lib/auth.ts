@@ -7,8 +7,10 @@ import { betterAuth } from "better-auth";
 import {
   admin,
   captcha,
+  emailOTP,
   jwt,
   lastLoginMethod,
+  magicLink,
   openAPI,
   username,
 } from "better-auth/plugins";
@@ -18,6 +20,8 @@ import { clientEnv } from "#/env/client";
 import { serverEnv } from "#/env/server";
 import { sendEmail } from "./email/index.server";
 import {
+  magicLinkEmailHtml,
+  otpEmailHtml,
   passwordResetEmailHtml,
   verificationEmailHtml,
 } from "./email/templates";
@@ -73,6 +77,31 @@ export const auth = betterAuth({
         updateInterval: 300000,
       },
     }),
+    emailOTP({
+      async sendVerificationOTP({ email, otp, type }) {
+        void sendEmail({
+          to: email,
+          subject:
+            type === "sign-in"
+              ? "Your Trichter login code"
+              : "Verify your email",
+          text: `Your code is: ${otp}`,
+          html: otpEmailHtml(otp, type),
+        });
+      },
+      expiresIn: 600,
+    }),
+    magicLink({
+      async sendMagicLink({ email, url }) {
+        void sendEmail({
+          to: email,
+          subject: "Sign in to Trichter",
+          text: `Click to sign in: ${url}`,
+          html: magicLinkEmailHtml(url),
+        });
+      },
+      expiresIn: 600,
+    }),
     passkey(),
     username(),
     lastLoginMethod(),
@@ -89,6 +118,8 @@ export const auth = betterAuth({
         "/sign-up/username",
         "/sign-in/username",
         "/request-password-reset",
+        "/email-otp/send-verification-otp",
+        "/sign-in/magic-link",
       ],
     }),
     oauthProvider({

@@ -11,12 +11,11 @@ export const Route = createFileRoute("/{-$locale}/_auth/login")({
 });
 
 function LoginPage() {
-  const { locale } = Route.useParams();
   const { redirectTo } = Route.useSearch();
 
   return (
-    <AuthCardWrapper locale={locale ?? ""}>
-      <LoginForm locale={locale ?? ""} redirectTo={redirectTo} />
+    <AuthCardWrapper>
+      <LoginForm redirectTo={redirectTo} />
     </AuthCardWrapper>
   );
 }

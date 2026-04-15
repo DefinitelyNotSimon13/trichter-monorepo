@@ -2,10 +2,11 @@ import {
   createFileRoute,
   Link,
   Outlet,
+  redirect,
   useNavigate,
   useRouterState,
 } from "@tanstack/react-router";
-import { CircleUser, LogOut, Rss, Trophy } from "lucide-react";
+import { CircleUser, LogOut, Rss, Settings2, Trophy } from "lucide-react";
 import { AppSidebar } from "#/components/app-sidebar";
 import { PageWrapper } from "#/components/page-wrapper";
 import {
@@ -21,35 +22,50 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "#/components/ui/sidebar";
-import { useRouteLocale } from "#/hooks/use-route-locale";
 import { authClient } from "#/lib/auth-client";
+import { getSession } from "#/lib/auth.functions";
 import { cn } from "#/lib/utils";
+import { LocalizedLink } from "#/components/localized-link";
 
 export const Route = createFileRoute("/{-$locale}/app")({
+  beforeLoad: async () => {
+    const session = await getSession();
+    if (session?.user && !session.user.username) {
+      throw redirect({ to: "/{-$locale}/complete-profile" });
+    }
+  },
   component: AppLayout,
 });
 
-const PAGE_NAMES: Record<string, string> = {
-  "/app/feed": "Feed",
-  "/app/leaderboard": "Leaderboard",
-  "/app/profile": "Profile",
-};
-
 function AppHeader() {
-  const pathname = useRouterState({ select: (s) => s.location.pathname });
   const navigate = useNavigate();
   const { data: session } = authClient.useSession();
-  const locale = useRouteLocale();
 
-  const pageName =
-    Object.entries(PAGE_NAMES).find(([key]) => pathname.includes(key))?.[1] ??
-    "App";
+  const matches = useRouterState({ select: (s) => s.matches });
+
+  const breadcrumbs = matches
+    .map((match) => {
+      const breadcrumb = (
+        match.staticData as { breadcrumb?: string } | undefined
+      )?.breadcrumb;
+
+      if (!breadcrumb) return null;
+
+      return {
+        id: match.id,
+        href: match.routeId.toString(),
+        label: breadcrumb,
+      };
+    })
+    .filter(
+      (item): item is { id: string; href: string; label: string } =>
+        item !== null,
+    );
 
   const handleSignOut = async () => {
     await authClient.signOut();
     await navigate({
       to: "/{-$locale}",
-      params: { locale },
       replace: true,
     });
   };
@@ -60,25 +76,53 @@ function AppHeader() {
 
       <Breadcrumb className="min-w-0 flex-1">
         <BreadcrumbList>
-          <BreadcrumbItem className="text-muted-foreground">App</BreadcrumbItem>
+          <BreadcrumbItem className="text-muted-foreground">
+            <LocalizedLink className="hover:underline">Trichter</LocalizedLink>
+          </BreadcrumbItem>{" "}
           <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbPage>{pageName}</BreadcrumbPage>
-          </BreadcrumbItem>
+          {breadcrumbs.map((crumb, index) => {
+            const isLast = index === breadcrumbs.length - 1;
+
+            return (
+              <>
+                <BreadcrumbItem>
+                  <BreadcrumbPage>
+                    <Link to={crumb.href} className="hover:underline">
+                      {crumb.label}
+                    </Link>
+                  </BreadcrumbPage>
+                </BreadcrumbItem>
+                {!isLast ? <BreadcrumbSeparator /> : null}
+              </>
+            );
+          })}
         </BreadcrumbList>
       </Breadcrumb>
 
       {session?.user ? (
-        <Button
-          type="button"
-          variant="ghost"
-          size="sm"
-          onClick={() => void handleSignOut()}
-          className="md:hidden"
-        >
-          <LogOut className="size-4" />
-          <span className="sr-only">Log out</span>
-        </Button>
+        <div className="flex items-center gap-1">
+          <LocalizedLink to="/app/settings">
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              className="size-8"
+            >
+              <Settings2 className="size-4" />
+              <span className="sr-only">Settings</span>
+            </Button>
+          </LocalizedLink>
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon"
+            onClick={() => void handleSignOut()}
+            className="size-8 md:hidden"
+          >
+            <LogOut className="size-4" />
+            <span className="sr-only">Log out</span>
+          </Button>
+        </div>
       ) : null}
     </header>
   );
@@ -90,19 +134,17 @@ function MobileNavLink({
   icon,
   label,
 }: {
-  to: "/{-$locale}/app/feed" | "/{-$locale}/app/leaderboard";
+  to: "/app/feed" | "/app/leaderboard" | "/app/profile";
   activePath: string;
   icon: React.ReactNode;
   label: string;
 }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
-  const locale = useRouteLocale();
   const isActive = pathname.includes(activePath);
 
   return (
-    <Link
+    <LocalizedLink
       to={to}
-      params={{ locale }}
       viewTransition
       className={cn(
         "flex flex-1 flex-col items-center gap-1 py-3 text-[10px] font-semibold transition-colors",
@@ -113,57 +155,38 @@ function MobileNavLink({
     >
       {icon}
       <span>{label}</span>
-    </Link>
+    </LocalizedLink>
   );
 }
 
 function MobileBottomNav() {
-  const { data: session } = authClient.useSession();
-  const locale = useRouteLocale();
-
   return (
     <nav className="fixed inset-x-0 bottom-0 z-50 flex border-t bg-background/95 backdrop-blur md:hidden">
       <MobileNavLink
-        to="/{-$locale}/app/feed"
+        to="/app/feed"
         activePath="/app/feed"
         icon={<Rss className="size-5" />}
         label="Feed"
       />
       <MobileNavLink
-        to="/{-$locale}/app/leaderboard"
+        to="/app/leaderboard"
         activePath="/app/leaderboard"
         icon={<Trophy className="size-5" />}
         label="Board"
       />
-      {session?.user ? (
-        <Link
-          to="/{-$locale}/app/profile"
-          params={{ locale }}
-          viewTransition
-          className={cn(
-            "flex flex-1 flex-col items-center gap-1 py-3 text-[10px] font-semibold text-muted-foreground transition-colors hover:text-foreground",
-          )}
-        >
-          <CircleUser className="size-5" />
-          <span>Profile</span>
-        </Link>
-      ) : (
-        <button
-          type="button"
-          disabled
-          className="flex flex-1 flex-col items-center gap-1 py-3 text-[10px] font-semibold text-muted-foreground"
-        >
-          <CircleUser className="size-5" />
-          <span>Profile</span>
-        </button>
-      )}
+      <MobileNavLink
+        to="/app/profile"
+        activePath="/app/profile"
+        icon={<CircleUser className="size-5" />}
+        label="Profile"
+      />
     </nav>
   );
 }
 
 function AppLayout() {
   return (
-    <SidebarProvider>
+    <SidebarProvider defaultOpen={false}>
       <AppSidebar />
       <SidebarInset>
         <AppHeader />

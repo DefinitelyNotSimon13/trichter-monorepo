@@ -2,19 +2,14 @@ import { heyApiPlugin } from "@hey-api/vite-plugin";
 import tailwindcss from "@tailwindcss/vite";
 import { devtools } from "@tanstack/devtools-vite";
 import { tanstackStart } from "@tanstack/react-start/plugin/vite";
-
 import viteReact from "@vitejs/plugin-react";
 import { nitro } from "nitro/vite";
 import { defineConfig } from "vite";
 
-const config = defineConfig({
+export default defineConfig({
   server: {
-    allowedHosts: [
-      "localhost:3000",
-      "imposing-lyricist-reprocess.ngrok-free.dev",
-    ],
     proxy: {
-      "/api/runs": {
+      "/api/v2": {
         target: "http://localhost:8080",
         changeOrigin: true,
       },
@@ -29,7 +24,9 @@ const config = defineConfig({
     devtools(),
     tailwindcss(),
     tanstackStart(),
-    nitro({ preset: "bun" }),
+    nitro({
+      preset: "bun",
+    }),
     viteReact({
       babel: {
         plugins: ["babel-plugin-react-compiler"],
@@ -53,5 +50,3 @@ const config = defineConfig({
     }),
   ],
 });
-
-export default config;

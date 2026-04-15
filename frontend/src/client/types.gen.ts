@@ -23,6 +23,7 @@ export type UserInfo = {
   id?: string;
   name?: string;
   username?: string;
+  image?: string;
 };
 
 export type CreateRunRequest = {
@@ -32,33 +33,16 @@ export type CreateRunRequest = {
   volume?: number;
 };
 
-export type PageRunView = {
+export type PageMetadata = {
+  size?: number;
+  number?: number;
   totalElements?: number;
   totalPages?: number;
-  pageable?: PageableObject;
-  first?: boolean;
-  last?: boolean;
-  size?: number;
+};
+
+export type PagedModelRunView = {
   content?: Array<RunView>;
-  number?: number;
-  sort?: SortObject;
-  numberOfElements?: number;
-  empty?: boolean;
-};
-
-export type PageableObject = {
-  paged?: boolean;
-  pageNumber?: number;
-  pageSize?: number;
-  unpaged?: boolean;
-  offset?: number;
-  sort?: SortObject;
-};
-
-export type SortObject = {
-  sorted?: boolean;
-  unsorted?: boolean;
-  empty?: boolean;
+  page?: PageMetadata;
 };
 
 export type ImageRef = {
@@ -155,7 +139,7 @@ export type GetRunsResponses = {
   /**
    * OK
    */
-  200: PageRunView;
+  200: PagedModelRunView;
 };
 
 export type GetRunsResponse = GetRunsResponses[keyof GetRunsResponses];
@@ -208,7 +192,7 @@ export type GetRunsByUserResponses = {
   /**
    * OK
    */
-  200: PageRunView;
+  200: PagedModelRunView;
 };
 
 export type GetRunsByUserResponse =

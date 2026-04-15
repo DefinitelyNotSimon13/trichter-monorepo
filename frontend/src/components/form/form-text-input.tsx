@@ -11,6 +11,7 @@ type FormTextInputProps = {
   placeholder?: string;
   description?: string;
   autoComplete?: string;
+  disabled?: boolean;
 };
 
 export function FormTextInput({
@@ -19,6 +20,7 @@ export function FormTextInput({
   placeholder,
   description,
   autoComplete,
+  disabled,
 }: FormTextInputProps) {
   const field = useFieldContext<string>();
   const errors = useStore(field.store, (state) => state.meta.errors);
@@ -38,6 +40,7 @@ export function FormTextInput({
         onBlur={field.handleBlur}
         onChange={(e) => field.handleChange(e.target.value)}
         aria-invalid={isTouched && errors.length > 0}
+        disabled={disabled}
       />
 
       {description ? <FieldDescription>{description}</FieldDescription> : null}

@@ -26,7 +26,7 @@ export function getContext() {
   const queryClient = getQueryClient();
 
   client.setConfig({
-    baseUrl: clientEnv.VITE_API_BASE_URL,
+    baseUrl: "",
   });
 
   return {
@@ -39,7 +39,7 @@ export default function TanstackQueryProvider(props: {
   children: ReactNode;
 }) {
   client.setConfig({
-    baseUrl: clientEnv.VITE_API_BASE_URL,
+    baseUrl: "",
   });
 
   return (

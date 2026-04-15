@@ -7,11 +7,9 @@ export const Route = createFileRoute("/{-$locale}/_auth/signup")({
 });
 
 function SignupPage() {
-  const { locale } = Route.useParams();
-
   return (
-    <AuthCardWrapper locale={locale ?? ""}>
-      <SignupForm locale={locale ?? ""} />
+    <AuthCardWrapper>
+      <SignupForm />
     </AuthCardWrapper>
   );
 }

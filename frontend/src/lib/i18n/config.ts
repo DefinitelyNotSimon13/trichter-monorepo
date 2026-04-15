@@ -1,4 +1,4 @@
-import i18n from "i18next";
+import i18n, { type Resource } from "i18next";
 import { initReactI18next } from "react-i18next";
 
 import enCommon from "./locales/en/common.json";
@@ -24,7 +24,9 @@ export const resources = {
     landing: deLanding,
     app: deApp,
   },
-} as const;
+} satisfies Resource;
+
+export const I18N_NAMESPACES = ["common", "landing", "app"] as const;
 
 let initialized = false;
 

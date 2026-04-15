@@ -8,11 +8,9 @@ export const Route = createFileRoute("/{-$locale}/about")({
 });
 
 function AboutPage() {
-  const { locale } = Route.useParams();
-
   return (
     <div className="flex min-h-svh flex-col">
-      <BrandHeader locale={locale ?? ""} />
+      <BrandHeader />
 
       <main className="mx-auto w-full max-w-4xl flex-1 px-4 py-16 sm:px-6">
         <section className="rounded-2xl border p-8">

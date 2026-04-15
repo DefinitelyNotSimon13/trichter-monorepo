@@ -2,7 +2,8 @@
   "appName": "Trichter",
   "actions": {
     "openFeed": "Feed öffnen",
-    "viewLeaderboard": "Bestenliste anzeigen"
+    "viewLeaderboard": "Bestenliste anzeigen",
+    "getStarted": "Los gehts"
   },
   "auth": {
     "signIn": "Anmelden"

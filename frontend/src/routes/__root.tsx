@@ -6,16 +6,22 @@ import {
   Outlet,
   Scripts,
   useRouter,
+  useRouterState,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
+import { useEffect, useState } from "react";
 import { I18nextProvider } from "react-i18next";
+import type { i18n as I18nInstance } from "i18next";
+
 import { Button } from "#/components/ui/button";
 import { TooltipProvider } from "#/components/ui/tooltip";
 import TanStackQueryDevtools from "#/integrations/tanstack-query/devtools";
 import TanstackQueryProvider from "#/integrations/tanstack-query/root-provider";
-import { i18n, initI18n } from "#/lib/i18n/config";
-import { resolveLocale } from "#/lib/i18n/detect-locale";
+import { createI18n } from "#/lib/i18n/create-i18n";
+import { normalizeLocale } from "#/lib/i18n/locale";
 import appCss from "#/styles.css?url";
+import { initI18n } from "#/lib/i18n/config";
+import { toast, Toaster } from "sonner";
 
 interface RouterContext {
   queryClient: QueryClient;
@@ -39,7 +45,9 @@ function NotFoundPage() {
           The page you're looking for doesn't exist or has been moved.
         </p>
       </div>
-      <Button onClick={() => void router.navigate({ to: "/" })}>Go home</Button>
+      <Button onClick={() => void router.navigate({ to: "/{-$locale}" })}>
+        Go home
+      </Button>
     </div>
   );
 }
@@ -79,16 +87,20 @@ export const Route = createRootRouteWithContext<RouterContext>()({
 
 function RootDocument() {
   const context = Route.useRouteContext();
-  const locale = resolveLocale();
+  const matches = useRouterState({ select: (s) => s.matches });
 
-  initI18n(locale);
+  const localeMatch = matches.find(
+    (m): m is typeof m & { params: { locale?: string } } =>
+      "locale" in (m.params ?? {}),
+  );
+  const locale = normalizeLocale(localeMatch?.params.locale);
+
+  const i18n = initI18n(locale);
 
   return (
-    <html lang={i18n.language} suppressHydrationWarning>
+    <html lang={locale} suppressHydrationWarning>
       <head>
-        {/* biome-ignore lint/security/noDangerouslySetInnerHtml: intentional theme init script */}
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
-
         <HeadContent />
       </head>
       <body className="bg-background font-sans text-foreground antialiased">
@@ -96,6 +108,7 @@ function RootDocument() {
           <I18nextProvider i18n={i18n}>
             <TooltipProvider>
               <Outlet />
+              <Toaster />
             </TooltipProvider>
           </I18nextProvider>
         </TanstackQueryProvider>

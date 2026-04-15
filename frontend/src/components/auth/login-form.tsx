@@ -1,7 +1,12 @@
-import { Turnstile } from "@marsidev/react-turnstile";
-import { Link } from "@tanstack/react-router";
-import { KeyRound } from "lucide-react";
+import { useHydrated, useRouter } from "@tanstack/react-router";
+import { ChevronDown, KeyRound, Link2, Mail } from "lucide-react";
+import { useState } from "react";
 import { Button } from "#/components/ui/button";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "#/components/ui/collapsible";
 import {
   Field,
   FieldDescription,
@@ -9,38 +14,55 @@ import {
   FieldLabel,
   FieldSeparator,
 } from "#/components/ui/field";
-import { clientEnv } from "#/env/client";
 import { useAppForm } from "#/hooks/form";
 import { useFormError } from "#/hooks/use-form-error";
 import { useTurnstile } from "#/hooks/use-turnstile";
 import { authClient } from "#/lib/auth-client";
-import type { LocaleProps } from "#/lib/utils";
 import { isEmail } from "#/lib/validators";
+import { toast } from "sonner";
 import { AuthCard } from "./auth-card";
 import { SocialLoginButton } from "./social-login-button";
+import { TurnstileWidget } from "./turnstile-widget";
+import { LocalizedLink } from "../localized-link";
 
 type LoginFormValues = {
   login: string;
   password: string;
 };
 
-type LoginFormProps = React.ComponentProps<"div"> &
-  LocaleProps & {
-    redirectTo?: string;
-  };
+type LoginFormProps = React.ComponentProps<"div"> & {
+  redirectTo?: string;
+};
 
-export function LoginForm({
-  className,
-  locale,
-  redirectTo,
-  ...props
-}: LoginFormProps) {
+type MoreOption = "passkey" | null;
+type GetFetchOptions = ReturnType<typeof useTurnstile>["getFetchOptions"];
+
+export function LoginForm({ className, redirectTo, ...props }: LoginFormProps) {
   const {
     error: formError,
     setError: setFormError,
     clearError,
   } = useFormError();
+
   const { ref: turnstileRef, getFetchOptions } = useTurnstile();
+  const hydrated = useHydrated();
+
+  const lastMethod = authClient.getLastUsedLoginMethod();
+  const callbackURL = redirectTo ?? "/app/feed";
+
+  const canUsePasskey =
+    hydrated && typeof window !== "undefined" && !!window.PublicKeyCredential;
+
+  const moreOptionsDefaultOpen =
+    lastMethod === "passkey" ||
+    lastMethod === "email-otp" ||
+    lastMethod === "magic-link";
+
+  const [activeMoreOption, setActiveMoreOption] = useState<MoreOption>(null);
+  const [credentialsLocked, setCredentialsLocked] = useState(false);
+  const [magicLinkSentEmail, setMagicLinkSentEmail] = useState<string | null>(
+    null,
+  );
 
   const form = useAppForm({
     defaultValues: {
@@ -53,7 +75,6 @@ export function LoginForm({
       const identifier = value.login.trim();
       const password = value.password;
       const fetchOptions = getFetchOptions();
-      const callbackURL = redirectTo ?? `/${locale}/app/feed`;
 
       const result = isEmail(identifier)
         ? await authClient.signIn.email({
@@ -79,25 +100,17 @@ export function LoginForm({
     <AuthCard
       className={className}
       title="Welcome back"
-      description="Login with your Google account"
+      description="Sign in to your account"
       footer={
         <>
-          By clicking continue, you agree to our{" "}
-          <Link
-            to="/{-$locale}/terms"
-            params={{ locale }}
-            className="underline underline-offset-4"
-          >
+          By continuing, you agree to our{" "}
+          <LocalizedLink to="/terms" className="underline underline-offset-4">
             Terms of Service
-          </Link>{" "}
+          </LocalizedLink>{" "}
           and{" "}
-          <Link
-            to="/{-$locale}/privacy"
-            params={{ locale }}
-            className="underline underline-offset-4"
-          >
+          <LocalizedLink to="/privacy" className="underline underline-offset-4">
             Privacy Policy
-          </Link>
+          </LocalizedLink>
           .
         </>
       }
@@ -107,27 +120,19 @@ export function LoginForm({
         onSubmit={(e) => {
           e.preventDefault();
           e.stopPropagation();
-
           void form.handleSubmit();
         }}
       >
         <FieldGroup>
-          <Field className="flex flex-col gap-2">
+          <Field>
             <SocialLoginButton
-              label="Login with Google"
-              callbackURL={redirectTo ?? `/${locale}/app/feed`}
+              label={
+                lastMethod === "google"
+                  ? "Continue with Google"
+                  : "Login with Google"
+              }
+              callbackURL={callbackURL}
             />
-            {typeof window !== "undefined" && window.PublicKeyCredential ? (
-              <Button
-                type="button"
-                variant="outline"
-                className="w-full"
-                onClick={() => void authClient.signIn.passkey()}
-              >
-                <KeyRound className="size-4" />
-                Login with Passkey
-              </Button>
-            ) : null}
           </Field>
 
           <FieldSeparator className="*:data-[slot=field-separator-content]:bg-card">
@@ -138,10 +143,7 @@ export function LoginForm({
             name="login"
             validators={{
               onChange: ({ value }) => {
-                if (!value.trim()) {
-                  return "Email or username is required";
-                }
-
+                if (!value.trim()) return "Email or username is required";
                 return undefined;
               },
             }}
@@ -152,6 +154,7 @@ export function LoginForm({
                 type="text"
                 placeholder="m@example.com"
                 autoComplete="username"
+                disabled={credentialsLocked}
               />
             )}
           </form.AppField>
@@ -160,10 +163,7 @@ export function LoginForm({
             name="password"
             validators={{
               onChange: ({ value }) => {
-                if (!value) {
-                  return "Password is required";
-                }
-
+                if (!value) return "Password is required";
                 return undefined;
               },
             }}
@@ -172,30 +172,26 @@ export function LoginForm({
               <Field>
                 <div className="flex items-center">
                   <FieldLabel htmlFor={field.name}>Password</FieldLabel>
-
-                  <Link
-                    to="/{-$locale}/forgot-password"
-                    params={{ locale }}
+                  <LocalizedLink
+                    to="/forgot-password"
                     className="ml-auto text-sm underline-offset-4 hover:underline"
                   >
                     Forgot your password?
-                  </Link>
+                  </LocalizedLink>
                 </div>
-
                 <field.FormPasswordInput
                   hideLabel
                   autoComplete="current-password"
+                  disabled={credentialsLocked}
                 />
               </Field>
             )}
           </form.AppField>
 
-          <div className="flex w-full justify-center">
-            <Turnstile
-              ref={turnstileRef}
-              siteKey={clientEnv.VITE_TURNSTYLE_SITE_KEY}
-            />
-          </div>
+          <TurnstileWidget
+            ref={turnstileRef}
+            className="flex w-full justify-center"
+          />
 
           {formError ? (
             <Field>
@@ -207,22 +203,242 @@ export function LoginForm({
 
           <Field>
             <form.AppForm>
-              <form.FormSubmitButton label="Login" />
+              <form.FormSubmitButton
+                label="Login"
+                disabled={credentialsLocked}
+              />
             </form.AppForm>
 
             <FieldDescription className="text-center">
               Don&apos;t have an account?{" "}
-              <Link
-                to="/{-$locale}/signup"
-                params={{ locale }}
+              <LocalizedLink
+                to="/signup"
                 className="underline underline-offset-4"
               >
                 Sign up
-              </Link>
+              </LocalizedLink>
             </FieldDescription>
           </Field>
         </FieldGroup>
       </form>
+
+      <form.Subscribe
+        selector={(state) => state.values.login}
+        children={(login) => {
+          const trimmedLogin = login.trim();
+          const email = isEmail(trimmedLogin) ? trimmedLogin : null;
+
+          return (
+            <MoreSignInOptions
+              moreOptionsDefaultOpen={moreOptionsDefaultOpen}
+              canUsePasskey={canUsePasskey}
+              activeMoreOption={activeMoreOption}
+              setActiveMoreOption={setActiveMoreOption}
+              lastMethod={lastMethod}
+              callbackURL={callbackURL}
+              email={email}
+              getFetchOptions={getFetchOptions}
+              credentialsLocked={credentialsLocked}
+              onCredentialsLockChange={setCredentialsLocked}
+              magicLinkSentEmail={magicLinkSentEmail}
+              onMagicLinkSentChange={setMagicLinkSentEmail}
+            />
+          );
+        }}
+      />
     </AuthCard>
+  );
+}
+
+function MoreSignInOptions({
+  moreOptionsDefaultOpen,
+  canUsePasskey,
+  activeMoreOption,
+  setActiveMoreOption,
+  lastMethod,
+  callbackURL,
+  email,
+  getFetchOptions,
+  credentialsLocked,
+  onCredentialsLockChange,
+  magicLinkSentEmail,
+  onMagicLinkSentChange,
+}: {
+  moreOptionsDefaultOpen: boolean;
+  canUsePasskey: boolean;
+  activeMoreOption: MoreOption;
+  setActiveMoreOption: React.Dispatch<React.SetStateAction<MoreOption>>;
+  lastMethod: string | null;
+  callbackURL: string;
+  email: string | null;
+  getFetchOptions: GetFetchOptions;
+  credentialsLocked: boolean;
+  onCredentialsLockChange: (locked: boolean) => void;
+  magicLinkSentEmail: string | null;
+  onMagicLinkSentChange: (email: string | null) => void;
+}) {
+  const router = useRouter();
+
+  const sendOtp = async () => {
+    if (!email) {
+      toast.error("Enter a valid email above");
+      return;
+    }
+
+    const result = await authClient.emailOtp.sendVerificationOtp({
+      email,
+      type: "sign-in",
+      fetchOptions: getFetchOptions(),
+    });
+
+    if (result.error) {
+      toast.error(result.error.message ?? "Failed to send code");
+      return;
+    }
+
+    onCredentialsLockChange(true);
+
+    await router.navigate({
+      to: "/{-$locale}/verify-otp",
+      search: {
+        email,
+        redirectTo: callbackURL,
+      },
+    });
+  };
+
+  const sendMagicLink = async () => {
+    if (!email) {
+      toast.error("Enter a valid email above");
+      return;
+    }
+
+    const result = await authClient.signIn.magicLink({
+      email,
+      callbackURL,
+      fetchOptions: getFetchOptions(),
+    });
+
+    if (result.error) {
+      toast.error(result.error.message ?? "Failed to send magic link");
+      return;
+    }
+
+    onMagicLinkSentChange(email);
+    onCredentialsLockChange(true);
+  };
+
+  return (
+    <Collapsible defaultOpen={moreOptionsDefaultOpen}>
+      <CollapsibleTrigger asChild>
+        <button
+          type="button"
+          className="flex w-full items-center justify-center py-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
+        >
+          <span>Other Options</span>
+          <ChevronDown className="size-4 transition-transform duration-200 in-data-[state=open]:rotate-180" />
+        </button>
+      </CollapsibleTrigger>
+
+      <CollapsibleContent className="space-y-2 pt-1">
+        {canUsePasskey ? (
+          <Button
+            type="button"
+            variant={activeMoreOption === "passkey" ? "secondary" : "outline"}
+            className={
+              "w-full justify-start gap-2 " +
+              (lastMethod === "passkey" && activeMoreOption === null
+                ? "bg-highlight/40 drop-shadow-xs"
+                : "")
+            }
+            disabled={credentialsLocked}
+            onClick={() => {
+              if (activeMoreOption === "passkey") {
+                setActiveMoreOption(null);
+                return;
+              }
+
+              setActiveMoreOption("passkey");
+
+              void authClient.signIn.passkey({
+                fetchOptions: {
+                  onSuccess() {
+                    void router.navigate({
+                      to: "/{-$locale}/app/feed",
+                      search: {},
+                    });
+                  },
+                  onError(context) {
+                    toast.error("Passkey sign-in failed");
+                    console.error("Passkey error:", context.error.message);
+                    setActiveMoreOption(null);
+                  },
+                },
+              });
+            }}
+          >
+            <KeyRound className="size-4" />
+            <span>Passkey</span>
+          </Button>
+        ) : null}
+
+        <Button
+          type="button"
+          variant="outline"
+          className={
+            "w-full justify-start gap-2 " +
+            (lastMethod === "email-otp" && activeMoreOption === null
+              ? "bg-highlight/40 drop-shadow-xs"
+              : "")
+          }
+          disabled={!email || credentialsLocked}
+          onClick={() => void sendOtp()}
+        >
+          <Mail className="size-4" />
+          <span>Email OTP</span>
+        </Button>
+
+        <div className="space-y-2">
+          <Button
+            type="button"
+            variant="outline"
+            className={
+              "w-full justify-start gap-2 " +
+              (lastMethod === "magic-link" && activeMoreOption === null
+                ? "bg-highlight/40 drop-shadow-xs"
+                : "")
+            }
+            disabled={!email || credentialsLocked || !!magicLinkSentEmail}
+            onClick={() => void sendMagicLink()}
+          >
+            <Link2 className="size-4" />
+            <span>Magic Link</span>
+          </Button>
+
+          {magicLinkSentEmail ? (
+            <div className="space-y-2 rounded-xl border bg-muted/40 p-3">
+              <p className="text-sm text-muted-foreground">
+                Magic link sent to{" "}
+                <span className="font-medium text-foreground">
+                  {magicLinkSentEmail}
+                </span>
+                . Check your inbox and click the link to sign in.
+              </p>
+
+              <button
+                type="button"
+                className="text-xs text-muted-foreground underline underline-offset-2 hover:text-foreground"
+                onClick={() => {
+                  onMagicLinkSentChange(null);
+                  onCredentialsLockChange(false);
+                }}
+              >
+                Clear
+              </button>
+            </div>
+          ) : null}
+        </div>
+      </CollapsibleContent>
+    </Collapsible>
   );
 }

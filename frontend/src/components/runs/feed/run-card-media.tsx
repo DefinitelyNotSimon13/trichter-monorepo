@@ -7,7 +7,7 @@ function resolveImageUrl(imageUrl?: string) {
     return imageUrl;
   }
 
-  return `${clientEnv.VITE_API_BASE_URL}${imageUrl}`;
+  return `${imageUrl}`;
 }
 
 export function RunCardMedia(props: { imageUrl?: string; alt: string }) {

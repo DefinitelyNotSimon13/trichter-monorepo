@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="BackendApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
-    <option name="ACTIVE_PROFILES" value="remote-dev,dev" />
+    <option name="ACTIVE_PROFILES" value="remote-prod" />
     <additionalParameters>
       <param>
         <option name="enabled" value="true" />

@@ -1,8 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
-import { Link } from "@tanstack/react-router";
 import { infoOptions } from "#/client/@tanstack/react-query.gen";
 import { clientEnv } from "#/env/client";
-import { useRouteLocale } from "#/hooks/use-route-locale";
+import { LocalizedLink } from "./localized-link";
 
 function readBuildId(data: unknown): string | undefined {
   if (!data || typeof data !== "object") return undefined;
@@ -38,7 +37,6 @@ function BackendBuildInfo() {
 
 export function Footer() {
   const year = new Date().getFullYear();
-  const locale = useRouteLocale();
 
   return (
     <footer className="border-t">
@@ -54,27 +52,16 @@ export function Footer() {
           </div>
         </div>
         <div className="flex flex-wrap items-center gap-4">
-          <Link
-            to="/{-$locale}"
-            params={{ locale }}
-            className="hover:text-foreground"
-          >
-            Home
-          </Link>
-          <Link
-            to="/{-$locale}/app/feed"
-            params={{ locale }}
-            className="hover:text-foreground"
-          >
+          <LocalizedLink className="hover:text-foreground">Home</LocalizedLink>
+          <LocalizedLink to="/app/feed" className="hover:text-foreground">
             Feed
-          </Link>
-          <Link
-            to="/{-$locale}/app/leaderboard"
-            params={{ locale }}
+          </LocalizedLink>
+          <LocalizedLink
+            to="/app/leaderboard"
             className="hover:text-foreground"
           >
             Leaderboard
-          </Link>
+          </LocalizedLink>
           <span>© {year}</span>
         </div>
       </div>

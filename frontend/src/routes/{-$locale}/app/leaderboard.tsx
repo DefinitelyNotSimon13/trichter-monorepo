@@ -11,6 +11,9 @@ import { StatePanel } from "#/components/ui/state-panel";
 const PAGE_SIZE = 100;
 
 export const Route = createFileRoute("/{-$locale}/app/leaderboard")({
+  staticData: {
+    breadcrumb: "Leaderboard",
+  },
   component: LeaderboardPage,
 });
 

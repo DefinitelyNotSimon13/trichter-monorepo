@@ -1,12 +1,18 @@
-import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
+import {
+  createFileRoute,
+  Outlet,
+  redirect,
+  useNavigate,
+  useRouterState,
+} from "@tanstack/react-router";
 import { useEffect } from "react";
 import { PageWrapper } from "#/components/page-wrapper";
-import { i18n } from "#/lib/i18n/config";
 import {
+  detectClientLocale,
   isSupportedLocale,
+  normalizeLocale,
   persistLocale,
-  resolveLocale,
-} from "#/lib/i18n/detect-locale";
+} from "#/lib/i18n/locale";
 
 export const Route = createFileRoute("/{-$locale}")({
   beforeLoad: ({ params }) => {
@@ -15,22 +21,42 @@ export const Route = createFileRoute("/{-$locale}")({
         to: "/{-$locale}",
       });
     }
+
+    return {
+      locale: normalizeLocale(params.locale),
+    };
   },
   component: LocaleLayout,
 });
 
 function LocaleLayout() {
+  const navigate = useNavigate();
+  const location = useRouterState({ select: (s) => s.location });
   const { locale } = Route.useParams();
-  const resolvedLocale = resolveLocale(locale);
+  const context = Route.useRouteContext();
+
+  const routeLocale = context.locale;
 
   useEffect(() => {
-    if (i18n.language !== resolvedLocale) {
-      void i18n.changeLanguage(resolvedLocale);
+    if (!locale) {
+      const detected = detectClientLocale();
+      const prefix = `/${detected}`;
+      const href = location.publicHref;
+      const alreadyNormalized =
+        href === prefix || href.startsWith(`${prefix}/`);
+
+      if (!alreadyNormalized) {
+        void navigate({
+          href: `${prefix}${href}`,
+          replace: true,
+        });
+        return;
+      }
     }
 
-    persistLocale(resolvedLocale);
-    document.documentElement.lang = resolvedLocale;
-  }, [resolvedLocale]);
+    persistLocale(routeLocale);
+    document.documentElement.lang = routeLocale;
+  }, [locale, routeLocale, location.publicHref, navigate]);
 
   return (
     <PageWrapper>

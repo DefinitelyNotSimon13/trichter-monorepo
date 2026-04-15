@@ -6,11 +6,15 @@ export function isSupportedLocale(value: string): value is AppLocale {
   return (SUPPORTED_LOCALES as readonly string[]).includes(value);
 }
 
-export function resolveLocale(value?: string): AppLocale {
+export function normalizeLocale(value?: string | null): AppLocale {
   if (value && isSupportedLocale(value)) {
     return value;
   }
 
+  return DEFAULT_LOCALE;
+}
+
+export function detectClientLocale(): AppLocale {
   if (typeof window !== "undefined") {
     const stored = window.localStorage.getItem(STORAGE_KEY);
     if (stored && isSupportedLocale(stored)) {

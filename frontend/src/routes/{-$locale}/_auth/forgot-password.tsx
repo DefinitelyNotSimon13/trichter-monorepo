@@ -7,10 +7,9 @@ export const Route = createFileRoute("/{-$locale}/_auth/forgot-password")({
 });
 
 function ForgotPasswordPage() {
-  const { locale } = Route.useParams();
   return (
-    <AuthCardWrapper locale={locale ?? ""}>
-      <ForgotPasswordForm className="w-full" locale={locale ?? ""} />
+    <AuthCardWrapper>
+      <ForgotPasswordForm className="w-full" />
     </AuthCardWrapper>
   );
 }

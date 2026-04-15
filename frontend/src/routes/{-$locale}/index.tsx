@@ -1,10 +1,11 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { Rss, Smartphone, Trophy } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 import { BrandHeader } from "#/components/brand-header";
 import { Footer } from "#/components/footer";
 import { Button } from "#/components/ui/button";
+import { LocalizedLink } from "#/components/localized-link";
 
 export const Route = createFileRoute("/{-$locale}/")({
   component: LandingPage,
@@ -12,11 +13,10 @@ export const Route = createFileRoute("/{-$locale}/")({
 
 function LandingPage() {
   const { t } = useTranslation(["landing", "common"]);
-  const { locale } = Route.useParams();
 
   return (
     <div className="flex min-h-svh flex-col">
-      <BrandHeader locale={locale ?? ""} />
+      <BrandHeader />
 
       <main className="flex-1">
         <section className="mx-auto max-w-6xl px-4 pb-20 pt-20 sm:px-6 lg:pt-28">
@@ -26,7 +26,7 @@ function LandingPage() {
             <span className="text-primary"> {t("landing:hero.highlight")}</span>
           </h1>
 
-          <p className="my-6 text-6xl font-black leading-none text-[var(--highlight)] sm:text-7xl lg:text-8xl">
+          <p className="my-6 text-6xl font-black leading-none text-highlight sm:text-7xl lg:text-8xl">
             {t("landing:hero.tagline")}
           </p>
 
@@ -36,15 +36,15 @@ function LandingPage() {
 
           <div className="mt-10 flex flex-wrap gap-4">
             <Button size="lg" asChild>
-              <Link to="/{-$locale}/app/feed" params={{ locale }}>
+              <LocalizedLink to="/app/feed">
                 {t("common:actions.openFeed")}
-              </Link>
+              </LocalizedLink>
             </Button>
 
             <Button size="lg" variant="outline" asChild>
-              <Link to="/{-$locale}/app/leaderboard" params={{ locale }}>
+              <LocalizedLink to="/app/leaderboard">
                 {t("common:actions.viewLeaderboard")}
-              </Link>
+              </LocalizedLink>
             </Button>
           </div>
         </section>

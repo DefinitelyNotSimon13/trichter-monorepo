@@ -1,10 +1,11 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import { useCallback, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { getRunsInfiniteOptions } from "#/client/@tanstack/react-query.gen";
 import type { RunView } from "#/client/types.gen";
 
+import { PasskeyPromptDialog } from "#/components/auth/passkey-prompt-dialog";
 import { InfiniteScrollSentinel } from "#/components/runs/feed/infinite-scroll-sentinel";
 import { RunFeed } from "#/components/runs/feed/run-feed";
 import { Skeleton } from "#/components/ui/skeleton";
@@ -13,6 +14,12 @@ import { StatePanel } from "#/components/ui/state-panel";
 const PAGE_SIZE = 10;
 
 export const Route = createFileRoute("/{-$locale}/app/feed")({
+  staticData: {
+    breadcrumb: "Feed",
+  },
+  validateSearch: (search: Record<string, unknown>): { newUser?: string } => ({
+    newUser: typeof search.newUser === "string" ? search.newUser : undefined,
+  }),
   component: FeedPage,
 });
 
@@ -41,6 +48,20 @@ function FeedSkeleton() {
 }
 
 function FeedPage() {
+  const { newUser } = Route.useSearch();
+  const [showPasskeyDialog, setShowPasskeyDialog] = useState(false);
+
+  useEffect(() => {
+    if (
+      newUser === "1" &&
+      typeof window !== "undefined" &&
+      window.PublicKeyCredential &&
+      !localStorage.getItem("passkey-prompt-dismissed")
+    ) {
+      setShowPasskeyDialog(true);
+    }
+  }, [newUser]);
+
   const query = useInfiniteQuery({
     ...getRunsInfiniteOptions({
       query: {
@@ -73,13 +94,21 @@ function FeedPage() {
     );
 
   return (
-    <div className="flex flex-col items-center gap-6 lg:items-start">
-      <RunFeed runs={runs} />
-      <InfiniteScrollSentinel
-        enabled={Boolean(query.hasNextPage)}
-        onIntersect={handleLoadMore}
+    <>
+      <div className="flex flex-col items-center gap-6 lg:items-start">
+        <RunFeed runs={runs} />
+        <InfiniteScrollSentinel
+          enabled={Boolean(query.hasNextPage)}
+          onIntersect={handleLoadMore}
+        />
+        {query.isFetchingNextPage && (
+          <StatePanel>Loading more runs…</StatePanel>
+        )}
+      </div>
+      <PasskeyPromptDialog
+        open={showPasskeyDialog}
+        onOpenChange={setShowPasskeyDialog}
       />
-      {query.isFetchingNextPage && <StatePanel>Loading more runs…</StatePanel>}
-    </div>
+    </>
   );
 }

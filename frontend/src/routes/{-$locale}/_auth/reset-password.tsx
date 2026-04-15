@@ -11,10 +11,9 @@ export const Route = createFileRoute("/{-$locale}/_auth/reset-password")({
 });
 
 function ResetPasswordPage() {
-  const { locale } = Route.useParams();
   return (
-    <AuthCardWrapper locale={locale ?? ""}>
-      <ResetPasswordForm className="w-full" locale={locale ?? ""} />
+    <AuthCardWrapper>
+      <ResetPasswordForm className="w-full" />
     </AuthCardWrapper>
   );
 }

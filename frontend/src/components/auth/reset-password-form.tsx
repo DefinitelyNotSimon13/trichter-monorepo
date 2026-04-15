@@ -1,11 +1,11 @@
-import { Link, useSearch } from "@tanstack/react-router";
+import { useSearch } from "@tanstack/react-router";
 import { Field, FieldDescription, FieldGroup } from "#/components/ui/field";
 import { useAppForm } from "#/hooks/form";
 import { useFormMessages } from "#/hooks/use-form-error";
 import { authClient } from "#/lib/auth-client";
-import type { LocaleProps } from "#/lib/utils";
-import { passwordConfirmValidator, passwordValidator } from "#/lib/validators";
+import { passwordValidator } from "#/lib/validators";
 import { AuthCard } from "./auth-card";
+import { LocalizedLink } from "../localized-link";
 
 type ResetPasswordFormValues = {
   password: string;
@@ -17,10 +17,9 @@ type ResetPasswordSearch = {
   error?: string;
 };
 
-type ResetPasswordFormProps = React.ComponentProps<"div"> & LocaleProps;
+type ResetPasswordFormProps = React.ComponentProps<"div">;
 
 export function ResetPasswordForm({
-  locale,
   className,
   ...props
 }: ResetPasswordFormProps) {
@@ -80,13 +79,9 @@ export function ResetPasswordForm({
       footer={
         <>
           Back to{" "}
-          <Link
-            to="/{-$locale}/login"
-            params={{ locale }}
-            className="underline underline-offset-4"
-          >
+          <LocalizedLink to="/login" className="underline underline-offset-4">
             login
-          </Link>
+          </LocalizedLink>
         </>
       }
       {...props}
@@ -113,7 +108,17 @@ export function ResetPasswordForm({
 
           <form.AppField
             name="confirmPassword"
-            validators={passwordConfirmValidator}
+            validators={{
+              onChangeListenTo: ["password"] as const,
+              onChange: ({ value, fieldApi }) => {
+                if (!value) return "Please confirm your password";
+                const password = fieldApi.form.getFieldValue(
+                  "password",
+                ) as string;
+                if (value !== password) return "Passwords do not match";
+                return undefined;
+              },
+            }}
           >
             {(field) => (
               <field.FormPasswordInput
@@ -134,14 +139,14 @@ export function ResetPasswordForm({
           {successMessage ? (
             <Field>
               <FieldDescription className="text-center text-foreground">
-                {successMessage}{" "}
-                <Link
-                  to="/{-$locale}/login"
-                  params={{ locale }}
+                {successMessage}
+                <br />
+                <LocalizedLink
+                  to="/login"
                   className="underline underline-offset-4"
                 >
                   Go to login
-                </Link>
+                </LocalizedLink>
                 .
               </FieldDescription>
             </Field>

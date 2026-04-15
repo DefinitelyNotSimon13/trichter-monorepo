@@ -78,8 +78,9 @@ class User(
     fun toUserInfo(): UserInfo =
         UserInfo(
             id = id,
-            name = name,
+            name = displayUsername,
             username = username,
+            image = image,
         )
 }
 
@@ -87,4 +88,5 @@ data class UserInfo(
     val id: String,
     val name: String,
     val username: String,
+    val image: String?,
 )
