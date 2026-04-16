@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Button } from "#/components/ui/button";
 import { Field, FieldDescription, FieldGroup } from "#/components/ui/field";
 import { useFormMessages } from "#/hooks/use-form-error";
-import { useTurnstile } from "#/hooks/use-turnstile";
+import type { useTurnstile } from "#/hooks/use-turnstile";
 import { authClient } from "#/lib/auth-client";
 
 type GetFetchOptions = ReturnType<typeof useTurnstile>["getFetchOptions"];

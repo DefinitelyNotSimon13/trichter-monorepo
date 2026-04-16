@@ -1,4 +1,4 @@
-import { createFileRoute, useRouter } from "@tanstack/react-router";
+import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import { Field, FieldDescription, FieldGroup } from "#/components/ui/field";
 import { AuthCard } from "#/components/auth/auth-card";
 import { useAppForm } from "#/hooks/form";
@@ -6,21 +6,21 @@ import { useFormError } from "#/hooks/use-form-error";
 import { useTurnstile } from "#/hooks/use-turnstile";
 import { authClient } from "#/lib/auth-client";
 import { TurnstileWidget } from "#/components/auth/turnstile-widget";
-import { Button } from "#/components/ui/button";
-import { LocalizedLink } from "#/components/localized-link";
 import { AuthCardWrapper } from "#/components/auth/auth-card-wrapper";
+import z from "zod";
 
 export const Route = createFileRoute("/{-$locale}/_auth/verify-otp")({
-  validateSearch: (search: Record<string, unknown>) => ({
-    email: typeof search.email === "string" ? search.email : "",
-    redirectTo:
-      typeof search.redirectTo === "string" ? search.redirectTo : "/app/feed",
+  validateSearch: z.object({
+    email: z.string().default(""),
+    redirectTo: z.string().default("/app/feed"),
   }),
+
   component: VerifyOtpPage,
 });
 
 function VerifyOtpPage() {
   const { email, redirectTo } = Route.useSearch();
+  const { ref: turnstileRef, getFetchOptions } = useTurnstile();
   const router = useRouter();
   const { error, setError, clearError } = useFormError();
 
@@ -39,6 +39,7 @@ function VerifyOtpPage() {
       const result = await authClient.signIn.emailOtp({
         email,
         otp: value.otp.trim(),
+        fetchOptions: getFetchOptions(),
       });
 
       if (result.error) {
@@ -81,6 +82,11 @@ function VerifyOtpPage() {
               )}
             </form.AppField>
 
+            <TurnstileWidget
+              ref={turnstileRef}
+              className="flex w-full justify-center"
+            />
+
             {error ? (
               <Field>
                 <FieldDescription className="text-destructive">
@@ -96,12 +102,15 @@ function VerifyOtpPage() {
             <Field>
               <FieldDescription className="text-center">
                 Wrong email?{" "}
-                <LocalizedLink
-                  to="/login"
+                <Link
+                  to="/{-$locale}/login"
+                  search={{
+                    initialLogin: email,
+                  }}
                   className="underline underline-offset-4"
                 >
                   Go back
-                </LocalizedLink>
+                </Link>
               </FieldDescription>
             </Field>
           </FieldGroup>

@@ -1,4 +1,4 @@
-import { useRouter } from "@tanstack/react-router";
+import { Link, useRouter } from "@tanstack/react-router";
 import {
   Field,
   FieldDescription,
@@ -9,11 +9,13 @@ import { useAppForm } from "#/hooks/form";
 import { useFormError } from "#/hooks/use-form-error";
 import { useTurnstile } from "#/hooks/use-turnstile";
 import { authClient } from "#/lib/auth-client";
-import { emailValidator, passwordValidator } from "#/lib/validators";
+import { emailValidator, isEmail, passwordValidator } from "#/lib/validators";
 import { AuthCard } from "./auth-card";
 import { SocialLoginButton } from "./social-login-button";
 import { TurnstileWidget } from "./turnstile-widget";
-import { LocalizedLink } from "../localized-link";
+import { PrivacyNotice } from "./privacy-notice";
+import { toast } from "sonner";
+import { useState } from "react";
 
 type SignupFormValues = {
   name: string;
@@ -23,9 +25,17 @@ type SignupFormValues = {
   confirmPassword: string;
 };
 
-type SignupFormProps = React.ComponentProps<"div">;
+type SignupFormProps = React.ComponentProps<"div"> & {
+  redirectTo?: string;
+  initialLogin?: string;
+};
 
-export function SignupForm({ className, ...props }: SignupFormProps) {
+export function SignupForm({
+  className,
+  initialLogin,
+  redirectTo,
+  ...props
+}: SignupFormProps) {
   const {
     error: formError,
     setError: setFormError,
@@ -37,8 +47,8 @@ export function SignupForm({ className, ...props }: SignupFormProps) {
   const form = useAppForm({
     defaultValues: {
       name: "",
-      username: "",
-      email: "",
+      username: !isEmail(initialLogin ?? "") ? (initialLogin ?? "") : "",
+      email: isEmail(initialLogin ?? "") ? (initialLogin ?? "") : "",
       password: "",
       confirmPassword: "",
     } satisfies SignupFormValues,
@@ -47,24 +57,28 @@ export function SignupForm({ className, ...props }: SignupFormProps) {
 
       const fetchOptions = getFetchOptions();
 
-      const result = await authClient.signUp.email({
+      const { data, error } = await authClient.signUp.email({
         name: value.name.trim(),
         email: value.email.trim(),
         username: value.username.trim(),
         displayUsername: value.username.trim(),
         password: value.password,
-        callbackURL: `/app/feed`,
+        callbackURL: redirectTo
+          ? redirectTo + "?newUser=true"
+          : "/app/feed?newUser=true",
         fetchOptions,
       });
 
-      if (result.error) {
-        setFormError(result.error.message ?? "Sign up failed");
+      if (error) {
+        setFormError(error.message ?? "Sign up failed");
         return;
       }
 
-      await router.navigate({
-        to: "/{-$locale}/app/feed",
-        search: { newUser: "1" },
+      router.navigate({
+        to: "/{-$locale}/login",
+        search: {
+          newUser: true,
+        },
       });
     },
   });
@@ -74,19 +88,7 @@ export function SignupForm({ className, ...props }: SignupFormProps) {
       className={className}
       title="Create your account"
       description="Sign up with Google or create an account with email and username"
-      footer={
-        <>
-          By clicking continue, you agree to our
-          <LocalizedLink to="/terms" className="underline underline-offset-4">
-            Terms of Service
-          </LocalizedLink>
-          and
-          <LocalizedLink to="/privacy" className="underline underline-offset-4">
-            Privacy Policy
-          </LocalizedLink>
-          .
-        </>
-      }
+      footer={<PrivacyNotice />}
       {...props}
     >
       <form
@@ -145,7 +147,7 @@ export function SignupForm({ className, ...props }: SignupFormProps) {
               <field.FormTextInput
                 label="Username"
                 type="text"
-                placeholder="simon"
+                placeholder="alcoholicjohn"
                 autoComplete="username"
               />
             )}
@@ -213,19 +215,40 @@ export function SignupForm({ className, ...props }: SignupFormProps) {
             <form.AppForm>
               <form.FormSubmitButton label="Create account" />
             </form.AppForm>
-
-            <FieldDescription className="text-center">
-              Already have an account?{" "}
-              <LocalizedLink
-                to="/login"
-                className="underline underline-offset-4"
-              >
-                Sign in
-              </LocalizedLink>
-            </FieldDescription>
           </Field>
         </FieldGroup>
       </form>
+
+      <form.Subscribe
+        selector={(state) => {
+          const trimmedEmail = state.values.email.trim();
+          const trimmedUsername = state.values.username.trim();
+          return isEmail(trimmedEmail)
+            ? trimmedEmail
+            : trimmedUsername.length > 0
+              ? trimmedUsername
+              : undefined;
+        }}
+        children={(login) => {
+          return (
+            <div className="pt-2">
+              <FieldDescription className="text-center">
+                Already have an account?{" "}
+                <Link
+                  to="/{-$locale}/login"
+                  search={{
+                    redirectTo: redirectTo,
+                    initialLogin: login,
+                  }}
+                  className="underline underline-offset-4"
+                >
+                  Sign in
+                </Link>
+              </FieldDescription>
+            </div>
+          );
+        }}
+      />
     </AuthCard>
   );
 }

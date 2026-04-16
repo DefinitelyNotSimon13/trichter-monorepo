@@ -47,6 +47,13 @@ export const Route = createFileRoute("/{-$locale}/app/profile/{-$userId}")({
 function ProfileSkeleton() {
   return (
     <div className="space-y-6">
+      <div className="flex items-center gap-4">
+        <Skeleton className="size-16 rounded-full" />
+        <div className="space-y-2">
+          <Skeleton className="h-6 w-40" />
+          <Skeleton className="h-4 w-24" />
+        </div>
+      </div>
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {Array.from({ length: 4 }).map((_, i) => (
           // biome-ignore lint/suspicious/noArrayIndexKey: static skeleton
@@ -75,24 +82,6 @@ function PublicProfilePage() {
 
   return (
     <section className="space-y-6">
-      <header className="flex items-center gap-4">
-        <Avatar className="size-16">
-          <AvatarFallback className="text-xl font-bold bg-primary/15 text-primary">
-            {initial}
-          </AvatarFallback>
-        </Avatar>
-        <div>
-          <h1 className="text-2xl font-semibold tracking-tight">
-            {displayName}
-          </h1>
-          {userInfo?.username ? (
-            <p className="text-sm text-muted-foreground">
-              @{userInfo.username}
-            </p>
-          ) : null}
-        </div>
-      </header>
-
       {runsQuery.isPending ? (
         <ProfileSkeleton />
       ) : runsQuery.isError ? (
@@ -101,6 +90,23 @@ function PublicProfilePage() {
         </StatePanel>
       ) : (
         <>
+          <header className="flex items-center gap-4">
+            <Avatar className="size-16">
+              <AvatarFallback className="text-xl font-bold bg-primary/15 text-primary">
+                {initial}
+              </AvatarFallback>
+            </Avatar>
+            <div>
+              <h1 className="text-2xl font-semibold tracking-tight">
+                {displayName}
+              </h1>
+              {userInfo?.username ? (
+                <p className="text-sm text-muted-foreground">
+                  @{userInfo.username}
+                </p>
+              ) : null}
+            </div>
+          </header>
           <ProfileStats runs={runs} />
           <div>
             <h2 className="mb-4 text-lg font-semibold tracking-tight">

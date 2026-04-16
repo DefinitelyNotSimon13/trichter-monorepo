@@ -54,6 +54,11 @@ export const auth = betterAuth({
         html: passwordResetEmailHtml(url),
       });
     },
+    onExistingUserSignUp: async ({ user }, request) => {
+      //TODO: Verify user about it
+      console.log(`Someone tried to sign up with ${user.email}`);
+      console.debug(request);
+    },
   },
   socialProviders: {
     google: {
@@ -78,6 +83,7 @@ export const auth = betterAuth({
       },
     }),
     emailOTP({
+      storeOTP: "hashed",
       async sendVerificationOTP({ email, otp, type }) {
         void sendEmail({
           to: email,
@@ -92,6 +98,7 @@ export const auth = betterAuth({
       expiresIn: 600,
     }),
     magicLink({
+      storeToken: "hashed",
       async sendMagicLink({ email, url }) {
         void sendEmail({
           to: email,
@@ -123,8 +130,11 @@ export const auth = betterAuth({
       ],
     }),
     oauthProvider({
-      loginPage: "/login",
-      consentPage: "/consent",
+      loginPage: "/auth/login",
+      consentPage: "/auth/consent",
+      silenceWarnings: {
+        oauthAuthServerConfig: true,
+      },
     }),
     i18n({
       translations: {

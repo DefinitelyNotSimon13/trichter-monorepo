@@ -26,6 +26,9 @@ import { authClient } from "#/lib/auth-client";
 import { getSession } from "#/lib/auth.functions";
 import { cn } from "#/lib/utils";
 import { LocalizedLink } from "#/components/localized-link";
+import z from "zod";
+import { useEffect, useState } from "react";
+import { PasskeyPromptDialog } from "#/components/auth/passkey-prompt-dialog";
 
 export const Route = createFileRoute("/{-$locale}/app")({
   beforeLoad: async () => {
@@ -35,6 +38,9 @@ export const Route = createFileRoute("/{-$locale}/app")({
     }
   },
   component: AppLayout,
+  validateSearch: z.object({
+    newUser: z.boolean().optional(),
+  }),
 });
 
 function AppHeader() {
@@ -185,6 +191,20 @@ function MobileBottomNav() {
 }
 
 function AppLayout() {
+  const { newUser } = Route.useSearch();
+  const [showPasskeyDialog, setShowPasskeyDialog] = useState(false);
+
+  useEffect(() => {
+    if (
+      newUser === true &&
+      typeof window !== "undefined" &&
+      window.PublicKeyCredential &&
+      !localStorage.getItem("passkey-prompt-dismissed")
+    ) {
+      setShowPasskeyDialog(true);
+    }
+  }, [newUser]);
+
   return (
     <SidebarProvider defaultOpen={false}>
       <AppSidebar />
@@ -193,6 +213,10 @@ function AppLayout() {
         <main className="mx-auto w-full max-w-4xl px-4 py-8 pb-24 sm:px-6 md:pb-8">
           <PageWrapper>
             <Outlet />
+            <PasskeyPromptDialog
+              open={showPasskeyDialog}
+              onOpenChange={setShowPasskeyDialog}
+            />
           </PageWrapper>
         </main>
       </SidebarInset>

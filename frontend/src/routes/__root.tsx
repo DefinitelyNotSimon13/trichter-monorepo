@@ -9,19 +9,17 @@ import {
   useRouterState,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
-import { useEffect, useState } from "react";
 import { I18nextProvider } from "react-i18next";
-import type { i18n as I18nInstance } from "i18next";
 
 import { Button } from "#/components/ui/button";
 import { TooltipProvider } from "#/components/ui/tooltip";
 import TanStackQueryDevtools from "#/integrations/tanstack-query/devtools";
 import TanstackQueryProvider from "#/integrations/tanstack-query/root-provider";
-import { createI18n } from "#/lib/i18n/create-i18n";
 import { normalizeLocale } from "#/lib/i18n/locale";
 import appCss from "#/styles.css?url";
 import { initI18n } from "#/lib/i18n/config";
-import { toast, Toaster } from "sonner";
+import { Toaster } from "sonner";
+import { createOauthClients } from "#/lib/auth.functions";
 
 interface RouterContext {
   queryClient: QueryClient;
@@ -72,6 +70,9 @@ function ErrorPage({ error }: { error: Error }) {
 }
 
 export const Route = createRootRouteWithContext<RouterContext>()({
+  beforeLoad: async () => {
+    // await createOauthClients();
+  },
   head: () => ({
     meta: [
       { charSet: "utf-8" },

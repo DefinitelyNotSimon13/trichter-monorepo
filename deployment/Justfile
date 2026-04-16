@@ -21,14 +21,14 @@ print-sops-key:
 
 encrypt *files:
     @for file in {{files}}; do \
-      echo "Encrypting $$file"; \
-      SOPS_AGE_KEY_FILE="{{keys_file}}" sops --encrypt --in-place "$$file"; \
+      echo "Encrypting $file"; \
+      SOPS_AGE_KEY_FILE="{{keys_file}}" sops --encrypt --in-place "$file"; \
     done
 
 decrypt *files:
     @for file in {{files}}; do \
-      echo "Decrypting $$file"; \
-      SOPS_AGE_KEY_FILE="{{keys_file}}" sops --decrypt --in-place "$$file"; \
+      echo "Decrypting $file"; \
+      SOPS_AGE_KEY_FILE="{{keys_file}}" sops --decrypt --in-place "$file"; \
     done
 
 encrypt-dir dir:

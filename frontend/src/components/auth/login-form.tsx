@@ -1,4 +1,4 @@
-import { useHydrated, useRouter } from "@tanstack/react-router";
+import { Link, useHydrated, useRouter } from "@tanstack/react-router";
 import { ChevronDown, KeyRound, Link2, Mail } from "lucide-react";
 import { useState } from "react";
 import { Button } from "#/components/ui/button";
@@ -24,6 +24,7 @@ import { AuthCard } from "./auth-card";
 import { SocialLoginButton } from "./social-login-button";
 import { TurnstileWidget } from "./turnstile-widget";
 import { LocalizedLink } from "../localized-link";
+import { PrivacyNotice } from "./privacy-notice";
 
 type LoginFormValues = {
   login: string;
@@ -32,12 +33,18 @@ type LoginFormValues = {
 
 type LoginFormProps = React.ComponentProps<"div"> & {
   redirectTo?: string;
+  initialLogin?: string;
 };
 
 type MoreOption = "passkey" | null;
 type GetFetchOptions = ReturnType<typeof useTurnstile>["getFetchOptions"];
 
-export function LoginForm({ className, redirectTo, ...props }: LoginFormProps) {
+export function LoginForm({
+  className,
+  redirectTo,
+  initialLogin,
+  ...props
+}: LoginFormProps) {
   const {
     error: formError,
     setError: setFormError,
@@ -66,7 +73,7 @@ export function LoginForm({ className, redirectTo, ...props }: LoginFormProps) {
 
   const form = useAppForm({
     defaultValues: {
-      login: "",
+      login: initialLogin ?? "",
       password: "",
     } satisfies LoginFormValues,
     onSubmit: async ({ value }) => {
@@ -76,7 +83,7 @@ export function LoginForm({ className, redirectTo, ...props }: LoginFormProps) {
       const password = value.password;
       const fetchOptions = getFetchOptions();
 
-      const result = isEmail(identifier)
+      const { data, error } = isEmail(identifier)
         ? await authClient.signIn.email({
             email: identifier,
             password,
@@ -90,8 +97,9 @@ export function LoginForm({ className, redirectTo, ...props }: LoginFormProps) {
             fetchOptions,
           });
 
-      if (result.error) {
-        setFormError(result.error.message ?? "Login failed");
+      if (error) {
+        setFormError(error.message ?? "Login failed");
+        return;
       }
     },
   });
@@ -101,19 +109,7 @@ export function LoginForm({ className, redirectTo, ...props }: LoginFormProps) {
       className={className}
       title="Welcome back"
       description="Sign in to your account"
-      footer={
-        <>
-          By continuing, you agree to our{" "}
-          <LocalizedLink to="/terms" className="underline underline-offset-4">
-            Terms of Service
-          </LocalizedLink>{" "}
-          and{" "}
-          <LocalizedLink to="/privacy" className="underline underline-offset-4">
-            Privacy Policy
-          </LocalizedLink>
-          .
-        </>
-      }
+      footer={<PrivacyNotice />}
       {...props}
     >
       <form
@@ -208,16 +204,6 @@ export function LoginForm({ className, redirectTo, ...props }: LoginFormProps) {
                 disabled={credentialsLocked}
               />
             </form.AppForm>
-
-            <FieldDescription className="text-center">
-              Don&apos;t have an account?{" "}
-              <LocalizedLink
-                to="/signup"
-                className="underline underline-offset-4"
-              >
-                Sign up
-              </LocalizedLink>
-            </FieldDescription>
           </Field>
         </FieldGroup>
       </form>
@@ -229,20 +215,36 @@ export function LoginForm({ className, redirectTo, ...props }: LoginFormProps) {
           const email = isEmail(trimmedLogin) ? trimmedLogin : null;
 
           return (
-            <MoreSignInOptions
-              moreOptionsDefaultOpen={moreOptionsDefaultOpen}
-              canUsePasskey={canUsePasskey}
-              activeMoreOption={activeMoreOption}
-              setActiveMoreOption={setActiveMoreOption}
-              lastMethod={lastMethod}
-              callbackURL={callbackURL}
-              email={email}
-              getFetchOptions={getFetchOptions}
-              credentialsLocked={credentialsLocked}
-              onCredentialsLockChange={setCredentialsLocked}
-              magicLinkSentEmail={magicLinkSentEmail}
-              onMagicLinkSentChange={setMagicLinkSentEmail}
-            />
+            <div className="pt-5">
+              <FieldDescription className="text-center">
+                Don&apos;t have an account?{" "}
+                <Link
+                  to="/{-$locale}/signup"
+                  search={{
+                    redirectTo: redirectTo,
+                    initialLogin:
+                      trimmedLogin.length > 0 ? trimmedLogin : undefined,
+                  }}
+                  className="underline underline-offset-4"
+                >
+                  Sign up
+                </Link>
+              </FieldDescription>
+              <MoreSignInOptions
+                moreOptionsDefaultOpen={moreOptionsDefaultOpen}
+                canUsePasskey={canUsePasskey}
+                activeMoreOption={activeMoreOption}
+                setActiveMoreOption={setActiveMoreOption}
+                lastMethod={lastMethod}
+                callbackURL={callbackURL}
+                email={email}
+                getFetchOptions={getFetchOptions}
+                credentialsLocked={credentialsLocked}
+                onCredentialsLockChange={setCredentialsLocked}
+                magicLinkSentEmail={magicLinkSentEmail}
+                onMagicLinkSentChange={setMagicLinkSentEmail}
+              />
+            </div>
           );
         }}
       />

@@ -1,15 +1,15 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo } from "react";
 
 import { getRunsInfiniteOptions } from "#/client/@tanstack/react-query.gen";
 import type { RunView } from "#/client/types.gen";
 
-import { PasskeyPromptDialog } from "#/components/auth/passkey-prompt-dialog";
 import { InfiniteScrollSentinel } from "#/components/runs/feed/infinite-scroll-sentinel";
 import { RunFeed } from "#/components/runs/feed/run-feed";
 import { Skeleton } from "#/components/ui/skeleton";
 import { StatePanel } from "#/components/ui/state-panel";
+import { Spinner } from "#/components/ui/spinner";
 
 const PAGE_SIZE = 10;
 
@@ -17,9 +17,6 @@ export const Route = createFileRoute("/{-$locale}/app/feed")({
   staticData: {
     breadcrumb: "Feed",
   },
-  validateSearch: (search: Record<string, unknown>): { newUser?: string } => ({
-    newUser: typeof search.newUser === "string" ? search.newUser : undefined,
-  }),
   component: FeedPage,
 });
 
@@ -48,20 +45,6 @@ function FeedSkeleton() {
 }
 
 function FeedPage() {
-  const { newUser } = Route.useSearch();
-  const [showPasskeyDialog, setShowPasskeyDialog] = useState(false);
-
-  useEffect(() => {
-    if (
-      newUser === "1" &&
-      typeof window !== "undefined" &&
-      window.PublicKeyCredential &&
-      !localStorage.getItem("passkey-prompt-dismissed")
-    ) {
-      setShowPasskeyDialog(true);
-    }
-  }, [newUser]);
-
   const query = useInfiniteQuery({
     ...getRunsInfiniteOptions({
       query: {
@@ -71,8 +54,8 @@ function FeedPage() {
     }),
     initialPageParam: 0,
     getNextPageParam: (lastPage) => {
-      if (lastPage.last) return undefined;
-      return (lastPage.number ?? 0) + 1;
+      if (lastPage.page?.number === lastPage.page?.totalPages) return undefined;
+      return (lastPage.page?.number ?? 0) + 1;
     },
   });
 
@@ -94,21 +77,20 @@ function FeedPage() {
     );
 
   return (
-    <>
-      <div className="flex flex-col items-center gap-6 lg:items-start">
-        <RunFeed runs={runs} />
-        <InfiniteScrollSentinel
-          enabled={Boolean(query.hasNextPage)}
-          onIntersect={handleLoadMore}
-        />
-        {query.isFetchingNextPage && (
-          <StatePanel>Loading more runs…</StatePanel>
-        )}
-      </div>
-      <PasskeyPromptDialog
-        open={showPasskeyDialog}
-        onOpenChange={setShowPasskeyDialog}
+    <div className="flex flex-col items-center gap-6 lg:items-start">
+      <RunFeed runs={runs} />
+      {query.isFetchingNextPage && (
+        <StatePanel>
+          <div className="flex gap-2">
+            <Spinner />
+            <span className="line-clamp-1">Loading more runs…</span>
+          </div>
+        </StatePanel>
+      )}
+      <InfiniteScrollSentinel
+        enabled={Boolean(query.hasNextPage)}
+        onIntersect={handleLoadMore}
       />
-    </>
+    </div>
   );
 }

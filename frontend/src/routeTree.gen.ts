@@ -15,6 +15,7 @@ import { Route as Char123LocaleChar125TermsRouteImport } from './routes/{-$local
 import { Route as Char123LocaleChar125PrivacyRouteImport } from './routes/{-$locale}/privacy'
 import { Route as Char123LocaleChar125AppRouteImport } from './routes/{-$locale}/app'
 import { Route as Char123LocaleChar125AboutRouteImport } from './routes/{-$locale}/about'
+import { Route as DotwellKnownOpenidConfigurationRouteImport } from './routes/[.]well-known/openid-configuration'
 import { Route as Char123LocaleChar125AppIndexRouteImport } from './routes/{-$locale}/app/index'
 import { Route as Char123LocaleChar125AppSettingsRouteImport } from './routes/{-$locale}/app/settings'
 import { Route as Char123LocaleChar125AppLeaderboardRouteImport } from './routes/{-$locale}/app/leaderboard'
@@ -25,12 +26,14 @@ import { Route as Char123LocaleChar125AuthSignupRouteImport } from './routes/{-$
 import { Route as Char123LocaleChar125AuthResetPasswordRouteImport } from './routes/{-$locale}/_auth/reset-password'
 import { Route as Char123LocaleChar125AuthLoginRouteImport } from './routes/{-$locale}/_auth/login'
 import { Route as Char123LocaleChar125AuthForgotPasswordRouteImport } from './routes/{-$locale}/_auth/forgot-password'
+import { Route as Char123LocaleChar125AuthConsentRouteImport } from './routes/{-$locale}/_auth/consent'
 import { Route as Char123LocaleChar125AuthCompleteProfileRouteImport } from './routes/{-$locale}/_auth/complete-profile'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 import { Route as Char123LocaleChar125AppAdminIndexRouteImport } from './routes/{-$locale}/app/admin/index'
 import { Route as Char123LocaleChar125AppProfileChar123UserIdChar125RouteImport } from './routes/{-$locale}/app/profile.{-$userId}'
 import { Route as Char123LocaleChar125AppAdminUsersRouteImport } from './routes/{-$locale}/app/admin/users'
 import { Route as Char123LocaleChar125AppAdminRunsRouteImport } from './routes/{-$locale}/app/admin/runs'
+import { Route as DotwellKnownOauthAuthorizationServerApiAuthRouteImport } from './routes/[.]well-known/oauth-authorization-server.api.auth'
 
 const Char123LocaleChar125RouteRoute =
   Char123LocaleChar125RouteRouteImport.update({
@@ -66,6 +69,12 @@ const Char123LocaleChar125AboutRoute =
     id: '/about',
     path: '/about',
     getParentRoute: () => Char123LocaleChar125RouteRoute,
+  } as any)
+const DotwellKnownOpenidConfigurationRoute =
+  DotwellKnownOpenidConfigurationRouteImport.update({
+    id: '/.well-known/openid-configuration',
+    path: '/.well-known/openid-configuration',
+    getParentRoute: () => rootRouteImport,
   } as any)
 const Char123LocaleChar125AppIndexRoute =
   Char123LocaleChar125AppIndexRouteImport.update({
@@ -127,6 +136,12 @@ const Char123LocaleChar125AuthForgotPasswordRoute =
     path: '/forgot-password',
     getParentRoute: () => Char123LocaleChar125RouteRoute,
   } as any)
+const Char123LocaleChar125AuthConsentRoute =
+  Char123LocaleChar125AuthConsentRouteImport.update({
+    id: '/_auth/consent',
+    path: '/consent',
+    getParentRoute: () => Char123LocaleChar125RouteRoute,
+  } as any)
 const Char123LocaleChar125AuthCompleteProfileRoute =
   Char123LocaleChar125AuthCompleteProfileRouteImport.update({
     id: '/_auth/complete-profile',
@@ -162,9 +177,16 @@ const Char123LocaleChar125AppAdminRunsRoute =
     path: '/runs',
     getParentRoute: () => Char123LocaleChar125AppAdminRoute,
   } as any)
+const DotwellKnownOauthAuthorizationServerApiAuthRoute =
+  DotwellKnownOauthAuthorizationServerApiAuthRouteImport.update({
+    id: '/.well-known/oauth-authorization-server/api/auth',
+    path: '/.well-known/oauth-authorization-server/api/auth',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/{-$locale}': typeof Char123LocaleChar125RouteRouteWithChildren
+  '/.well-known/openid-configuration': typeof DotwellKnownOpenidConfigurationRoute
   '/{-$locale}/about': typeof Char123LocaleChar125AboutRoute
   '/{-$locale}/app': typeof Char123LocaleChar125AppRouteWithChildren
   '/{-$locale}/privacy': typeof Char123LocaleChar125PrivacyRoute
@@ -172,6 +194,7 @@ export interface FileRoutesByFullPath {
   '/{-$locale}/': typeof Char123LocaleChar125IndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/{-$locale}/complete-profile': typeof Char123LocaleChar125AuthCompleteProfileRoute
+  '/{-$locale}/consent': typeof Char123LocaleChar125AuthConsentRoute
   '/{-$locale}/forgot-password': typeof Char123LocaleChar125AuthForgotPasswordRoute
   '/{-$locale}/login': typeof Char123LocaleChar125AuthLoginRoute
   '/{-$locale}/reset-password': typeof Char123LocaleChar125AuthResetPasswordRoute
@@ -182,18 +205,21 @@ export interface FileRoutesByFullPath {
   '/{-$locale}/app/leaderboard': typeof Char123LocaleChar125AppLeaderboardRoute
   '/{-$locale}/app/settings': typeof Char123LocaleChar125AppSettingsRoute
   '/{-$locale}/app/': typeof Char123LocaleChar125AppIndexRoute
+  '/.well-known/oauth-authorization-server/api/auth': typeof DotwellKnownOauthAuthorizationServerApiAuthRoute
   '/{-$locale}/app/admin/runs': typeof Char123LocaleChar125AppAdminRunsRoute
   '/{-$locale}/app/admin/users': typeof Char123LocaleChar125AppAdminUsersRoute
   '/{-$locale}/app/profile/{-$userId}': typeof Char123LocaleChar125AppProfileChar123UserIdChar125Route
   '/{-$locale}/app/admin/': typeof Char123LocaleChar125AppAdminIndexRoute
 }
 export interface FileRoutesByTo {
+  '/.well-known/openid-configuration': typeof DotwellKnownOpenidConfigurationRoute
   '/{-$locale}/about': typeof Char123LocaleChar125AboutRoute
   '/{-$locale}/privacy': typeof Char123LocaleChar125PrivacyRoute
   '/{-$locale}/terms': typeof Char123LocaleChar125TermsRoute
   '/{-$locale}': typeof Char123LocaleChar125IndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/{-$locale}/complete-profile': typeof Char123LocaleChar125AuthCompleteProfileRoute
+  '/{-$locale}/consent': typeof Char123LocaleChar125AuthConsentRoute
   '/{-$locale}/forgot-password': typeof Char123LocaleChar125AuthForgotPasswordRoute
   '/{-$locale}/login': typeof Char123LocaleChar125AuthLoginRoute
   '/{-$locale}/reset-password': typeof Char123LocaleChar125AuthResetPasswordRoute
@@ -203,6 +229,7 @@ export interface FileRoutesByTo {
   '/{-$locale}/app/leaderboard': typeof Char123LocaleChar125AppLeaderboardRoute
   '/{-$locale}/app/settings': typeof Char123LocaleChar125AppSettingsRoute
   '/{-$locale}/app': typeof Char123LocaleChar125AppIndexRoute
+  '/.well-known/oauth-authorization-server/api/auth': typeof DotwellKnownOauthAuthorizationServerApiAuthRoute
   '/{-$locale}/app/admin/runs': typeof Char123LocaleChar125AppAdminRunsRoute
   '/{-$locale}/app/admin/users': typeof Char123LocaleChar125AppAdminUsersRoute
   '/{-$locale}/app/profile/{-$userId}': typeof Char123LocaleChar125AppProfileChar123UserIdChar125Route
@@ -211,6 +238,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/{-$locale}': typeof Char123LocaleChar125RouteRouteWithChildren
+  '/.well-known/openid-configuration': typeof DotwellKnownOpenidConfigurationRoute
   '/{-$locale}/about': typeof Char123LocaleChar125AboutRoute
   '/{-$locale}/app': typeof Char123LocaleChar125AppRouteWithChildren
   '/{-$locale}/privacy': typeof Char123LocaleChar125PrivacyRoute
@@ -218,6 +246,7 @@ export interface FileRoutesById {
   '/{-$locale}/': typeof Char123LocaleChar125IndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/{-$locale}/_auth/complete-profile': typeof Char123LocaleChar125AuthCompleteProfileRoute
+  '/{-$locale}/_auth/consent': typeof Char123LocaleChar125AuthConsentRoute
   '/{-$locale}/_auth/forgot-password': typeof Char123LocaleChar125AuthForgotPasswordRoute
   '/{-$locale}/_auth/login': typeof Char123LocaleChar125AuthLoginRoute
   '/{-$locale}/_auth/reset-password': typeof Char123LocaleChar125AuthResetPasswordRoute
@@ -228,6 +257,7 @@ export interface FileRoutesById {
   '/{-$locale}/app/leaderboard': typeof Char123LocaleChar125AppLeaderboardRoute
   '/{-$locale}/app/settings': typeof Char123LocaleChar125AppSettingsRoute
   '/{-$locale}/app/': typeof Char123LocaleChar125AppIndexRoute
+  '/.well-known/oauth-authorization-server/api/auth': typeof DotwellKnownOauthAuthorizationServerApiAuthRoute
   '/{-$locale}/app/admin/runs': typeof Char123LocaleChar125AppAdminRunsRoute
   '/{-$locale}/app/admin/users': typeof Char123LocaleChar125AppAdminUsersRoute
   '/{-$locale}/app/profile/{-$userId}': typeof Char123LocaleChar125AppProfileChar123UserIdChar125Route
@@ -237,6 +267,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/{-$locale}'
+    | '/.well-known/openid-configuration'
     | '/{-$locale}/about'
     | '/{-$locale}/app'
     | '/{-$locale}/privacy'
@@ -244,6 +275,7 @@ export interface FileRouteTypes {
     | '/{-$locale}/'
     | '/api/auth/$'
     | '/{-$locale}/complete-profile'
+    | '/{-$locale}/consent'
     | '/{-$locale}/forgot-password'
     | '/{-$locale}/login'
     | '/{-$locale}/reset-password'
@@ -254,18 +286,21 @@ export interface FileRouteTypes {
     | '/{-$locale}/app/leaderboard'
     | '/{-$locale}/app/settings'
     | '/{-$locale}/app/'
+    | '/.well-known/oauth-authorization-server/api/auth'
     | '/{-$locale}/app/admin/runs'
     | '/{-$locale}/app/admin/users'
     | '/{-$locale}/app/profile/{-$userId}'
     | '/{-$locale}/app/admin/'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/.well-known/openid-configuration'
     | '/{-$locale}/about'
     | '/{-$locale}/privacy'
     | '/{-$locale}/terms'
     | '/{-$locale}'
     | '/api/auth/$'
     | '/{-$locale}/complete-profile'
+    | '/{-$locale}/consent'
     | '/{-$locale}/forgot-password'
     | '/{-$locale}/login'
     | '/{-$locale}/reset-password'
@@ -275,6 +310,7 @@ export interface FileRouteTypes {
     | '/{-$locale}/app/leaderboard'
     | '/{-$locale}/app/settings'
     | '/{-$locale}/app'
+    | '/.well-known/oauth-authorization-server/api/auth'
     | '/{-$locale}/app/admin/runs'
     | '/{-$locale}/app/admin/users'
     | '/{-$locale}/app/profile/{-$userId}'
@@ -282,6 +318,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/{-$locale}'
+    | '/.well-known/openid-configuration'
     | '/{-$locale}/about'
     | '/{-$locale}/app'
     | '/{-$locale}/privacy'
@@ -289,6 +326,7 @@ export interface FileRouteTypes {
     | '/{-$locale}/'
     | '/api/auth/$'
     | '/{-$locale}/_auth/complete-profile'
+    | '/{-$locale}/_auth/consent'
     | '/{-$locale}/_auth/forgot-password'
     | '/{-$locale}/_auth/login'
     | '/{-$locale}/_auth/reset-password'
@@ -299,6 +337,7 @@ export interface FileRouteTypes {
     | '/{-$locale}/app/leaderboard'
     | '/{-$locale}/app/settings'
     | '/{-$locale}/app/'
+    | '/.well-known/oauth-authorization-server/api/auth'
     | '/{-$locale}/app/admin/runs'
     | '/{-$locale}/app/admin/users'
     | '/{-$locale}/app/profile/{-$userId}'
@@ -307,7 +346,9 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   Char123LocaleChar125RouteRoute: typeof Char123LocaleChar125RouteRouteWithChildren
+  DotwellKnownOpenidConfigurationRoute: typeof DotwellKnownOpenidConfigurationRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
+  DotwellKnownOauthAuthorizationServerApiAuthRoute: typeof DotwellKnownOauthAuthorizationServerApiAuthRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -353,6 +394,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/{-$locale}/about'
       preLoaderRoute: typeof Char123LocaleChar125AboutRouteImport
       parentRoute: typeof Char123LocaleChar125RouteRoute
+    }
+    '/.well-known/openid-configuration': {
+      id: '/.well-known/openid-configuration'
+      path: '/.well-known/openid-configuration'
+      fullPath: '/.well-known/openid-configuration'
+      preLoaderRoute: typeof DotwellKnownOpenidConfigurationRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/{-$locale}/app/': {
       id: '/{-$locale}/app/'
@@ -424,6 +472,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof Char123LocaleChar125AuthForgotPasswordRouteImport
       parentRoute: typeof Char123LocaleChar125RouteRoute
     }
+    '/{-$locale}/_auth/consent': {
+      id: '/{-$locale}/_auth/consent'
+      path: '/consent'
+      fullPath: '/{-$locale}/consent'
+      preLoaderRoute: typeof Char123LocaleChar125AuthConsentRouteImport
+      parentRoute: typeof Char123LocaleChar125RouteRoute
+    }
     '/{-$locale}/_auth/complete-profile': {
       id: '/{-$locale}/_auth/complete-profile'
       path: '/complete-profile'
@@ -465,6 +520,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/{-$locale}/app/admin/runs'
       preLoaderRoute: typeof Char123LocaleChar125AppAdminRunsRouteImport
       parentRoute: typeof Char123LocaleChar125AppAdminRoute
+    }
+    '/.well-known/oauth-authorization-server/api/auth': {
+      id: '/.well-known/oauth-authorization-server/api/auth'
+      path: '/.well-known/oauth-authorization-server/api/auth'
+      fullPath: '/.well-known/oauth-authorization-server/api/auth'
+      preLoaderRoute: typeof DotwellKnownOauthAuthorizationServerApiAuthRouteImport
+      parentRoute: typeof rootRouteImport
     }
   }
 }
@@ -524,6 +586,7 @@ interface Char123LocaleChar125RouteRouteChildren {
   Char123LocaleChar125TermsRoute: typeof Char123LocaleChar125TermsRoute
   Char123LocaleChar125IndexRoute: typeof Char123LocaleChar125IndexRoute
   Char123LocaleChar125AuthCompleteProfileRoute: typeof Char123LocaleChar125AuthCompleteProfileRoute
+  Char123LocaleChar125AuthConsentRoute: typeof Char123LocaleChar125AuthConsentRoute
   Char123LocaleChar125AuthForgotPasswordRoute: typeof Char123LocaleChar125AuthForgotPasswordRoute
   Char123LocaleChar125AuthLoginRoute: typeof Char123LocaleChar125AuthLoginRoute
   Char123LocaleChar125AuthResetPasswordRoute: typeof Char123LocaleChar125AuthResetPasswordRoute
@@ -540,6 +603,7 @@ const Char123LocaleChar125RouteRouteChildren: Char123LocaleChar125RouteRouteChil
     Char123LocaleChar125IndexRoute: Char123LocaleChar125IndexRoute,
     Char123LocaleChar125AuthCompleteProfileRoute:
       Char123LocaleChar125AuthCompleteProfileRoute,
+    Char123LocaleChar125AuthConsentRoute: Char123LocaleChar125AuthConsentRoute,
     Char123LocaleChar125AuthForgotPasswordRoute:
       Char123LocaleChar125AuthForgotPasswordRoute,
     Char123LocaleChar125AuthLoginRoute: Char123LocaleChar125AuthLoginRoute,
@@ -557,7 +621,10 @@ const Char123LocaleChar125RouteRouteWithChildren =
 
 const rootRouteChildren: RootRouteChildren = {
   Char123LocaleChar125RouteRoute: Char123LocaleChar125RouteRouteWithChildren,
+  DotwellKnownOpenidConfigurationRoute: DotwellKnownOpenidConfigurationRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
+  DotwellKnownOauthAuthorizationServerApiAuthRoute:
+    DotwellKnownOauthAuthorizationServerApiAuthRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
