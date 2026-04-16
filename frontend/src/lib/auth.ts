@@ -130,8 +130,8 @@ export const auth = betterAuth({
       ],
     }),
     oauthProvider({
-      loginPage: "/auth/login",
-      consentPage: "/auth/consent",
+      loginPage: "/login",
+      consentPage: "/consent",
       silenceWarnings: {
         oauthAuthServerConfig: true,
       },
