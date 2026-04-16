@@ -184,10 +184,10 @@ export function LoginForm({
             )}
           </form.AppField>
 
-          <TurnstileWidget
+          {/*         <TurnstileWidget
             ref={turnstileRef}
             className="flex w-full justify-center"
-          />
+          /> */}
 
           {formError ? (
             <Field>

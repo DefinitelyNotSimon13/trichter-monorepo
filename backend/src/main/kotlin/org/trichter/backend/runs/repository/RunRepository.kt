@@ -9,7 +9,7 @@ import java.util.Optional
 import java.util.UUID
 
 interface RunRepository : JpaRepository<Run, UUID> {
-    fun findAllByUser_Id(userId: String, pageable: Pageable): Page<Run>
+    fun findAllByUserId(userId: String, pageable: Pageable): Page<Run>
     override fun findById(id: UUID): Optional<Run>
 }
 

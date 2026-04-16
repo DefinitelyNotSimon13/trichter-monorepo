@@ -8,6 +8,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -19,7 +20,6 @@ import org.trichter.app.features.ble.domain.models.ResultMeta
 import org.trichter.app.features.ble.presentation.views.BleConnectScreen
 import org.trichter.app.features.ble.presentation.views.BleConnectedScreen
 import org.trichter.app.features.ble.presentation.views.BlePermissionsScreen
-import org.trichter.app.util.Log
 import kotlin.uuid.ExperimentalUuidApi
 
 
@@ -27,43 +27,53 @@ import kotlin.uuid.ExperimentalUuidApi
 fun BleScreen(viewModel: BleViewModel) {
     val uiState by viewModel.state.collectAsStateWithLifecycle()
     val searchUserState by viewModel.searchUserState.collectAsStateWithLifecycle()
-
+    val snackbarHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(uiState.permissionState) {
         if (uiState.permissionState == PermissionState.Granted) viewModel.startScan()
     }
 
-    when {
-        uiState.permissionState != PermissionState.Granted -> BlePermissionsScreen(
-            permissionState = uiState.permissionState,
-            onRequestPermissions = { viewModel.onRequestPermissions() },
-            onOpenSettings = { viewModel.onOpenSettings() },
-        )
+    LaunchedEffect(Unit) {
+        viewModel.disconnectEvent.collect {
+            snackbarHostState.showSnackbar("Disconnected from device")
+        }
+    }
 
-        uiState.connectionState == ConnectionState.Disconnected -> BleConnectScreen(
-            advertisements = uiState.advertisements.values.toList(),
-            onConnectClick = { viewModel.connect(it) }
-        )
+    Scaffold(
+        snackbarHost = { SnackbarHost(snackbarHostState) },
+    ) { innerPadding ->
+        Box(Modifier.padding(innerPadding)) {
+            when {
+                uiState.permissionState != PermissionState.Granted -> BlePermissionsScreen(
+                    permissionState = uiState.permissionState,
+                    onRequestPermissions = { viewModel.onRequestPermissions() },
+                    onOpenSettings = { viewModel.onOpenSettings() },
+                )
 
-        uiState.connectionState == ConnectionState.Connecting -> BleConnectingScreen()
+                uiState.connectionState == ConnectionState.Disconnected -> BleConnectScreen(
+                    advertisements = uiState.advertisements.values.toList(),
+                    onConnectClick = { viewModel.connect(it) }
+                )
 
-        uiState.connectionState == ConnectionState.Connected  -> BleConnectedScreen(
-            trichterState = uiState.trichterState!!,
-            onReconnect = { Log.d("ConnectScreen", "onReconnect") },
-            onDisconnect = { viewModel.disconnect() },
-            onAck = { viewModel.sendAck() },
-            onReset = { viewModel.onReset() },
-            onFakeRun = { viewModel.onFakeRun() },
-            onSaveImage = { Log.d("ConnectScreen", "onSaveImage") },
-            onSaveRun = { meta: ResultMeta -> viewModel.saveRun(meta) },
-            searchUserState = searchUserState,
-            onQueryChange = viewModel::onQueryChange,
-            onUserClick = { viewModel.onUserClick(it) },
-            onClearUser = { viewModel.onClearUser() },
-        )
+                uiState.connectionState == ConnectionState.Connecting -> BleConnectingScreen()
 
+                uiState.connectionState == ConnectionState.Connected -> BleConnectedScreen(
+                    trichterState = uiState.trichterState!!,
+                    runSaved = uiState.runSaved,
+                    onDisconnect = { viewModel.disconnect() },
+                    onAck = { viewModel.sendAck() },
+                    onReset = { viewModel.onReset() },
+                    onFakeRun = { viewModel.onFakeRun() },
+                    onSaveRun = { meta: ResultMeta -> viewModel.saveRun(meta) },
+                    searchUserState = searchUserState,
+                    onQueryChange = viewModel::onQueryChange,
+                    onUserClick = { viewModel.onUserClick(it) },
+                    onClearUser = { viewModel.onClearUser() },
+                )
 
-        uiState.error != null -> ErrorView(uiState.error!!) { viewModel.startScan() }
+                uiState.error != null -> ErrorView(uiState.error!!) { viewModel.startScan() }
+            }
+        }
     }
 }
 

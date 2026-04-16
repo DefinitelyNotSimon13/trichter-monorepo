@@ -121,9 +121,7 @@ export const auth = betterAuth({
       secretKey: serverEnv.TURNSTYLE_SECRET_KEY,
       endpoints: [
         "/sign-up/email",
-        "/sign-in/email",
         "/sign-up/username",
-        "/sign-in/username",
         "/request-password-reset",
         "/email-otp/send-verification-otp",
         "/sign-in/magic-link",

@@ -1,79 +1,69 @@
 package org.trichter.backend.runs.model
 
 import jakarta.persistence.Column
-import jakarta.persistence.Embeddable
 import jakarta.persistence.Entity
 import jakarta.persistence.FetchType
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
-import jakarta.persistence.Version
 import jakarta.validation.constraints.NotNull
-import org.hibernate.annotations.JdbcTypeCode
+import org.hibernate.annotations.ColumnDefault
 import org.hibernate.annotations.OnDelete
 import org.hibernate.annotations.OnDeleteAction
-import org.hibernate.type.SqlTypes
 import org.trichter.backend.auth.model.User
-import org.trichter.backend.auth.model.UserInfo
-import java.time.Instant
+import java.time.OffsetDateTime
 import java.util.UUID
 
-
 @Entity
-@Table(name = "runs")
-class Run(
-    @Id @GeneratedValue(strategy = GenerationType.UUID) @Column(
-        name = "id",
-        nullable = false,
-        updatable = false
-    ) var id: UUID? = null,
+@Table(name = "runs", schema = "public")
+open class Run(
+    @Id
+    @ColumnDefault("gen_random_uuid()")
+    @Column(name = "id", nullable = false)
+    open var id: UUID? = null,
 
-    @ManyToOne(fetch = FetchType.LAZY) @OnDelete(action = OnDeleteAction.RESTRICT) @JoinColumn(name = "user_id") var user: User? = null,
+    @ManyToOne(fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "\"userId\"")
+    open var user: User? = null,
 
-    @NotNull @JdbcTypeCode(SqlTypes.JSON) @Column(
-        name = "data",
-        nullable = false,
-        columnDefinition = "jsonb"
-    ) var data: MeasurementData,
+    @NotNull
+    @Column(name = "rate", nullable = false)
+    open var rate: Double = 0.0,
 
-    @NotNull @Column(name = "image", nullable = false) var image: String = "",
+    @NotNull
+    @Column(name = "volume", nullable = false)
+    open var volume: Double = 0.0,
 
-    @NotNull @Column(name = "created_at", nullable = false, updatable = false) var createdAt: Instant = Instant.now(),
+    @NotNull
+    @Column(name = "duration", nullable = false)
+    open var duration: Double = 0.0,
 
-    @Version var version: Long = 0
+    @Column(name = "image", length = Integer.MAX_VALUE)
+    open var image: String? = null,
+
+    @NotNull
+    @ColumnDefault("now()")
+    @Column(name = "\"createdAt\"", nullable = false)
+    open var createdAt: OffsetDateTime = OffsetDateTime.now(),
+
+    @NotNull
+    @ColumnDefault("now()")
+    @Column(name = "\"lastModifiedAt\"", nullable = false)
+    open var lastModifiedAt: OffsetDateTime = OffsetDateTime.now(),
+
+    @NotNull
+    @Column(name = "version", nullable = false)
+    open var version: Long = 0L,
 ) {
-    fun toView(): RunView = RunView(
-        id = requireNotNull(id),
-        user = user?.toUserInfo(),
-        data = data,
-        hasImage = !image.isEmpty() && image != "trichter-images/placeholder.jpg",
-        imageUrl = if (!image.isEmpty()) "/api/v2/runs/${requireNotNull(id)}/image" else null,
-        createdAt = createdAt
-    )
-
     companion object {
-        fun create(data: MeasurementData, user: User?): Run = Run(
-            data = data,
+        fun create(data: MeasurementData, user: User?) = Run(
+            rate = data.rate,
+            volume = data.volume,
+            duration = data.duration,
             user = user,
         )
     }
 }
 
-@Embeddable
-data class MeasurementData(
-    var rate: Double,
-    var volume: Double,
-    var duration: Double,
-)
-
-data class RunView(
-    val id: UUID,
-    val user: UserInfo?,
-    val data: MeasurementData,
-    val hasImage: Boolean,
-    val imageUrl: String?,
-    val createdAt: Instant
-)

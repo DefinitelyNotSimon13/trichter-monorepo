@@ -15,4 +15,5 @@ data class BleUiState(
     val advertisements: PersistentMap<DeviceId, PlatformAdvertisement> = persistentMapOf(),
     val connectionState: ConnectionState = ConnectionState.Disconnected,
     val error: Throwable? = null,
+    val runSaved: Boolean = false,
 )

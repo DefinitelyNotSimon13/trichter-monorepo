@@ -8,6 +8,7 @@ import org.koin.core.module.dsl.singleOf
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
+import org.trichter.app.features.ble.data.BleServiceController
 import org.trichter.app.features.ble.data.KableBleRepository
 import org.trichter.app.features.ble.data.MokoPermissionsGateway
 import org.trichter.app.features.ble.data.network.ApiService
@@ -41,6 +42,7 @@ val bleDataModule = module {
     singleOf(::MokoPermissionsGateway).bind<PermissionsGateway>()
     singleOf(::KableBleRepository).bind<BleRepository>()
     singleOf(::ApiServiceImpl).bind<ApiService>()
+    single { BleServiceController() }
 }
 
 val bleDomainModule = module {

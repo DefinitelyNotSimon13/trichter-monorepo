@@ -7,8 +7,11 @@ import dev.icerock.moko.permissions.PermissionState
 import kotlinx.collections.immutable.toPersistentMap
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -21,24 +24,27 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import org.trichter.app.features.ble.domain.usecases.ConnectToDevice
-import org.trichter.app.features.ble.domain.usecases.ObservePermissionsState
-import org.trichter.app.features.ble.domain.usecases.OpenAppSettings
-import org.trichter.app.features.ble.domain.usecases.RequestBluetoothPermissions
-import org.trichter.app.features.ble.domain.usecases.StartScan
-import org.trichter.app.features.ble.domain.usecases.StopScan
+import org.trichter.app.features.ble.data.BleServiceController
+import org.trichter.app.features.ble.domain.models.Connection
 import org.trichter.app.features.ble.domain.models.ConnectionState
 import org.trichter.app.features.ble.domain.models.ResultMeta
+import org.trichter.app.features.ble.domain.models.SessionStatus
 import org.trichter.app.features.ble.domain.models.UserDto
 import org.trichter.app.features.ble.domain.models.id
+import org.trichter.app.features.ble.domain.usecases.ConnectToDevice
 import org.trichter.app.features.ble.domain.usecases.DisconnectFromDevice
+import org.trichter.app.features.ble.domain.usecases.ObservePermissionsState
 import org.trichter.app.features.ble.domain.usecases.ObserveScanResults
 import org.trichter.app.features.ble.domain.usecases.ObserveTrichterState
+import org.trichter.app.features.ble.domain.usecases.OpenAppSettings
+import org.trichter.app.features.ble.domain.usecases.RequestBluetoothPermissions
 import org.trichter.app.features.ble.domain.usecases.SaveRun
 import org.trichter.app.features.ble.domain.usecases.SearchUsers
 import org.trichter.app.features.ble.domain.usecases.SendAck
 import org.trichter.app.features.ble.domain.usecases.SendFakeRun
 import org.trichter.app.features.ble.domain.usecases.SendReset
+import org.trichter.app.features.ble.domain.usecases.StartScan
+import org.trichter.app.features.ble.domain.usecases.StopScan
 import kotlin.collections.emptyList
 
 
@@ -57,11 +63,21 @@ class BleViewModel(
     private val sendResetUseCase: SendReset,
     private val sendFakeRunUseCase: SendFakeRun,
     private val saveRunUseCase: SaveRun,
-    private val searchUsersUseCase: SearchUsers
+    private val searchUsersUseCase: SearchUsers,
+    private val bleServiceController: BleServiceController,
 ) : ViewModel() {
 
     private var _state = MutableStateFlow(BleUiState())
     val state: StateFlow<BleUiState> get() = _state
+
+    private val _disconnectEvent = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
+    val disconnectEvent: SharedFlow<Unit> = _disconnectEvent.asSharedFlow()
+
+    // Track whether this disconnect was user-initiated (suppress snackbar in that case)
+    private var intentionalDisconnect = false
+
+    // Stored so reconnect doesn't need to re-scan
+    private var lastAdvertisement: PlatformAdvertisement? = null
 
     init {
         observePermissionsStateUseCase().onEach { ps ->
@@ -72,8 +88,24 @@ class BleViewModel(
         observeScanResultsUseCase().onEach { onAdvertisement(it) }
             .catch { e -> _state.value = _state.value.copy(error = e) }.launchIn(viewModelScope)
 
-        observeTrichterStateUseCase().onEach {
-            _state.value = _state.value.copy(trichterState = it)
+        observeTrichterStateUseCase().onEach { trichterState ->
+            val prev = _state.value.trichterState
+            val wasConnected = prev?.connection == Connection.Connected ||
+                    _state.value.connectionState == ConnectionState.Connected
+            val isNowDisconnected = trichterState.connection == Connection.Disconnected
+
+            // Reset runSaved when a new run cycle starts (status leaves COMPLETE)
+            val runSaved = if (prev?.status == SessionStatus.COMPLETE &&
+                trichterState.status != SessionStatus.COMPLETE
+            ) false else _state.value.runSaved
+
+            _state.update { it.copy(trichterState = trichterState, runSaved = runSaved) }
+
+            if (wasConnected && isNowDisconnected && !intentionalDisconnect) {
+                _state.update { it.copy(connectionState = ConnectionState.Disconnected) }
+                bleServiceController.stop()
+                _disconnectEvent.tryEmit(Unit)
+            }
         }.catch { e -> _state.value = _state.value.copy(error = e) }.launchIn(viewModelScope)
     }
 
@@ -93,7 +125,10 @@ class BleViewModel(
     fun saveRun(meta: ResultMeta) = viewModelScope.launch {
         val imageBytes = _state.value.trichterState?.lastImage
         val userId = _searchUserState.value.selectedUser?.id
-        saveRunUseCase(meta, imageBytes, userId)
+        saveRunUseCase(meta, imageBytes, userId).onSuccess {
+            sendAckUseCase()
+            _state.update { it.copy(runSaved = true) }
+        }
     }
 
     fun onAdvertisement(advertisement: PlatformAdvertisement) {
@@ -103,12 +138,16 @@ class BleViewModel(
     }
 
     fun connect(advertisement: PlatformAdvertisement) {
+        lastAdvertisement = advertisement
+        intentionalDisconnect = false
         _state.value = _state.value.copy(connectionState = ConnectionState.Connecting, error = null)
+        bleServiceController.start()
         viewModelScope.launch {
             val res = connectUseCase(advertisement)
             _state.value = res.fold(
                 onSuccess = { _state.value.copy(connectionState = ConnectionState.Connected) },
                 onFailure = { ex ->
+                    bleServiceController.stop()
                     _state.value.copy(
                         connectionState = ConnectionState.Failed(ex.message ?: "Error")
                     )
@@ -117,14 +156,17 @@ class BleViewModel(
     }
 
     fun disconnect() {
+        intentionalDisconnect = true
         viewModelScope.launch {
             disconnectUseCase()
+            bleServiceController.stop()
             _state.value = _state.value.copy(connectionState = ConnectionState.Disconnected)
         }
     }
 
     override fun onCleared() {
         stopScan()
+        bleServiceController.stop()
         super.onCleared()
     }
 

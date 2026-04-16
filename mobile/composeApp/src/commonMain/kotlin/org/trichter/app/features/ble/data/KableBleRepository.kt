@@ -179,7 +179,7 @@ class KableBleRepository(
 
                 if (chunk.isEnd) {
                     Log.d("BLE", "Image transfer complete")
-                    _state.update { it.copy(lastImage = buf.copyOf()) }
+                    _state.update { it.copy(lastImage = buf.copyOf(), imageStatus = ImageStatus.DONE) }
                     currentImageBuffer = null
                     currentImageSize = 0
                     currentTransferId = null

@@ -1,217 +1,164 @@
-@file:OptIn(
-    ExperimentalUuidApi::class, ExperimentalTime::class,
-    ExperimentalMaterial3ExpressiveApi::class
-)
+@file:OptIn(ExperimentalTime::class)
 
 package org.trichter.app.features.runs.presentation.components
 
-import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ImageBitmap
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import nl.jacobras.humanreadable.HumanReadable
 import org.trichter.app.features.runs.data.model.Run
-import org.trichter.app.features.runs.data.model.RunData
-import org.trichter.app.features.runs.data.model.User
-import org.trichter.app.util.Log
-import kotlin.io.encoding.Base64
-import kotlin.io.encoding.ExperimentalEncodingApi
-import kotlin.math.abs
-import kotlin.math.ceil
-import kotlin.math.floor
-import kotlin.random.Random
-import kotlin.time.Clock
-import kotlin.time.Duration.Companion.days
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
-import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
 @Composable
 fun RunCard(
     run: Run,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
-    OutlinedCard(
-        modifier = modifier
-            .fillMaxWidth()
+    Card(
+        modifier = modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceContainer,
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
     ) {
-        Column(
-        ) {
-            if(run.image != "trichter-images/placeholder.jpg") {
+        Column {
+            // Image
+            if (run.hasImage && run.imageUrl != null) {
                 AsyncImage(
-                    model = "https://trichterstorage.blob.core.windows.net/" + run.image,
+                    model = run.imageUrl,
                     contentDescription = null,
                     contentScale = ContentScale.FillWidth,
-                    modifier = Modifier.fillMaxWidth()
-                )
-
-            }
-//            val imageBytes = decodeBase64Image(run.image);
-//            val bitmap: ImageBitmap? = remember(imageBytes) { decodeImage(imageBytes)}
-//            if(bitmap != null){
-//                Image(
-//                    bitmap = bitmap,
-//                    contentDescription = "Session image",
-//                    modifier = Modifier
-//                        .fillMaxWidth()
-//                        .heightIn(min = 160.dp)
-//                        .clip(MaterialTheme.shapes.extraLarge)
-//                )
-//
-//            }
-
-            Column(
-                modifier = Modifier.padding(15.dp),
-                verticalArrangement = Arrangement.spacedBy(5.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Stat(
-                    icon = Icons.Default.Settings,
-                   statTitle = "Duration",
-                    valueText = "${run.data.duration.toFixed(2)}s",
-                    color = MaterialTheme.colorScheme.primary
-                )
-                Stat(
-                    icon = Icons.Default.Add,
-                    statTitle = "Volume",
-                    valueText = "${run.data.volume.toFixed(2)}L",
-                    color = MaterialTheme.colorScheme.secondary,
-
-                )
-                Stat(
-                    icon = Icons.Default.Check,
-                    statTitle = "Rate",
-                    valueText = "${run.data.rate.toFixed(2)}L/min",
-                    color = MaterialTheme.colorScheme.tertiary
+                    modifier = Modifier.fillMaxWidth(),
                 )
             }
-            HorizontalDivider()
+
+            // Metrics grid
             Row(
-                horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier.padding(15.dp)
+                modifier = Modifier
                     .fillMaxWidth()
+                    .padding(horizontal = 12.dp, vertical = 12.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                RunMetric(label = "Rate", value = run.data?.rate, unit = "L/min", modifier = Modifier.weight(1f))
+                RunMetric(label = "Volume", value = run.data?.volume, unit = "L", modifier = Modifier.weight(1f))
+                RunMetric(label = "Duration", value = run.data?.duration, unit = "s", modifier = Modifier.weight(1f))
+            }
+
+            // Footer
+            HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
+            RunCardFooter(run = run)
+        }
+    }
+}
+
+@Composable
+private fun RunMetric(
+    label: String,
+    value: Double?,
+    unit: String,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier = modifier
+            .background(MaterialTheme.colorScheme.surfaceContainerHigh)
+            .padding(horizontal = 10.dp, vertical = 10.dp),
+    ) {
+        Text(
+            text = label.uppercase(),
+            style = MaterialTheme.typography.labelSmall,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            letterSpacing = 1.2.sp,
+        )
+        Row(
+            verticalAlignment = Alignment.Bottom,
+            horizontalArrangement = Arrangement.spacedBy(3.dp),
+            modifier = Modifier.padding(top = 4.dp),
+        ) {
+            Text(
+                text = value?.toFixed(2) ?: "—",
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.Black,
+                color = MaterialTheme.colorScheme.primary,
+            )
+            Text(
+                text = unit,
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        }
+    }
+}
+
+@Composable
+private fun RunCardFooter(run: Run) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 12.dp, vertical = 10.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            // Avatar
+            val displayName = run.user?.name ?: "Unknown"
+            val initial = displayName.firstOrNull()?.uppercaseChar()?.toString() ?: "?"
+            Box(
+                modifier = Modifier
+                    .size(28.dp)
+                    .background(MaterialTheme.colorScheme.primaryContainer, CircleShape),
+                contentAlignment = Alignment.Center,
             ) {
                 Text(
-                    text = run.user?.name ?: "Unkown",
-                    style = MaterialTheme.typography.bodyMediumEmphasized
+                    text = initial,
+                    style = MaterialTheme.typography.labelSmall,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onPrimaryContainer,
                 )
+            }
+            Text(
+                text = displayName,
+                style = MaterialTheme.typography.bodySmall,
+                fontWeight = FontWeight.SemiBold,
+            )
+        }
+
+        run.createdAt?.let { createdAt ->
+            runCatching { Instant.parse(createdAt) }.getOrNull()?.let { instant ->
                 Text(
-                    text = HumanReadable.timeAgo(run.createdAt)
+                    text = HumanReadable.timeAgo(instant),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
         }
-
-    }
-
-}
-
-@Composable
-fun Stat(
-    icon: ImageVector,
-    statTitle: String,
-    valueText: String,
-    color: Color = MaterialTheme.colorScheme.primary,
-    modifier: Modifier = Modifier
-) {
-    Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(10.dp)
-        ,
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Row() {
-            Icon(icon, contentDescription = statTitle, tint = color)
-            Spacer(Modifier.size(5.dp))
-            Text(
-                statTitle,
-                color = color
-            )
-
-        }
-        Text(
-            valueText,
-            textAlign = TextAlign.Left,
-            color = color
-        )
-
     }
 }
 
-@Preview
-@Composable
-fun RunCardPreview() {
-    val run = { instant: Instant ->
-        Run(
-            id = Uuid.random().toString(),
-            data = RunData(
-                duration = 4.5,
-                rate = 4.7,
-                volume = 0.7,
-            ),
-            image = "image",
-            createdAt = instant,
-            user = User(
-                id = Uuid.random().toString(),
-                name = "Max Mustermann",
-                username = "maxmustermann"
-            ),
-            userId = null
-        )
-    }
-
-    LazyColumn(
-        modifier = Modifier.fillMaxSize()
-            .padding(15.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        items(100) {
-            RunCard(run(randomInstant((Clock.System.now() - 2.days), Clock.System.now())))
-        }
-    }
-}
-
-fun randomInstant(start: Instant, end: Instant, random: Random = Random): Instant {
-    val startMs = start.toEpochMilliseconds()
-    val endMs = end.toEpochMilliseconds()
-    val randomMs = random.nextLong(from = startMs, until = endMs + 1)
-    return Instant.fromEpochMilliseconds(randomMs)
-}
-
+// Reused from the existing implementation
 private val POW10: LongArray = longArrayOf(
     1L, 10L, 100L, 1_000L, 10_000L, 100_000L, 1_000_000L,
     10_000_000L, 100_000_000L, 1_000_000_000L,
@@ -221,14 +168,15 @@ private val POW10: LongArray = longArrayOf(
 )
 
 private fun roundHalfAwayFromZero(x: Double): Long =
-    if (x >= 0.0) floor(x + 0.5).toLong() else ceil(x - 0.5).toLong()
+    if (x >= 0.0) kotlin.math.floor(x + 0.5).toLong()
+    else kotlin.math.ceil(x - 0.5).toLong()
 
 fun Double.toFixed(decimals: Int): String {
-    require(decimals >= 0 && decimals < POW10.size) { "decimals out of range" }
+    require(decimals >= 0 && decimals < POW10.size)
     val pow = POW10[decimals].toDouble()
     val scaled = roundHalfAwayFromZero(this * pow)
     val sign = if (scaled < 0) "-" else ""
-    val absScaled = abs(scaled)
+    val absScaled = kotlin.math.abs(scaled)
     val intPart = (absScaled / POW10[decimals]).toString()
     return if (decimals == 0) {
         "$sign$intPart"
@@ -238,10 +186,4 @@ fun Double.toFixed(decimals: Int): String {
     }
 }
 
-fun Float.toFixed(decimals: Int): String = this.toDouble().toFixed(decimals)
-
-fun decodeBase64Image(base64: String): ByteArray {
-    return Base64.decode(base64)
-}
-
-expect fun decodeImage(bytes: ByteArray): ImageBitmap?
+expect fun decodeImage(bytes: ByteArray): androidx.compose.ui.graphics.ImageBitmap?

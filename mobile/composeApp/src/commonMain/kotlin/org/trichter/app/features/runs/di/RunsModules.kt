@@ -15,6 +15,7 @@ import kotlinx.serialization.json.Json
 import org.koin.core.module.dsl.viewModelOf
 import org.trichter.app.features.runs.data.network.ApiService
 import org.trichter.app.features.runs.data.network.ApiServiceImpl
+import org.trichter.app.features.runs.presentation.LeaderboardViewModel
 import org.trichter.app.features.runs.presentation.RunsViewModel
 
 fun runsModule() = listOf(runsSharedModule)
@@ -23,6 +24,7 @@ val runsSharedModule = module {
     singleOf(::RunsRepositoryImpl).bind<RunsRepository>()
     singleOf(::ApiServiceImpl).bind<ApiService>()
     viewModelOf(::RunsViewModel)
+    viewModelOf(::LeaderboardViewModel)
 
     single<HttpClient> {
         HttpClient {
