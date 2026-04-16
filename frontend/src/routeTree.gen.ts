@@ -9,12 +9,14 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as OauthRouteImport } from './routes/oauth'
 import { Route as Char123LocaleChar125RouteRouteImport } from './routes/{-$locale}/route'
 import { Route as Char123LocaleChar125IndexRouteImport } from './routes/{-$locale}/index'
 import { Route as Char123LocaleChar125TermsRouteImport } from './routes/{-$locale}/terms'
 import { Route as Char123LocaleChar125PrivacyRouteImport } from './routes/{-$locale}/privacy'
 import { Route as Char123LocaleChar125AppRouteImport } from './routes/{-$locale}/app'
 import { Route as Char123LocaleChar125AboutRouteImport } from './routes/{-$locale}/about'
+import { Route as OauthCallbackRouteImport } from './routes/oauth.callback'
 import { Route as DotwellKnownOpenidConfigurationRouteImport } from './routes/[.]well-known/openid-configuration'
 import { Route as DotwellKnownAssetlinksDotjsonRouteImport } from './routes/[.]well-known/assetlinks[.]json'
 import { Route as Char123LocaleChar125AppIndexRouteImport } from './routes/{-$locale}/app/index'
@@ -36,6 +38,11 @@ import { Route as Char123LocaleChar125AppAdminUsersRouteImport } from './routes/
 import { Route as Char123LocaleChar125AppAdminRunsRouteImport } from './routes/{-$locale}/app/admin/runs'
 import { Route as DotwellKnownOauthAuthorizationServerApiAuthRouteImport } from './routes/[.]well-known/oauth-authorization-server.api.auth'
 
+const OauthRoute = OauthRouteImport.update({
+  id: '/oauth',
+  path: '/oauth',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const Char123LocaleChar125RouteRoute =
   Char123LocaleChar125RouteRouteImport.update({
     id: '/{-$locale}',
@@ -71,6 +78,11 @@ const Char123LocaleChar125AboutRoute =
     path: '/about',
     getParentRoute: () => Char123LocaleChar125RouteRoute,
   } as any)
+const OauthCallbackRoute = OauthCallbackRouteImport.update({
+  id: '/callback',
+  path: '/callback',
+  getParentRoute: () => OauthRoute,
+} as any)
 const DotwellKnownOpenidConfigurationRoute =
   DotwellKnownOpenidConfigurationRouteImport.update({
     id: '/.well-known/openid-configuration',
@@ -193,8 +205,10 @@ const DotwellKnownOauthAuthorizationServerApiAuthRoute =
 
 export interface FileRoutesByFullPath {
   '/{-$locale}': typeof Char123LocaleChar125RouteRouteWithChildren
+  '/oauth': typeof OauthRouteWithChildren
   '/.well-known/assetlinks.json': typeof DotwellKnownAssetlinksDotjsonRoute
   '/.well-known/openid-configuration': typeof DotwellKnownOpenidConfigurationRoute
+  '/oauth/callback': typeof OauthCallbackRoute
   '/{-$locale}/about': typeof Char123LocaleChar125AboutRoute
   '/{-$locale}/app': typeof Char123LocaleChar125AppRouteWithChildren
   '/{-$locale}/privacy': typeof Char123LocaleChar125PrivacyRoute
@@ -220,8 +234,10 @@ export interface FileRoutesByFullPath {
   '/{-$locale}/app/admin/': typeof Char123LocaleChar125AppAdminIndexRoute
 }
 export interface FileRoutesByTo {
+  '/oauth': typeof OauthRouteWithChildren
   '/.well-known/assetlinks.json': typeof DotwellKnownAssetlinksDotjsonRoute
   '/.well-known/openid-configuration': typeof DotwellKnownOpenidConfigurationRoute
+  '/oauth/callback': typeof OauthCallbackRoute
   '/{-$locale}/about': typeof Char123LocaleChar125AboutRoute
   '/{-$locale}/privacy': typeof Char123LocaleChar125PrivacyRoute
   '/{-$locale}/terms': typeof Char123LocaleChar125TermsRoute
@@ -247,8 +263,10 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/{-$locale}': typeof Char123LocaleChar125RouteRouteWithChildren
+  '/oauth': typeof OauthRouteWithChildren
   '/.well-known/assetlinks.json': typeof DotwellKnownAssetlinksDotjsonRoute
   '/.well-known/openid-configuration': typeof DotwellKnownOpenidConfigurationRoute
+  '/oauth/callback': typeof OauthCallbackRoute
   '/{-$locale}/about': typeof Char123LocaleChar125AboutRoute
   '/{-$locale}/app': typeof Char123LocaleChar125AppRouteWithChildren
   '/{-$locale}/privacy': typeof Char123LocaleChar125PrivacyRoute
@@ -277,8 +295,10 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/{-$locale}'
+    | '/oauth'
     | '/.well-known/assetlinks.json'
     | '/.well-known/openid-configuration'
+    | '/oauth/callback'
     | '/{-$locale}/about'
     | '/{-$locale}/app'
     | '/{-$locale}/privacy'
@@ -304,8 +324,10 @@ export interface FileRouteTypes {
     | '/{-$locale}/app/admin/'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/oauth'
     | '/.well-known/assetlinks.json'
     | '/.well-known/openid-configuration'
+    | '/oauth/callback'
     | '/{-$locale}/about'
     | '/{-$locale}/privacy'
     | '/{-$locale}/terms'
@@ -330,8 +352,10 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/{-$locale}'
+    | '/oauth'
     | '/.well-known/assetlinks.json'
     | '/.well-known/openid-configuration'
+    | '/oauth/callback'
     | '/{-$locale}/about'
     | '/{-$locale}/app'
     | '/{-$locale}/privacy'
@@ -359,6 +383,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   Char123LocaleChar125RouteRoute: typeof Char123LocaleChar125RouteRouteWithChildren
+  OauthRoute: typeof OauthRouteWithChildren
   DotwellKnownAssetlinksDotjsonRoute: typeof DotwellKnownAssetlinksDotjsonRoute
   DotwellKnownOpenidConfigurationRoute: typeof DotwellKnownOpenidConfigurationRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
@@ -367,6 +392,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/oauth': {
+      id: '/oauth'
+      path: '/oauth'
+      fullPath: '/oauth'
+      preLoaderRoute: typeof OauthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/{-$locale}': {
       id: '/{-$locale}'
       path: '/{-$locale}'
@@ -408,6 +440,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/{-$locale}/about'
       preLoaderRoute: typeof Char123LocaleChar125AboutRouteImport
       parentRoute: typeof Char123LocaleChar125RouteRoute
+    }
+    '/oauth/callback': {
+      id: '/oauth/callback'
+      path: '/callback'
+      fullPath: '/oauth/callback'
+      preLoaderRoute: typeof OauthCallbackRouteImport
+      parentRoute: typeof OauthRoute
     }
     '/.well-known/openid-configuration': {
       id: '/.well-known/openid-configuration'
@@ -640,8 +679,19 @@ const Char123LocaleChar125RouteRouteWithChildren =
     Char123LocaleChar125RouteRouteChildren,
   )
 
+interface OauthRouteChildren {
+  OauthCallbackRoute: typeof OauthCallbackRoute
+}
+
+const OauthRouteChildren: OauthRouteChildren = {
+  OauthCallbackRoute: OauthCallbackRoute,
+}
+
+const OauthRouteWithChildren = OauthRoute._addFileChildren(OauthRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   Char123LocaleChar125RouteRoute: Char123LocaleChar125RouteRouteWithChildren,
+  OauthRoute: OauthRouteWithChildren,
   DotwellKnownAssetlinksDotjsonRoute: DotwellKnownAssetlinksDotjsonRoute,
   DotwellKnownOpenidConfigurationRoute: DotwellKnownOpenidConfigurationRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,

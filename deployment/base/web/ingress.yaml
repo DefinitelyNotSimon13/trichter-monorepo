@@ -17,5 +17,10 @@ spec:
       services:
         - name: web
           port: 3000
+    - match: Host(`oidc.trichter.hauptspeicher.com`) && PathPrefix(`/.well-known/assetlinks.json`)
+      kind: Rule
+      services:
+        - name: web
+          port: 3000
   tls:
     certResolver: myresolver
