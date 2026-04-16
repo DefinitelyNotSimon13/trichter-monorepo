@@ -112,7 +112,7 @@ android {
         versionName = "1.0"
 
         addManifestPlaceholders(
-            mapOf("oidcRedirectScheme" to "org.trichter.app")
+            mapOf("oidcRedirectScheme" to "trichter")
         )
     }
     packaging {

@@ -46,13 +46,16 @@ export const createOauthClients = createServerFn({ method: "GET" }).handler(
       headers: getRequestHeaders(),
       body: {
         redirect_uris: [
+          "https://oidc.trichter.hauptspeicher.com/",
+          "https://oidc.trichter.hauptspeicher.com/callback",
+          "https://oidc.trichter.hauptspeicher.com/oauth/callback",
           "https://trichter.hauptspeicher.com/oauth/callback",
           "https://next.trichter.hauptspeicher.com/oauth/callback",
           "https://mobile.trichter.hauptspeicher.com/oauth/callback",
           "https://mobile.next.trichter.hauptspeicher.com/oauth/callback",
           "trichter://oauth/callback",
         ],
-        scope: "openid profile",
+        scope: "openid profile offline_access",
         client_name: "trichter-app",
         client_secret_expires_at: 0,
         skip_consent: true,

@@ -40,6 +40,21 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+<!--        <activity-->
+<!--            android:name="org.publicvalue.multiplatform.oidc.appsupport.HandleRedirectActivity"-->
+<!--            android:exported="true"-->
+<!--            tools:ignore="IntentFilterExportedReceiver"> &lt;!&ndash; Android Studio erroneously shows a warning otherwise &ndash;&gt;-->
+<!--            <intent-filter tools:node="removeAll" />-->
+<!--            <intent-filter android:autoVerify="true">-->
+<!--                <action android:name="android.intent.action.VIEW" />-->
+
+<!--                <category android:name="android.intent.category.DEFAULT" />-->
+<!--                <category android:name="android.intent.category.BROWSABLE" />-->
+
+<!--                <data android:scheme="https" android:host="oidc.trichter.hauptspeicher.com" android:path="/oauth/callback"/>-->
+<!--            </intent-filter>-->
+
+<!--        </activity>-->
     </application>
 
 </manifest>
