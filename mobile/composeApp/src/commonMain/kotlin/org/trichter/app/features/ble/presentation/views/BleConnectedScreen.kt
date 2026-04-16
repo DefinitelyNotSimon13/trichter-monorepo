@@ -22,6 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -42,24 +43,23 @@ import org.trichter.app.features.ble.domain.models.TrichterState
 import org.trichter.app.features.ble.domain.models.UserDto
 import org.trichter.app.features.ble.presentation.SearchUserState
 import org.trichter.app.isDevMode
-import org.trichter.app.util.Log
 import kotlin.math.pow
 import kotlin.math.round
 
 @Composable
 fun BleConnectedScreen(
     trichterState: TrichterState,
+    runSaved: Boolean,
     searchUserState: SearchUserState,
     onQueryChange: (String) -> Unit,
     onUserClick: (UserDto) -> Unit,
     onClearUser: () -> Unit,
-    onReconnect: () -> Unit,
     onDisconnect: () -> Unit,
     onAck: () -> Unit,
     onReset: () -> Unit,
     onFakeRun: () -> Unit,
     onSaveRun: (ResultMeta) -> Unit,
-    onSaveImage: (ByteArray) -> Unit,
+    onSaveImage: (ByteArray) -> Unit = {},
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
@@ -67,18 +67,8 @@ fun BleConnectedScreen(
             TopAppBar(
                 title = { Text("Trichter") },
                 actions = {
-                    when (trichterState.connection) {
-                        Connection.Connected -> {
-                            IconButton(onClick = onDisconnect) {
-                                Icon(Icons.Outlined.Close, contentDescription = "Disconnect")
-                            }
-                        }
-                        Connection.Disconnected -> {
-                            IconButton(onClick = onReconnect) {
-                                Icon(Icons.Outlined.Refresh, contentDescription = "Reconnect")
-                            }
-                        }
-                        Connection.Connecting -> {}
+                    IconButton(onClick = onDisconnect) {
+                        Icon(Icons.Outlined.Close, contentDescription = "Disconnect")
                     }
                 }
             )
@@ -109,6 +99,7 @@ fun BleConnectedScreen(
                     if (meta != null) {
                         CompletePanel(
                             trichterState = trichterState,
+                            runSaved = runSaved,
                             searchUserState = searchUserState,
                             onQueryChange = onQueryChange,
                             onUserClick = onUserClick,
@@ -274,6 +265,7 @@ private fun PulsingRingPanel(
 @Composable
 private fun CompletePanel(
     trichterState: TrichterState,
+    runSaved: Boolean,
     searchUserState: SearchUserState,
     onQueryChange: (String) -> Unit,
     onUserClick: (UserDto) -> Unit,
@@ -282,15 +274,37 @@ private fun CompletePanel(
     onAck: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    var showAckDialog by remember { mutableStateOf(false) }
+
+    if (showAckDialog) {
+        AlertDialog(
+            onDismissRequest = { showAckDialog = false },
+            icon = { Icon(Icons.Outlined.Warning, contentDescription = null) },
+            title = { Text("Run not saved") },
+            text = { Text("Acknowledging without saving will discard the measurement data. Continue?") },
+            confirmButton = {
+                TextButton(onClick = {
+                    showAckDialog = false
+                    onAck()
+                }) { Text("Acknowledge") }
+            },
+            dismissButton = {
+                TextButton(onClick = { showAckDialog = false }) { Text("Cancel") }
+            }
+        )
+    }
+
     Card(
         modifier = modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)
     ) {
-        val imageBytes = trichterState.lastImage;
-        val meta = trichterState.lastResultMeta!!;
+        val imageBytes = trichterState.lastImage
+        val meta = trichterState.lastResultMeta!!
+        val transferring = trichterState.imageStatus == ImageStatus.TRANSFERRING
+
         Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-            // Image
-            if (imageBytes?.isNotEmpty() ?: false) {
+            // Image area
+            if (imageBytes?.isNotEmpty() == true) {
                 val bitmap: ImageBitmap? = remember(imageBytes) { decodeImage(imageBytes) }
                 if (bitmap != null) {
                     Image(
@@ -370,25 +384,45 @@ private fun CompletePanel(
                 }
 
                 // Action buttons
-                Row(
+                Column(
                     modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    Button(
-                        onClick = { onSaveRun(meta) },
-                        modifier = Modifier.weight(1f)
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
-                        Icon(Icons.Outlined.Check, contentDescription = null)
-                        Spacer(Modifier.width(6.dp))
-                        Text("Save Run")
+                        Button(
+                            onClick = { onSaveRun(meta) },
+                            enabled = !transferring && !runSaved,
+                            modifier = Modifier.weight(1f)
+                        ) {
+                            if (runSaved) {
+                                Icon(Icons.Outlined.CheckCircle, contentDescription = null)
+                            } else {
+                                Icon(Icons.Outlined.Check, contentDescription = null)
+                            }
+                            Spacer(Modifier.width(6.dp))
+                            Text(if (runSaved) "Saved" else "Save Run")
+                        }
+                        OutlinedButton(
+                            onClick = {
+                                if (!runSaved) showAckDialog = true else onAck()
+                            },
+                            enabled = !transferring,
+                            modifier = Modifier.weight(1f)
+                        ) {
+                            Icon(Icons.Outlined.Send, contentDescription = null)
+                            Spacer(Modifier.width(6.dp))
+                            Text("Acknowledge")
+                        }
                     }
-                    OutlinedButton(
-                        onClick = onAck,
-                        modifier = Modifier.weight(1f)
-                    ) {
-                        Icon(Icons.Outlined.Send, contentDescription = null)
-                        Spacer(Modifier.width(6.dp))
-                        Text("Acknowledge")
+                    if (transferring) {
+                        Text(
+                            "Waiting for image transfer\u2026",
+                            style = MaterialTheme.typography.labelMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
                     }
                 }
             }
@@ -420,19 +454,10 @@ private fun NoImagePanel(
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.onSurfaceVariant
             )
-//            val percentageReceived = trichterState.imageTransferState?.percentageReceived();
-//            if(percentageReceived != null) {
-//                Log.i("TEST", "PERCENTAGE: $percentageReceived");
-//                LinearWavyProgressIndicator(progress = { percentageReceived.toFloat() })
-//            } else {
-            Column(
-
-            ) {
-                Text("Retrieving Image...", color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Column {
+                Text("Retrieving Image\u2026", color = MaterialTheme.colorScheme.onSurfaceVariant)
                 LinearWavyProgressIndicator()
-//            }
             }
-
         } else {
             Text("WTF?", color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
@@ -648,6 +673,7 @@ private fun NoImagePanelPreview() {
                 transferred
             )
         ),
+        runSaved = false,
         searchUserState = SearchUserState(),
         onQueryChange = {},
         onUserClick = {},
@@ -677,5 +703,3 @@ fun Double.clean(digits: Int): String = formatFloatCommon(this, digits)
 fun Float.clean(digits: Int): String = formatFloatCommon(this.toDouble(), digits)
 
 expect fun decodeImage(bytes: ByteArray): ImageBitmap?
-
-

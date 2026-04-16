@@ -1,6 +1,5 @@
 package org.trichter.backend.runs.web
 
-import com.azure.core.http.HttpHeader
 import jakarta.validation.Valid
 import org.springdoc.core.converters.models.PageableAsQueryParam
 import org.springframework.core.io.ByteArrayResource
@@ -20,12 +19,9 @@ import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestPart
-import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.multipart.MultipartFile
-import org.trichter.backend.runs.model.RunView
-import org.trichter.backend.runs.repository.RunRepository
 import org.trichter.backend.runs.storage.SignedImageUrl
 import org.trichter.backend.runs.usecase.CreateRunUseCase
 import org.trichter.backend.runs.usecase.GetRunImageSignedUrlUseCase
@@ -39,13 +35,13 @@ import java.util.UUID
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.media.Content
-import io.swagger.v3.oas.annotations.media.Encoding
 import io.swagger.v3.oas.annotations.media.ExampleObject
 import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.parameters.RequestBody as SwaggerRequestBody
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springdoc.core.annotations.ParameterObject
+import org.trichter.backend.runs.model.RunDto
 
 @RestController
 @RequestMapping("/api/v2")
@@ -70,7 +66,7 @@ class RunController(
         @ParameterObject
         @PageableDefault(sort = ["createdAt"], direction = Sort.Direction.DESC)
         pageable: Pageable
-    ): Page<RunView> = getRunsUseCase(pageable)
+    ): Page<RunDto> = getRunsUseCase(pageable)
 
     @Operation(summary = "Get run by ID")
     @ApiResponse(responseCode = "200", description = "Run found")
@@ -79,7 +75,7 @@ class RunController(
     fun getRun(
         @Parameter(description = "Run ID", example = "0787de56-ca0d-4109-b579-70122a73867b")
         @PathVariable id: UUID
-    ): RunView = getRunUseCase(id)
+    ): RunDto = getRunUseCase(id)
 
     @Operation(
         summary = "Create a new run",
@@ -111,7 +107,7 @@ class RunController(
             ]
         )
         @Valid @RequestBody request: CreateRunRequest
-    ): RunView = createRunUseCase(
+    ): RunDto = createRunUseCase(
         userId = request.userId,
         rate = request.rate,
         volume = request.volume,
@@ -127,7 +123,7 @@ class RunController(
         @ParameterObject
         @PageableDefault(sort = ["createdAt"], direction = Sort.Direction.DESC)
         pageable: Pageable
-    ): Page<RunView> = getRunsByUserUseCase(userId, pageable)
+    ): Page<RunDto> = getRunsByUserUseCase(userId, pageable)
 
     @Operation(
         summary = "Upload run image",
@@ -148,7 +144,7 @@ class RunController(
             )]
         )
         @RequestPart("file") file: MultipartFile,
-    ): RunView = uploadRunImageUseCase(
+    ): RunDto = uploadRunImageUseCase(
         runId = id,
         bytes = file.bytes,
         contentType = file.contentType ?: MediaType.APPLICATION_OCTET_STREAM_VALUE

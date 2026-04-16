@@ -11,7 +11,6 @@ import io.ktor.http.contentType
 import io.ktor.http.isSuccess
 import org.trichter.app.features.ble.domain.models.NewRunDto
 import org.trichter.app.features.ble.domain.models.UserDto
-import org.trichter.app.features.runs.data.model.Run
 import org.trichter.app.util.Log
 
 private const val DEV_AUTH_HEADER = "Basic dHJpY2h0ZXI6c3VwZXItc2FmZS1wYXNzd29yZA==";

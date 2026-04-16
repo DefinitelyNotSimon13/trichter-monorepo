@@ -1,6 +1,5 @@
 package org.trichter.app.features.runs.data.repository
 
-import kotlinx.coroutines.flow.Flow
 import org.trichter.app.features.runs.data.model.Run
 
 sealed class Result<out T> {
@@ -10,6 +9,5 @@ sealed class Result<out T> {
 }
 
 interface RunsRepository {
-    fun getRuns(): Flow<Result<List<Run>>>;
-
+    suspend fun getRuns(page: Int = 0, size: Int = 20): Result<Pair<List<Run>, Boolean>>
 }

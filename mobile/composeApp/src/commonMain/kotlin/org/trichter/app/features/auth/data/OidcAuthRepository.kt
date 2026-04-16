@@ -61,14 +61,9 @@ class OidcAuthRepository(
 
             val flow = codeAuthFlowFactory.createAuthFlow(oidcClient)
 
-            /*
-             * Opens the browser / custom tab when needed.
-             * After the redirect returns into the app, initialize() or a new call
-             * to login() can resume via canContinueLogin()/continueLogin().
-             */
+            // startLogin() suspends until the redirect is received via HandleRedirectActivity
             if (!flow.canContinueLogin()) {
                 flow.startLogin()
-                return
             }
 
             val session = continueLogin(flow)

@@ -11,7 +11,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -36,6 +35,7 @@ import org.trichter.app.features.ble.presentation.BleScreen
 import org.trichter.app.features.ble.presentation.BleViewModel
 import org.trichter.app.features.runs.presentation.RunsScreen
 import org.trichter.app.features.runs.presentation.RunsViewModel
+import org.trichter.app.features.settings.presentation.SettingsScreen
 import org.trichter.app.navigation.Routes
 import org.trichter.app.ui.theme.TrichterTheme
 
@@ -73,36 +73,21 @@ private fun AppRoot() {
     val uiState by authViewModel.uiState.collectAsState()
 
     when (val state = uiState) {
-        AuthUiState.Initializing -> {
-            AuthLoadingScreen(message = "Checking session…")
-        }
-
-        AuthUiState.Unauthenticated -> {
-            LoginScreen(
-                onLoginClick = authViewModel::login,
-            )
-        }
-
-        AuthUiState.Authenticating -> {
-            AuthLoadingScreen(message = "Opening sign-in…")
-        }
-
-        AuthUiState.Authenticated -> {
-            MainAppScreen()
-        }
-
-        is AuthUiState.Error -> {
-            LoginScreen(
-                onLoginClick = authViewModel::login,
-                errorMessage = state.message,
-            )
-        }
+        AuthUiState.Initializing -> AuthLoadingScreen(message = "Checking session…")
+        AuthUiState.Unauthenticated -> LoginScreen(onLoginClick = authViewModel::login)
+        AuthUiState.Authenticating -> AuthLoadingScreen(message = "Opening sign-in…")
+        AuthUiState.Authenticated -> MainAppScreen(onLogout = authViewModel::logout)
+        is AuthUiState.Error -> LoginScreen(
+            onLoginClick = authViewModel::login,
+            errorMessage = state.message,
+        )
     }
 }
 
 @Composable
 private fun MainAppScreen(
-    navController: NavHostController = rememberNavController()
+    onLogout: () -> Unit,
+    navController: NavHostController = rememberNavController(),
 ) {
     Scaffold(
         bottomBar = { BottomNavigationBar(navController = navController) }
@@ -123,6 +108,10 @@ private fun MainAppScreen(
                 val viewModel: BleViewModel = koinViewModel()
                 BleScreen(viewModel = viewModel)
             }
+
+            composable(route = Routes.SETTINGS.route) {
+                SettingsScreen(onLogout = onLogout)
+            }
         }
     }
 }
@@ -132,22 +121,12 @@ fun BottomNavigationBar(navController: NavHostController) {
     val currentBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = currentBackStackEntry?.destination?.route
 
-    val routes = listOf(Routes.RUNS, Routes.BLE)
-
     NavigationBar {
-        routes.forEach { item ->
-            val isSelected = currentRoute == item.route
+        Routes.entries.forEach { item ->
             NavigationBarItem(
-                icon = {
-                    Icon(
-                        imageVector = item.icon,
-                        contentDescription = item.title
-                    )
-                },
-                label = {
-                    Text(text = item.title)
-                },
-                selected = isSelected,
+                icon = { Icon(imageVector = item.icon, contentDescription = item.title) },
+                label = { Text(text = item.title) },
+                selected = currentRoute == item.route,
                 onClick = {
                     navController.navigate(item.route) {
                         popUpTo(navController.graph.startDestinationId)

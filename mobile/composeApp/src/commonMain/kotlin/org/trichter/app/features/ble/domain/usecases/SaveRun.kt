@@ -12,7 +12,7 @@ class SaveRun(
         resultMeta: ResultMeta,
         imageBytes: ByteArray? = null,
         userId: String? = null,
-    ) {
+    ): Result<Unit> {
         val image = imageBytes?.let { bytes ->
             apiService.uploadImage(bytes).fold(
                 onSuccess = { resource ->
@@ -21,12 +21,12 @@ class SaveRun(
                 },
                 onFailure = { error ->
                     Log.e("SAVE", "Failed to upload image", error)
-                    return
+                    return Result.failure(error)
                 }
             )
         }
 
-        apiService.createRun(
+        return apiService.createRun(
             resultMeta.toNewRun(
                 image = image,
                 userId = userId,
@@ -34,9 +34,11 @@ class SaveRun(
         ).fold(
             onSuccess = {
                 Log.i("SAVE", "Run saved successfully")
+                Result.success(Unit)
             },
             onFailure = { error ->
                 Log.e("SAVE", "Failed to save run", error)
+                Result.failure(error)
             }
         )
     }
