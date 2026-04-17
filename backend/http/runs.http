@@ -1,26 +1,36 @@
 @runId = 0787de56-ca0d-4109-b579-70122a73867b
 @userId = IN98sFyCl1X4jnSAeHu6H0pqdf3glTA1
 
-### Get all runs
+### List all runs (public)
 GET {{baseUrl}}/api/v2/runs?page=0&size=10&sort=createdAt,desc
 Accept: application/json
 
-### Get all runs with custom sorting
+### List all runs with custom sorting (public)
 GET {{baseUrl}}/api/v2/runs?page=0&size=5&sort=rate,asc
 Accept: application/json
 
-### Get single run by ID
+### Get single run by ID (public)
 GET {{baseUrl}}/api/v2/runs/{{runId}}
 Accept: application/json
 
-### Get runs by user
+### Get runs by user (public)
 GET {{baseUrl}}/api/v2/users/{{userId}}/runs?page=0&size=10&sort=createdAt,desc
 Accept: application/json
 
-### Create run
+### Get signed URL for run image (public)
+GET {{baseUrl}}/api/v2/runs/{{runId}}/image/signed-url
+Accept: application/json
+
+### Stream image for run (public)
+GET {{baseUrl}}/api/v2/runs/{{runId}}/image
+Accept: image/*
+
+### Create run (authenticated + device token required)
 POST {{baseUrl}}/api/v2/runs
 Content-Type: application/json
 Accept: application/json
+Authorization: Bearer {{$auth.token("oauth")}}
+X-Trichter-Device-Token: {{deviceSecret}}
 
 {
   "userId": "{{userId}}",
@@ -33,10 +43,12 @@ Accept: application/json
     client.global.set("runId", response.body.id);
 %}
 
-### Create run (minimal realistic example)
+### Create run — minimal realistic example (authenticated + device token)
 POST {{baseUrl}}/api/v2/runs
 Content-Type: application/json
 Accept: application/json
+Authorization: Bearer {{$auth.token("oauth")}}
+X-Trichter-Device-Token: {{deviceSecret}}
 
 {
   "userId": "{{userId}}",
@@ -49,8 +61,9 @@ Accept: application/json
     client.global.set("newRunId", response.body.id);
 %}
 
-### Upload image for run
+### Upload image for run (authenticated — must be run creator or admin)
 PUT {{baseUrl}}/api/v2/runs/{{newRunId}}/image
+Authorization: Bearer {{$auth.token("oauth")}}
 Accept: application/json
 Content-Type: multipart/form-data; boundary=WebAppBoundary
 
@@ -61,10 +74,20 @@ Content-Type: image/jpeg
 < ./images/placeholder.jpg
 --WebAppBoundary--
 
-### Stream image for run
-GET {{baseUrl}}/api/v2/runs/{{newRunId}}/image
-Accept: image/*
+###
+# --- Admin only ---
+###
 
-### Get signed URL for run image
-GET {{baseUrl}}/api/v2/runs/{{newRunId}}/image/signed-url
+### Update assigned user of a run (admin only)
+PUT {{baseUrl}}/api/v2/runs/{{runId}}/user
+Content-Type: application/json
 Accept: application/json
+Authorization: Bearer {{$auth.token("oauth")}}
+
+{
+  "userId": "{{userId}}"
+}
+
+### Delete a run (admin only)
+DELETE {{baseUrl}}/api/v2/runs/{{runId}}
+Authorization: Bearer {{$auth.token("oauth")}}

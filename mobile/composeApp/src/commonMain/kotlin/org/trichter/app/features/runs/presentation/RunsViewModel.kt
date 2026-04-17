@@ -7,9 +7,10 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import org.trichter.app.features.runs.data.model.Run
+import org.trichter.app.features.runs.domain.model.Run
 import org.trichter.app.features.runs.data.repository.Result
 import org.trichter.app.features.runs.data.repository.RunsRepository
+import org.trichter.app.features.runs.domain.usecases.GetRuns
 import org.trichter.app.util.Log
 
 data class RunsUiState(
@@ -22,7 +23,9 @@ data class RunsUiState(
     val currentPage: Int = 0,
 )
 
-class RunsViewModel(private val repository: RunsRepository) : ViewModel() {
+class RunsViewModel(
+    private val getRunsUseCase: GetRuns
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow(RunsUiState())
     val uiState: StateFlow<RunsUiState> = _uiState.asStateFlow()
@@ -34,7 +37,7 @@ class RunsViewModel(private val repository: RunsRepository) : ViewModel() {
     private fun loadInitial() {
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true, errorMessage = null) }
-            when (val result = repository.getRuns(page = 0)) {
+            when (val result =  getRunsUseCase(page = 0)) {
                 is Result.Success -> _uiState.update {
                     it.copy(
                         runs = result.data.first,
@@ -58,7 +61,7 @@ class RunsViewModel(private val repository: RunsRepository) : ViewModel() {
         viewModelScope.launch {
             val nextPage = state.currentPage + 1
             _uiState.update { it.copy(isLoadingMore = true) }
-            when (val result = repository.getRuns(page = nextPage)) {
+            when (val result = getRunsUseCase(page = nextPage)) {
                 is Result.Success -> _uiState.update {
                     it.copy(
                         runs = it.runs + result.data.first,
@@ -78,7 +81,7 @@ class RunsViewModel(private val repository: RunsRepository) : ViewModel() {
     fun refresh() {
         viewModelScope.launch {
             _uiState.update { it.copy(isRefreshing = true, errorMessage = null) }
-            when (val result = repository.getRuns(page = 0)) {
+            when (val result = getRunsUseCase(page = 0)) {
                 is Result.Success -> _uiState.update {
                     it.copy(
                         runs = result.data.first,

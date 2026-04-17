@@ -33,3 +33,6 @@ plugins {
 }
 
 include(":composeApp")
+
+include(":api-client")
+project(":api-client").projectDir = file("api-client/generated")

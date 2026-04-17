@@ -4,10 +4,11 @@ import java.util.Properties
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
+    alias(libs.plugins.kotlinSerialization)
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
-    alias(libs.plugins.kotlinSerialization)
+    alias(libs.plugins.openapiGenerator)
 }
 
 kotlin {
@@ -29,6 +30,7 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
+            implementation(project(":api-client"))
             implementation(libs.compose.runtime)
             implementation(libs.compose.foundation)
             implementation(libs.compose.material3)
@@ -105,18 +107,18 @@ val keystoreProperties = Properties().apply {
 
 android {
     signingConfigs {
-        getByName("debug") {
-            storeFile = rootProject.file(keystoreProperties.getProperty("storeFile") ?: "upload-keystore.jks")
-            storePassword = keystoreProperties.getProperty("storePassword") ?: ""
-            keyAlias = keystoreProperties.getProperty("keyAlias") ?: "upload"
-            keyPassword = keystoreProperties.getProperty("keyPassword") ?: ""
-        }
-        create("release") {
-            storeFile = rootProject.file(keystoreProperties.getProperty("storeFile") ?: "upload-keystore.jks")
-            storePassword = keystoreProperties.getProperty("storePassword") ?: ""
-            keyAlias = keystoreProperties.getProperty("keyAlias") ?: "upload"
-            keyPassword = keystoreProperties.getProperty("keyPassword") ?: ""
-        }
+//        getByName("debug") {
+//            storeFile = rootProject.file(keystoreProperties.getProperty("storeFile") ?: "upload-keystore.jks")
+//            storePassword = keystoreProperties.getProperty("storePassword") ?: ""
+//            keyAlias = keystoreProperties.getProperty("keyAlias") ?: "upload"
+//            keyPassword = keystoreProperties.getProperty("keyPassword") ?: ""
+//        }
+//        create("release") {
+//            storeFile = rootProject.file(keystoreProperties.getProperty("storeFile") ?: "upload-keystore.jks")
+//            storePassword = keystoreProperties.getProperty("storePassword") ?: ""
+//            keyAlias = keystoreProperties.getProperty("keyAlias") ?: "upload"
+//            keyPassword = keystoreProperties.getProperty("keyPassword") ?: ""
+//        }
     }
     namespace = "org.trichter.app"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
@@ -146,10 +148,10 @@ android {
     buildTypes {
         getByName("release") {
             isMinifyEnabled = false
-            signingConfig = signingConfigs.getByName("release")
+//            signingConfig = signingConfigs.getByName("release")
         }
         getByName("debug") {
-            applicationIdSuffix = ".debug"
+//            applicationIdSuffix = ".debug"
         }
     }
     compileOptions {
@@ -162,3 +164,37 @@ dependencies {
     debugImplementation(libs.compose.uiTooling)
 }
 
+val generatedDir = rootProject.file("api-client/generated")
+
+openApiGenerate {
+    generatorName.set("kotlin")
+    inputSpec.set(rootProject.file("api-client/openapi.yaml").path)
+    outputDir.set(generatedDir.path)
+    packageName.set("org.trichter.api.client")
+
+    library.set("multiplatform")
+
+    configOptions.set(
+        mapOf(
+            "companionObject" to "true",
+            "groupId" to "org.trichter.app",
+            "dateLibrary" to "kotlinx-datetime",
+            "omitGradleWrapper" to "true",
+            "omitGradlePluginVersions" to "true",
+        )
+    )
+}
+val rewriteGeneratedBuildScript by tasks.registering {
+    dependsOn(tasks.named("openApiGenerate"))
+
+    doLast {
+        val file = layout.buildDirectory.file("generated/openapi/build.gradle.kts").get().asFile
+        if (file.exists()) {
+            file.writeText(
+                file.readText()
+                    .replace("""kotlin("multiplatform")""", """alias(libs.plugins.kotlinMultiplatform)""")
+                    .replace("""kotlin("plugin.serialization")""", """alias(libs.plugins.kotlinSerialization)""")
+            )
+        }
+    }
+}

@@ -19,7 +19,6 @@ class DevSecurityConfig {
             }
             .httpBasic { it.disable() }
             .formLogin { it.disable() }
-            .oauth2Login { it.disable() }
             .logout(Customizer.withDefaults())
 
         return http.build()

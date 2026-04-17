@@ -1,0 +1,550 @@
+openapi: 3.1.0
+info:
+  title: OpenAPI definition
+  version: v0
+servers:
+  - url: http://localhost:8080
+    description: Generated server url
+tags:
+  - name: Runs
+    description: Operations related to run tracking
+  - name: Users
+    description: Read-only user management
+  - name: Actuator
+    description: Monitor and interact
+    externalDocs:
+      description: Spring Boot Actuator Web API Documentation
+      url: https://docs.spring.io/spring-boot/docs/current/actuator-api/html/
+paths:
+  /api/v2/runs/{id}/user:
+    put:
+      tags:
+        - Runs
+      summary: Update assigned user of a run
+      description: Reassigns an existing run to another user. Admin only.
+      operationId: updateRunUser
+      parameters:
+        - name: id
+          in: path
+          description: Run ID
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateRunUserRequest"
+        required: true
+      responses:
+        "200":
+          description: Run user updated
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/RunDto"
+        "403":
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/RunDto"
+        "404":
+          description: Run or user not found
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/RunDto"
+  /api/v2/runs/{id}/image:
+    get:
+      tags:
+        - Runs
+      summary: Download run image
+      description: Returns the raw image bytes
+      operationId: getRunImage
+      parameters:
+        - name: id
+          in: path
+          description: Run ID
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Image returned
+          content:
+            image/*:
+              schema:
+                type: string
+                format: binary
+    put:
+      tags:
+        - Runs
+      summary: Upload run image
+      description: Uploads or replaces an image for a run. Only the run creator or
+        an admin may upload.
+      operationId: uploadRunImage
+      parameters:
+        - name: id
+          in: path
+          description: Run ID
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: Image file (JPEG recommended)
+              required:
+                - file
+            encoding:
+              file:
+                contentType: multipart/form-data
+      responses:
+        "200":
+          description: Image uploaded
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/RunDto"
+        "403":
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/RunDto"
+  /api/v2/runs:
+    get:
+      tags:
+        - Runs
+      summary: List runs
+      description: Returns paginated runs sorted by creation date (newest first)
+      operationId: getRuns
+      parameters:
+        - name: page
+          in: query
+          description: Zero-based page index (0..N)
+          required: false
+          schema:
+            type: integer
+            default: 0
+        - name: size
+          in: query
+          description: The size of the page to be returned
+          required: false
+          schema:
+            type: integer
+            default: 20
+        - name: sort
+          in: query
+          description: "Sorting criteria in the format: property,(asc|desc). Default\
+          \ sort order is ascending. Multiple sort criteria are supported."
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PagedModelRunDto"
+    post:
+      tags:
+        - Runs
+      summary: Create a new run
+      description: Creates a run entry without an image. The authenticated user becomes
+        the creator (createdBy).
+      operationId: createRun
+      parameters:
+        - name: X-Trichter-Device-Token
+          in: header
+          required: false
+          schema:
+            type: string
+      requestBody:
+        description: Run creation payload
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateRunRequest"
+            example:
+              userId: user-123
+              rate: 5.5
+              volume: 1.4
+              duration: 1000
+        required: true
+      responses:
+        "201":
+          description: Run created
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/RunDto"
+  /api/v2/users:
+    get:
+      tags:
+        - Users
+      summary: Get or search users
+      description: "Returns a paginated list of users. If 'q' is provided, filters\
+        \ by username or display name."
+      operationId: getUsers
+      parameters:
+        - name: q
+          in: query
+          description: Search query
+          required: false
+          schema:
+            type: string
+        - name: page
+          in: query
+          description: Zero-based page index (0..N)
+          required: false
+          schema:
+            type: integer
+            default: 0
+            minimum: 0
+        - name: size
+          in: query
+          description: The size of the page to be returned
+          required: false
+          schema:
+            type: integer
+            default: 20
+            minimum: 1
+        - name: sort
+          in: query
+          description: "Sorting criteria in the format: property,(asc|desc). Default\
+          \ sort order is ascending. Multiple sort criteria are supported."
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PagedModelUserDto"
+  /api/v2/users/{userId}:
+    get:
+      tags:
+        - Users
+      summary: Get user by ID
+      description: Returns a single user by ID.
+      operationId: getUserById
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: User found
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/UserDto"
+        "404":
+          description: User not found
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/UserDto"
+  /api/v2/users/{userId}/runs:
+    get:
+      tags:
+        - Runs
+      summary: List runs by user
+      operationId: getRunsByUser
+      parameters:
+        - name: userId
+          in: path
+          description: User ID
+          required: true
+          schema:
+            type: string
+          example: user-123
+        - name: page
+          in: query
+          description: Zero-based page index (0..N)
+          required: false
+          schema:
+            type: integer
+            default: 0
+        - name: size
+          in: query
+          description: The size of the page to be returned
+          required: false
+          schema:
+            type: integer
+            default: 20
+        - name: sort
+          in: query
+          description: "Sorting criteria in the format: property,(asc|desc). Default\
+          \ sort order is ascending. Multiple sort criteria are supported."
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PagedModelRunDto"
+  /api/v2/runs/{id}:
+    get:
+      tags:
+        - Runs
+      summary: Get run by ID
+      operationId: getRun
+      parameters:
+        - name: id
+          in: path
+          description: Run ID
+          required: true
+          schema:
+            type: string
+            format: uuid
+          example: 0787de56-ca0d-4109-b579-70122a73867b
+      responses:
+        "200":
+          description: Run found
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/RunDto"
+        "404":
+          description: Run not found
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/RunDto"
+    delete:
+      tags:
+        - Runs
+      summary: Delete a run
+      description: Deletes a run and its stored image if present. Admin only.
+      operationId: deleteRun
+      parameters:
+        - name: id
+          in: path
+          description: Run ID
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "204":
+          description: Run deleted
+        "403":
+          description: Forbidden
+        "404":
+          description: Run not found
+  /api/v2/runs/{id}/image/signed-url:
+    get:
+      tags:
+        - Runs
+      summary: Get signed image URL
+      description: Returns a temporary signed URL for accessing the run image
+      operationId: getRunImageSignedUrl
+      parameters:
+        - name: id
+          in: path
+          description: Run ID
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Signed URL returned
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/SignedImageUrl"
+  /actuator/info:
+    get:
+      tags:
+        - Actuator
+      summary: Actuator web endpoint 'info'
+      operationId: info
+      responses:
+        "200":
+          description: OK
+          content:
+            application/vnd.spring-boot.actuator.v3+json:
+              schema:
+                type: object
+            application/vnd.spring-boot.actuator.v2+json:
+              schema:
+                type: object
+            application/json:
+              schema:
+                type: object
+  /actuator/health:
+    get:
+      tags:
+        - Actuator
+      summary: Actuator web endpoint 'health'
+      operationId: health
+      responses:
+        "200":
+          description: OK
+          content:
+            application/vnd.spring-boot.actuator.v3+json:
+              schema:
+                type: object
+            application/vnd.spring-boot.actuator.v2+json:
+              schema:
+                type: object
+            application/json:
+              schema:
+                type: object
+components:
+  schemas:
+    UpdateRunUserRequest:
+      type: object
+      properties:
+        userId:
+          type: string
+          minLength: 1
+      required:
+        - userId
+    RunDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        user:
+          $ref: "#/components/schemas/UserDto"
+        createdBy:
+          $ref: "#/components/schemas/UserDto"
+        rate:
+          type: number
+          format: double
+        volume:
+          type: number
+          format: double
+        duration:
+          type: number
+          format: double
+        image:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+    UserDto:
+      type: object
+      properties:
+        id:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        username:
+          type: string
+        displayUsername:
+          type: string
+        lastActiveAt:
+          type: string
+          format: date-time
+    CreateRunRequest:
+      type: object
+      properties:
+        userId:
+          type: string
+        duration:
+          type: number
+          format: double
+        rate:
+          type: number
+          format: double
+        volume:
+          type: number
+          format: double
+    PageMetadata:
+      type: object
+      properties:
+        size:
+          type: integer
+          format: int64
+        number:
+          type: integer
+          format: int64
+        totalElements:
+          type: integer
+          format: int64
+        totalPages:
+          type: integer
+          format: int64
+    PagedModelUserDto:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: "#/components/schemas/UserDto"
+        page:
+          $ref: "#/components/schemas/PageMetadata"
+    PagedModelRunDto:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: "#/components/schemas/RunDto"
+        page:
+          $ref: "#/components/schemas/PageMetadata"
+    ImageRef:
+      type: object
+      properties:
+        key:
+          type: string
+    SignedImageUrl:
+      type: object
+      properties:
+        imageRef:
+          $ref: "#/components/schemas/ImageRef"
+        url:
+          type: string
+        expiresAt:
+          type: string
+          format: date-time
+    Link:
+      type: object
+      properties:
+        href:
+          type: string
+        hreflang:
+          type: string
+        title:
+          type: string
+        type:
+          type: string
+        deprecation:
+          type: string
+        profile:
+          type: string
+        name:
+          type: string
+        templated:
+          type: boolean

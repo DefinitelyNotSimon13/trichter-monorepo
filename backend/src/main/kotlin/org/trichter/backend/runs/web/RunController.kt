@@ -12,6 +12,13 @@ import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
+import org.springframework.beans.factory.annotation.Value
+import org.springframework.security.access.prepost.PreAuthorize
+import org.springframework.security.core.Authentication
+import org.springframework.security.core.authority.SimpleGrantedAuthority
+import org.springframework.web.bind.annotation.DeleteMapping
+import org.springframework.web.bind.annotation.RequestHeader
+import org.springframework.web.server.ResponseStatusException
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -22,15 +29,19 @@ import org.springframework.web.bind.annotation.RequestPart
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.multipart.MultipartFile
+import org.trichter.backend.runs.model.RunDto
 import org.trichter.backend.runs.storage.SignedImageUrl
 import org.trichter.backend.runs.usecase.CreateRunUseCase
+import org.trichter.backend.runs.usecase.DeleteRunUseCase
 import org.trichter.backend.runs.usecase.GetRunImageSignedUrlUseCase
 import org.trichter.backend.runs.usecase.GetRunImageUseCase
 import org.trichter.backend.runs.usecase.GetRunUseCase
 import org.trichter.backend.runs.usecase.GetRunsByUserUseCase
 import org.trichter.backend.runs.usecase.GetRunsUseCase
+import org.trichter.backend.runs.usecase.UpdateRunUserUseCase
 import org.trichter.backend.runs.usecase.UploadRunImageUseCase
 import org.trichter.backend.runs.web.dto.CreateRunRequest
+import org.trichter.backend.runs.web.dto.UpdateRunUserRequest
 import java.util.UUID
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
@@ -41,19 +52,22 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody as SwaggerRequestBod
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springdoc.core.annotations.ParameterObject
-import org.trichter.backend.runs.model.RunDto
 
 @RestController
 @RequestMapping("/api/v2")
 @Tag(name = "Runs", description = "Operations related to run tracking")
 class RunController(
+    @Value("\${app.device.secret}")
+    private val deviceSecret: String,
     private val createRunUseCase: CreateRunUseCase,
     private val getRunUseCase: GetRunUseCase,
     private val getRunsUseCase: GetRunsUseCase,
     private val getRunsByUserUseCase: GetRunsByUserUseCase,
+    private val updateRunUserUseCase: UpdateRunUserUseCase,
+    private val deleteRunUseCase: DeleteRunUseCase,
     private val uploadRunImageUseCase: UploadRunImageUseCase,
     private val getRunImageUseCase: GetRunImageUseCase,
-    private val getRunImageSignedUrlUseCase: GetRunImageSignedUrlUseCase
+    private val getRunImageSignedUrlUseCase: GetRunImageSignedUrlUseCase,
 ) {
 
     @Operation(
@@ -79,7 +93,7 @@ class RunController(
 
     @Operation(
         summary = "Create a new run",
-        description = "Creates a run entry without an image"
+        description = "Creates a run entry without an image. The authenticated user becomes the creator (createdBy)."
     )
     @ApiResponse(responseCode = "201", description = "Run created")
     @PostMapping("/runs")
@@ -106,13 +120,22 @@ class RunController(
                 )
             ]
         )
-        @Valid @RequestBody request: CreateRunRequest
-    ): RunDto = createRunUseCase(
+        @Valid @RequestBody request: CreateRunRequest,
+        @RequestHeader("X-Trichter-Device-Token", required = false) deviceToken: String?,
+        authentication: Authentication,
+    ): RunDto {
+
+        val validDevice = deviceToken == deviceSecret
+        val isAdmin = authentication.authorities.contains(SimpleGrantedAuthority("ROLE_ADMIN"))
+        if (!validDevice && !isAdmin) throw ResponseStatusException(HttpStatus.FORBIDDEN, "Invalid device token")
+        return createRunUseCase(
         userId = request.userId,
         rate = request.rate,
         volume = request.volume,
         duration = request.duration,
+        createdById = authentication.name,
     )
+    }
 
     @Operation(summary = "List runs by user")
     @PageableAsQueryParam
@@ -126,10 +149,46 @@ class RunController(
     ): Page<RunDto> = getRunsByUserUseCase(userId, pageable)
 
     @Operation(
+        summary = "Update assigned user of a run",
+        description = "Reassigns an existing run to another user. Admin only."
+    )
+    @ApiResponse(responseCode = "200", description = "Run user updated")
+    @ApiResponse(responseCode = "403", description = "Forbidden")
+    @ApiResponse(responseCode = "404", description = "Run or user not found")
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("/runs/{id}/user")
+    fun updateRunUser(
+        @Parameter(description = "Run ID")
+        @PathVariable id: UUID,
+        @Valid @RequestBody request: UpdateRunUserRequest,
+    ): RunDto = updateRunUserUseCase(
+        runId = id,
+        userId = request.userId,
+    )
+
+    @Operation(
+        summary = "Delete a run",
+        description = "Deletes a run and its stored image if present. Admin only."
+    )
+    @ApiResponse(responseCode = "204", description = "Run deleted")
+    @ApiResponse(responseCode = "403", description = "Forbidden")
+    @ApiResponse(responseCode = "404", description = "Run not found")
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("/runs/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    fun deleteRun(
+        @Parameter(description = "Run ID")
+        @PathVariable id: UUID,
+    ) {
+        deleteRunUseCase(id)
+    }
+
+    @Operation(
         summary = "Upload run image",
-        description = "Uploads or replaces an image for a run"
+        description = "Uploads or replaces an image for a run. Only the run creator or an admin may upload."
     )
     @ApiResponse(responseCode = "200", description = "Image uploaded")
+    @ApiResponse(responseCode = "403", description = "Forbidden")
     @PutMapping("/runs/{id}/image", consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
     fun uploadRunImage(
         @Parameter(description = "Run ID")
@@ -144,10 +203,13 @@ class RunController(
             )]
         )
         @RequestPart("file") file: MultipartFile,
+        authentication: Authentication,
     ): RunDto = uploadRunImageUseCase(
         runId = id,
         bytes = file.bytes,
-        contentType = file.contentType ?: MediaType.APPLICATION_OCTET_STREAM_VALUE
+        contentType = file.contentType ?: MediaType.APPLICATION_OCTET_STREAM_VALUE,
+        callerId = authentication.name,
+        callerIsAdmin = authentication.authorities.contains(SimpleGrantedAuthority("ROLE_ADMIN")),
     )
 
     @Operation(

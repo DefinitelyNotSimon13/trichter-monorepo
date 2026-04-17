@@ -25,7 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import nl.jacobras.humanreadable.HumanReadable
-import org.trichter.app.features.runs.data.model.Run
+import org.trichter.app.features.runs.domain.model.Run
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 

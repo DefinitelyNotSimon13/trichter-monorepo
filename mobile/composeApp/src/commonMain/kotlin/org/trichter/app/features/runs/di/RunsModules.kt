@@ -12,19 +12,37 @@ import org.trichter.app.features.runs.data.repository.RunsRepositoryImpl
 import io.ktor.client.plugins.logging.*
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.json.Json
+import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.viewModelOf
+import org.trichter.api.client.apis.RunsApi
+import org.trichter.app.di.ApiConfig
 import org.trichter.app.features.runs.data.network.ApiService
 import org.trichter.app.features.runs.data.network.ApiServiceImpl
+import org.trichter.app.features.runs.domain.usecases.GetRuns
 import org.trichter.app.features.runs.presentation.LeaderboardViewModel
 import org.trichter.app.features.runs.presentation.RunsViewModel
 
-fun runsModule() = listOf(runsSharedModule)
+fun runsModule() = listOf(runsPresentationModules, runsDomainModule, runsDataModule)
 
-val runsSharedModule = module {
-    singleOf(::RunsRepositoryImpl).bind<RunsRepository>()
-    singleOf(::ApiServiceImpl).bind<ApiService>()
+val runsPresentationModules = module {
     viewModelOf(::RunsViewModel)
     viewModelOf(::LeaderboardViewModel)
+
+}
+
+val runsDomainModule = module {
+    factoryOf(::GetRuns)
+}
+
+val runsDataModule = module {
+    singleOf(::RunsRepositoryImpl).bind<RunsRepository>()
+
+    single {
+        RunsApi(
+            baseUrl = get<ApiConfig>().baseUrl,
+            httpClient = get()
+        )
+    }
 
     single<HttpClient> {
         HttpClient {
@@ -47,4 +65,5 @@ val runsSharedModule = module {
             }
         }
     }
+
 }

@@ -26,7 +26,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import org.trichter.app.features.runs.data.model.Run
+import org.trichter.app.features.runs.domain.model.Run
 import org.trichter.app.features.runs.presentation.components.toFixed
 
 @Composable

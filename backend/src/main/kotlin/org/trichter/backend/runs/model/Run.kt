@@ -3,6 +3,8 @@ package org.trichter.backend.runs.model
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.FetchType
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
@@ -11,7 +13,7 @@ import jakarta.validation.constraints.NotNull
 import org.hibernate.annotations.ColumnDefault
 import org.hibernate.annotations.OnDelete
 import org.hibernate.annotations.OnDeleteAction
-import org.trichter.backend.auth.model.User
+import org.trichter.backend.users.model.User
 import java.time.OffsetDateTime
 import java.util.UUID
 
@@ -19,7 +21,7 @@ import java.util.UUID
 @Table(name = "runs", schema = "public")
 open class Run(
     @Id
-    @ColumnDefault("gen_random_uuid()")
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id", nullable = false)
     open var id: UUID? = null,
 
@@ -56,13 +58,20 @@ open class Run(
     @NotNull
     @Column(name = "version", nullable = false)
     open var version: Long = 0L,
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.SET_NULL)
+    @JoinColumn(name = "\"createdById\"")
+    open var createdBy: User? = null
 ) {
+
     companion object {
-        fun create(data: MeasurementData, user: User?) = Run(
+        fun create(data: MeasurementData, user: User?, createdBy: User?) = Run(
             rate = data.rate,
             volume = data.volume,
             duration = data.duration,
             user = user,
+            createdBy = createdBy
         )
     }
 }

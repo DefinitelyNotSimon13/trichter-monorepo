@@ -1,0 +1,20 @@
+@userId = IN98sFyCl1X4jnSAeHu6H0pqdf3glTA1
+
+###
+# All user endpoints require authentication.
+###
+
+### List all users (authenticated)
+GET {{baseUrl}}/api/v2/users?page=0&size=10
+Accept: application/json
+Authorization: Bearer {{$auth.token("Auth")}}
+
+### Search users by username or display name (authenticated)
+GET {{baseUrl}}/api/v2/users?q=simon&page=0&size=10
+Accept: application/json
+Authorization: Bearer {{$auth.token("Auth")}}
+
+### Get user by ID (authenticated)
+GET {{baseUrl}}/api/v2/users/{{userId}}
+Accept: application/json
+Authorization: Bearer {{$auth.token("Auth")}}

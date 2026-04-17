@@ -1,9 +1,11 @@
 package org.trichter.backend.runs.usecase
 
-import jakarta.transaction.Transactional
+import org.springframework.transaction.annotation.Transactional
 import org.slf4j.LoggerFactory
 import org.springframework.context.ApplicationEventPublisher
+import org.springframework.security.access.AccessDeniedException
 import org.springframework.stereotype.Service
+import org.trichter.backend.common.errors.ConflictException
 import org.trichter.backend.realtime.application.RealtimeAudience
 import org.trichter.backend.realtime.application.RealtimeEvent
 import org.trichter.backend.runs.model.RunDto
@@ -50,12 +52,18 @@ class UploadRunImageUseCase(
         runId: UUID,
         bytes: ByteArray,
         contentType: String,
+        callerId: String,
+        callerIsAdmin: Boolean,
     ): RunDto {
         val run = runRepository.findByIdOrThrow(runId)
 
+        if (run.createdBy?.id != callerId && !callerIsAdmin) {
+            throw AccessDeniedException("Only the run creator or an admin can upload images")
+        }
+
         if (!run.image.isNullOrEmpty()) {
-            log.error("Run '$runId' already has an image.")
-            throw IllegalStateException("Run '$runId' already has an image.")
+            log.warn("Upload rejected: run {} already has an image", runId)
+            throw ConflictException("Run '$runId' already has an image")
         }
 
         val imageRef = imageStorage.putRunImage(
@@ -69,6 +77,7 @@ class UploadRunImageUseCase(
         val saved = runRepository.save(run)
         val dto = saved.toDto()
 
+        log.info("Image uploaded for run {}", runId)
         applicationEventPublisher.publishEvent(
             RunImageUploadedEvent(
                 runId = dto.id,

@@ -42,3 +42,4 @@ out/
 
 application-remote-dev.yaml
 application-remote-prod.yaml
+http/http-client.private.env.json

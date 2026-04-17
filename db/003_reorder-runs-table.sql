@@ -35,10 +35,10 @@ SELECT
 FROM runs_old;
 
 
-CREATE TRIGGER runs_set_last_modified_date
+CREATE TRIGGER runs_set_last_modified_at
 BEFORE UPDATE ON runs
 FOR EACH ROW
-EXECUTE FUNCTION set_runs_last_modified_date();
+EXECUTE FUNCTION set_runs_last_modified_at();
 
 -- drop old table
 DROP TABLE runs_old;

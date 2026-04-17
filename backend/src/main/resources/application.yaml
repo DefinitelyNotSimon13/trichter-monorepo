@@ -3,6 +3,12 @@ spring:
     default: local
   application:
     name: trichter-backend
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: ${BETTERAUTH_URL}/api/auth/.well-known/jwks.json
+          issuer-uri: ${BETTERAUTH_URL}
   jpa:
     hibernate:
       ddl-auto: validate
@@ -20,7 +26,9 @@ management:
         include: health,info
 
 app:
-  build-id: ${buildId}
+  build-id: "@buildId@"
+  device:
+    secret: ${DEVICE_SECRET:dev-secret}
   storage:
     azure:
       container-name: trichter-image

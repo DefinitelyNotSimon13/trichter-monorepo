@@ -3,8 +3,8 @@ package org.trichter.app.features.runs.data.network
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.request.*
-import org.trichter.app.features.runs.data.model.PagedResult
-import org.trichter.app.features.runs.data.model.Run
+import org.trichter.app.features.runs.domain.model.PagedResult
+import org.trichter.app.features.runs.domain.model.Run
 
 class ApiServiceImpl(private val httpClient: HttpClient) : ApiService {
     private val baseUrl = "https://next.trichter.hauptspeicher.com/api/v2"

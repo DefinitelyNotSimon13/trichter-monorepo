@@ -32,7 +32,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-hateoas")
     implementation("org.springframework.boot:spring-boot-starter-security")
-    implementation("org.springframework.boot:spring-boot-starter-security-oauth2-client")
+    implementation("org.springframework.boot:spring-boot-starter-security-oauth2-resource-server")
     implementation("org.springframework.boot:spring-boot-starter-webmvc")
     implementation("org.springframework.boot:spring-boot-starter-websocket")
     implementation("com.azure.spring:spring-cloud-azure-starter-actuator")
@@ -53,7 +53,7 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-hateoas-test")
     testImplementation("org.springframework.boot:spring-boot-starter-opentelemetry-test")
     testImplementation("org.springframework.boot:spring-boot-starter-restdocs")
-    testImplementation("org.springframework.boot:spring-boot-starter-security-oauth2-client-test")
+    testImplementation("org.springframework.boot:spring-boot-starter-security-oauth2-resource-server-test")
     testImplementation("org.springframework.boot:spring-boot-starter-security-test")
     testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
     testImplementation("org.springframework.boot:spring-boot-starter-websocket-test")
@@ -101,10 +101,9 @@ tasks.named<ProcessResources>("processResources") {
     inputs.property("buildId", buildId)
 
     filesMatching("application.yaml") {
-        expand(
-            mapOf(
-                "buildId" to buildId.get()
-            )
+        filter(
+            org.apache.tools.ant.filters.ReplaceTokens::class,
+            "tokens" to mapOf("buildId" to buildId.get())
         )
     }
 }
