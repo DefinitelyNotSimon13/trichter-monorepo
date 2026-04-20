@@ -18,6 +18,8 @@ export function SocialLoginButton({
     try {
       setIsLoading(true);
 
+      console.log("CallbackURL: ", callbackURL);
+
       await authClient.signIn.social({
         provider: "google",
         callbackURL: callbackURL,

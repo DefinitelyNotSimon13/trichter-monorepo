@@ -173,7 +173,7 @@ fun LoginScreen(
 
             TextButton(
                 onClick = {
-                    uriHandler.openUri("https://next.trichter.hauptspeicher.com/signup?redirectTo=%2Flogin")
+                    uriHandler.openUri("https://next.trichter.hauptspeicher.com/signup?redirectTo=%2mobile")
                 },
                 enabled = !isLoading,
                 modifier = Modifier

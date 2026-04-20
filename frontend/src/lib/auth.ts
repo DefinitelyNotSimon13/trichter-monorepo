@@ -98,7 +98,7 @@ export const auth = betterAuth({
             }
 
             const timestamp = Date.now().toString().slice(-4);
-            const finalUsername = `${generatedUsername}-${timestamp}`;
+            const finalUsername = `${generatedUsername}_${timestamp}`;
 
             return {
               data: {
@@ -183,7 +183,7 @@ export const auth = betterAuth({
       ],
     }),
     oauthProvider({
-      loginPage: "/login?oauth=mobile",
+      loginPage: "/login?oauth=mobile&redirectTo=%2Fnew-mobile",
       signup: {
         page: "/signup",
       },

@@ -58,6 +58,7 @@ export function LoginForm({
 
   const lastMethod = authClient.getLastUsedLoginMethod();
   const callbackURL = redirectTo ?? "/app/feed";
+  console.log("LOGIN CallbackUrl: ", callbackURL);
 
   const canUsePasskey =
     hydrated && typeof window !== "undefined" && !!window.PublicKeyCredential;
