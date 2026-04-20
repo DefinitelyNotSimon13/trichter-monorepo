@@ -15,7 +15,7 @@ import { MoreHorizontal, UserRoundPen } from "lucide-react";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
 import { getRunsOptions } from "#/client/@tanstack/react-query.gen";
-import type { RunView } from "#/client/types.gen";
+import type { RunDto } from "#/client/types.gen";
 import { Badge } from "#/components/ui/badge";
 import { Button } from "#/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "#/components/ui/card";
@@ -67,7 +67,7 @@ import {
 } from "#/lib/formatters";
 
 type AssignUserDialogProps = {
-  run: RunView | null;
+  run: RunDto | null;
   onClose: () => void;
 };
 
@@ -122,9 +122,9 @@ function RunRowActions({
   onDelete,
   onAssign,
 }: {
-  run: RunView;
-  onDelete: (run: RunView) => void;
-  onAssign: (run: RunView) => void;
+  run: RunDto;
+  onDelete: (run: RunDto) => void;
+  onAssign: (run: RunDto) => void;
 }) {
   return (
     <DropdownMenu>
@@ -161,8 +161,8 @@ export function AdminRunsPage() {
     pageSize: 20,
   });
 
-  const [runToDelete, setRunToDelete] = useState<RunView | null>(null);
-  const [runToAssign, setRunToAssign] = useState<RunView | null>(null);
+  const [runToDelete, setRunToDelete] = useState<RunDto | null>(null);
+  const [runToAssign, setRunToAssign] = useState<RunDto | null>(null);
 
   const sort = sorting[0];
   const sortField = sort?.id ?? "createdAt";
@@ -180,10 +180,10 @@ export function AdminRunsPage() {
   });
 
   const rows = runsQuery.data?.content ?? [];
-  const total = runsQuery.data?.totalElements ?? 0;
+  const total = runsQuery.data?.page?.totalElements ?? 0;
   const pageCount = Math.max(1, Math.ceil(total / pagination.pageSize));
 
-  const handleDelete = (run: RunView) => {
+  const handleDelete = (run: RunDto) => {
     console.warn("delete run:", run.id);
     toast("Run deleted (mocked)", {
       description: `Run ${run.id?.slice(0, 8)}… removed`,
@@ -192,7 +192,7 @@ export function AdminRunsPage() {
     void queryClient.invalidateQueries({ queryKey: ["getRunsByUser"] });
   };
 
-  const columns = useMemo<ColumnDef<RunView>[]>(
+  const columns = useMemo<ColumnDef<RunDto>[]>(
     () => [
       {
         accessorKey: "id",
@@ -208,7 +208,9 @@ export function AdminRunsPage() {
         header: "User",
         cell: ({ row }) => (
           <span className="text-sm font-medium">
-            {row.original.user?.name ?? row.original.user?.username ?? "—"}
+            {row.original.user?.displayUsername ??
+              row.original.user?.username ??
+              "—"}
           </span>
         ),
       },
@@ -216,18 +218,14 @@ export function AdminRunsPage() {
         id: "rate",
         header: "Rate",
         cell: ({ row }) => (
-          <Badge variant="secondary">
-            {formatRate(row.original.data?.rate)}
-          </Badge>
+          <Badge variant="secondary">{formatRate(row.original.rate)}</Badge>
         ),
       },
       {
         id: "volume",
         header: "Volume",
         cell: ({ row }) => (
-          <span className="text-sm">
-            {formatVolume(row.original.data?.volume)}
-          </span>
+          <span className="text-sm">{formatVolume(row.original.volume)}</span>
         ),
       },
       {
@@ -235,7 +233,7 @@ export function AdminRunsPage() {
         header: "Duration",
         cell: ({ row }) => (
           <span className="text-sm text-muted-foreground">
-            {formatDuration(row.original.data?.duration)}
+            {formatDuration(row.original.duration)}
           </span>
         ),
       },

@@ -85,17 +85,17 @@ export function LoginForm({
 
       const { data, error } = isEmail(identifier)
         ? await authClient.signIn.email({
-            email: identifier,
-            password,
-            callbackURL,
-            fetchOptions,
-          })
+          email: identifier,
+          password,
+          callbackURL,
+          fetchOptions,
+        })
         : await authClient.signIn.username({
-            username: identifier,
-            password,
-            callbackURL,
-            fetchOptions,
-          });
+          username: identifier,
+          password,
+          callbackURL,
+          fetchOptions,
+        });
 
       if (error) {
         setFormError(error.message ?? "Login failed");
@@ -184,10 +184,10 @@ export function LoginForm({
             )}
           </form.AppField>
 
-          {/*         <TurnstileWidget
+          <TurnstileWidget
             ref={turnstileRef}
             className="flex w-full justify-center"
-          /> */}
+          />
 
           {formError ? (
             <Field>

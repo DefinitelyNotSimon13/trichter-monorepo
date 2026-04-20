@@ -28,6 +28,6 @@ fun Run.toDto() = RunDto(
     rate = rate,
     volume = volume,
     duration = duration,
-    image = image,
+    image = if(image != null && image != "trichter-images/placeholder.jpg") image else null,
     createdAt = createdAt
 )

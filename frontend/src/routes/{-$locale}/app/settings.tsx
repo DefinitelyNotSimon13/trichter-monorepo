@@ -8,6 +8,7 @@ import { ConnectedAccountsSection } from "#/components/settings/connected-accoun
 import { DisplayNameSection } from "#/components/settings/display-name-section";
 import { PasskeysSection } from "#/components/settings/passkeys-section";
 import { getSession } from "#/lib/auth.functions";
+import { DeleteAccountSection } from "#/components/settings/delete-account-section";
 
 export const Route = createFileRoute("/{-$locale}/app/settings")({
   staticData: {
@@ -123,6 +124,15 @@ function SettingsPage() {
         description="View and revoke sessions signed in to your account."
       >
         <ActiveSessionsSection />
+      </SettingSection>
+
+      <Separator />
+
+      <SettingSection
+        title="Delete account"
+        description="This action is permament and can not be reversed!"
+      >
+        <DeleteAccountSection />
       </SettingSection>
     </div>
   );

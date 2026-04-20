@@ -1,12 +1,12 @@
-import type { RunView } from "#/client/types.gen";
+import type { RunDto } from "#/client/types.gen";
 import { LocalizedLink } from "#/components/localized-link";
 import { Avatar, AvatarFallback, AvatarImage } from "#/components/ui/avatar";
 import { CardFooter } from "#/components/ui/card";
 import { formatTimestamp } from "#/lib/formatters";
 
-export function RunCardFooter(props: { run: RunView }) {
+export function RunCardFooter(props: { run: RunDto }) {
   const { run } = props;
-  const displayName = run.user?.name ?? "Unknown user";
+  const displayName = run.user?.displayUsername ?? "Unknown user";
   const userId = run.user?.id;
 
   return (

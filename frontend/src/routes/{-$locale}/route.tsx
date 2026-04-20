@@ -37,26 +37,26 @@ function LocaleLayout() {
 
   const routeLocale = context.locale;
 
-  useEffect(() => {
-    if (!locale) {
-      const detected = detectClientLocale();
-      const prefix = `/${detected}`;
-      const href = location.publicHref;
-      const alreadyNormalized =
-        href === prefix || href.startsWith(`${prefix}/`);
-
-      if (!alreadyNormalized) {
-        void navigate({
-          href: `${prefix}${href}`,
-          replace: true,
-        });
-        return;
-      }
-    }
-
-    persistLocale(routeLocale);
-    document.documentElement.lang = routeLocale;
-  }, [locale, routeLocale, location.publicHref, navigate]);
+  // useEffect(() => {
+  //   if (!locale) {
+  //     const detected = detectClientLocale();
+  //     const prefix = `/${detected}`;
+  //     const href = location.publicHref;
+  //     const alreadyNormalized =
+  //       href === prefix || href.startsWith(`${prefix}/`);
+  //
+  //     if (!alreadyNormalized) {
+  //       void navigate({
+  //         href: `${prefix}${href}`,
+  //         replace: true,
+  //       });
+  //       return;
+  //     }
+  //   }
+  //
+  //   persistLocale(routeLocale);
+  //   document.documentElement.lang = routeLocale;
+  // }, [locale, routeLocale, location.publicHref, navigate]);
 
   return (
     <PageWrapper>

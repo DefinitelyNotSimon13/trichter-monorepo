@@ -20,6 +20,7 @@ import { clientEnv } from "#/env/client";
 import { serverEnv } from "#/env/server";
 import { sendEmail } from "./email/index.server";
 import {
+  deleteAccountEmailHtml,
   magicLinkEmailHtml,
   otpEmailHtml,
   passwordResetEmailHtml,
@@ -31,6 +32,19 @@ export const auth = betterAuth({
   database: new Pool({
     connectionString: serverEnv.DATABASE_URL,
   }),
+  user: {
+    deleteUser: {
+      enabled: true,
+      sendDeleteAccountVerification: async ({ user, url }) => {
+        void sendEmail({
+          to: user.email,
+          subject: "Confirm account deletion",
+          text: `Click the link to confirm deleting your Trichter account: ${url}`,
+          html: deleteAccountEmailHtml(url),
+        });
+      },
+    },
+  },
   emailVerification: {
     sendOnSignUp: true,
     autoSignInAfterVerification: true,

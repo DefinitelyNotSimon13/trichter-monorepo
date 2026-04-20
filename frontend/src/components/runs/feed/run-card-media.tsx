@@ -1,17 +1,5 @@
-import { clientEnv } from "#/env/client";
-
-function resolveImageUrl(imageUrl?: string) {
-  if (!imageUrl) return null;
-
-  if (imageUrl.startsWith("http://") || imageUrl.startsWith("https://")) {
-    return imageUrl;
-  }
-
-  return `${imageUrl}`;
-}
-
-export function RunCardMedia(props: { imageUrl?: string; alt: string }) {
-  const src = resolveImageUrl(props.imageUrl);
+export function RunCardMedia(props: { runId: string; alt: string }) {
+  const src = `/api/v2/runs/${props.runId}/image`;
 
   if (!src) return null;
 

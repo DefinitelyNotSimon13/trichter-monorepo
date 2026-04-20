@@ -13,6 +13,7 @@ data class UserDto(
     @field:NotNull var createdAt: Instant,
     @field:NotNull var username: String,
     @field:NotNull var displayUsername: String,
+    var image: String? = null,
     val lastActiveAt: OffsetDateTime? = null
 ) : Serializable
 
@@ -21,5 +22,6 @@ fun User.toDto() = UserDto(
     createdAt = createdAt,
     username = username,
     displayUsername = displayUsername,
-    lastActiveAt = lastActiveAt
+    image = image,
+    lastActiveAt = lastActiveAt,
 )

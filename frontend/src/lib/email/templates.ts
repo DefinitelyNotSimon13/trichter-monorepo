@@ -271,6 +271,23 @@ export function verificationEmailHtml(url: string): string {
   });
 }
 
+export function deleteAccountEmailHtml(url: string): string {
+  return emailBase({
+    preheader: "Confirm the deletion of your Trichter account.",
+    eyebrow: "Account deletion",
+    title: "Confirm the deletion",
+    intro: `
+      We're sad to see you leave <strong>${escapeHtml(APP_NAME)}</strong>.
+      Click the link below to confirm your account deletion.
+    `,
+    body: `
+      ${ctaButton("Delete account", url)}
+      ${fallbackLink(url)}
+      ${finePrint(`If you didn't request to delete your ${escapeHtml(APP_NAME)} account, immediatly update your credentials!`)}
+    `,
+  });
+}
+
 export function passwordResetEmailHtml(url: string): string {
   return emailBase({
     preheader: "Reset your Trichter password. This link expires in 1 hour.",

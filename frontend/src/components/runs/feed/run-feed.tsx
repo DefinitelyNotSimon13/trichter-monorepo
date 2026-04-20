@@ -1,8 +1,8 @@
-import type { RunView } from "#/client/types.gen";
+import type { RunDto } from "#/client/types.gen";
 import { RunCard } from "#/components/runs/feed/run-card";
 import { StatePanel } from "#/components/ui/state-panel";
 
-export function RunFeed(props: { runs: RunView[] }) {
+export function RunFeed(props: { runs: RunDto[] }) {
   if (props.runs.length === 0) {
     return <StatePanel>No runs found.</StatePanel>;
   }
