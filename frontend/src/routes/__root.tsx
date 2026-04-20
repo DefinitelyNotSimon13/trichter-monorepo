@@ -43,9 +43,7 @@ function NotFoundPage() {
           The page you're looking for doesn't exist or has been moved.
         </p>
       </div>
-      <Button onClick={() => void router.navigate({ to: "/{-$locale}" })}>
-        Go home
-      </Button>
+      <Button onClick={() => void router.navigate({ to: "/" })}>Go home</Button>
     </div>
   );
 }

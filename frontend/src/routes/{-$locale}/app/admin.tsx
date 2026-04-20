@@ -1,5 +1,6 @@
 import {
   createFileRoute,
+  notFound,
   Outlet,
   redirect,
   useRouterState,
@@ -50,7 +51,7 @@ export const Route = createFileRoute("/{-$locale}/app/admin")({
   beforeLoad: async ({ location, params }) => {
     const result = await requireAdminSession();
 
-    if (!result.ok) {
+    if (!result.ok && result.reason === "unauthenticated") {
       throw redirect({
         to: "/{-$locale}/login",
         params: {
@@ -60,6 +61,8 @@ export const Route = createFileRoute("/{-$locale}/app/admin")({
           redirectTo: location.href,
         },
       });
+    } else if (!result.ok && result.reason === "forbidden") {
+      throw notFound();
     }
 
     return {

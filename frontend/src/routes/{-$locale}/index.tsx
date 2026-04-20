@@ -49,7 +49,7 @@ function LandingPage() {
           </div>
         </section>
 
-        <section className="mx-auto max-w-6xl px-4 pb-24 sm:px-6">
+        {/*      <section className="mx-auto max-w-6xl px-4 pb-24 sm:px-6">
           <div className="grid gap-4 md:grid-cols-3">
             <article className="rounded-3xl bg-primary/10 p-8">
               <Rss className="mb-4 size-7 text-primary" />
@@ -90,7 +90,7 @@ function LandingPage() {
               </p>
             </article>
           </div>
-        </section>
+        </section> */}
       </main>
 
       <Footer />

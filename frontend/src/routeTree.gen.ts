@@ -11,14 +11,14 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as Char123LocaleChar125RouteRouteImport } from './routes/{-$locale}/route'
 import { Route as Char123LocaleChar125IndexRouteImport } from './routes/{-$locale}/index'
-import { Route as Char123LocaleChar125TermsRouteImport } from './routes/{-$locale}/terms'
-import { Route as Char123LocaleChar125PrivacyRouteImport } from './routes/{-$locale}/privacy'
 import { Route as Char123LocaleChar125GoodbyeRouteImport } from './routes/{-$locale}/goodbye'
 import { Route as Char123LocaleChar125AppRouteImport } from './routes/{-$locale}/app'
 import { Route as Char123LocaleChar125AboutRouteImport } from './routes/{-$locale}/about'
 import { Route as DotwellKnownOpenidConfigurationRouteImport } from './routes/[.]well-known/openid-configuration'
 import { Route as DotwellKnownAssetlinksDotjsonRouteImport } from './routes/[.]well-known/assetlinks[.]json'
 import { Route as Char123LocaleChar125AppIndexRouteImport } from './routes/{-$locale}/app/index'
+import { Route as Char123LocaleChar125PolicyPrivacyRouteImport } from './routes/{-$locale}/policy/privacy'
+import { Route as Char123LocaleChar125PolicyImprintRouteImport } from './routes/{-$locale}/policy/imprint'
 import { Route as Char123LocaleChar125AppSettingsRouteImport } from './routes/{-$locale}/app/settings'
 import { Route as Char123LocaleChar125AppLeaderboardRouteImport } from './routes/{-$locale}/app/leaderboard'
 import { Route as Char123LocaleChar125AppFeedRouteImport } from './routes/{-$locale}/app/feed'
@@ -47,18 +47,6 @@ const Char123LocaleChar125IndexRoute =
   Char123LocaleChar125IndexRouteImport.update({
     id: '/',
     path: '/',
-    getParentRoute: () => Char123LocaleChar125RouteRoute,
-  } as any)
-const Char123LocaleChar125TermsRoute =
-  Char123LocaleChar125TermsRouteImport.update({
-    id: '/terms',
-    path: '/terms',
-    getParentRoute: () => Char123LocaleChar125RouteRoute,
-  } as any)
-const Char123LocaleChar125PrivacyRoute =
-  Char123LocaleChar125PrivacyRouteImport.update({
-    id: '/privacy',
-    path: '/privacy',
     getParentRoute: () => Char123LocaleChar125RouteRoute,
   } as any)
 const Char123LocaleChar125GoodbyeRoute =
@@ -95,6 +83,18 @@ const Char123LocaleChar125AppIndexRoute =
     id: '/',
     path: '/',
     getParentRoute: () => Char123LocaleChar125AppRoute,
+  } as any)
+const Char123LocaleChar125PolicyPrivacyRoute =
+  Char123LocaleChar125PolicyPrivacyRouteImport.update({
+    id: '/policy/privacy',
+    path: '/policy/privacy',
+    getParentRoute: () => Char123LocaleChar125RouteRoute,
+  } as any)
+const Char123LocaleChar125PolicyImprintRoute =
+  Char123LocaleChar125PolicyImprintRouteImport.update({
+    id: '/policy/imprint',
+    path: '/policy/imprint',
+    getParentRoute: () => Char123LocaleChar125RouteRoute,
   } as any)
 const Char123LocaleChar125AppSettingsRoute =
   Char123LocaleChar125AppSettingsRouteImport.update({
@@ -205,8 +205,6 @@ export interface FileRoutesByFullPath {
   '/{-$locale}/about': typeof Char123LocaleChar125AboutRoute
   '/{-$locale}/app': typeof Char123LocaleChar125AppRouteWithChildren
   '/{-$locale}/goodbye': typeof Char123LocaleChar125GoodbyeRoute
-  '/{-$locale}/privacy': typeof Char123LocaleChar125PrivacyRoute
-  '/{-$locale}/terms': typeof Char123LocaleChar125TermsRoute
   '/{-$locale}/': typeof Char123LocaleChar125IndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/{-$locale}/complete-profile': typeof Char123LocaleChar125AuthCompleteProfileRoute
@@ -220,6 +218,8 @@ export interface FileRoutesByFullPath {
   '/{-$locale}/app/feed': typeof Char123LocaleChar125AppFeedRoute
   '/{-$locale}/app/leaderboard': typeof Char123LocaleChar125AppLeaderboardRoute
   '/{-$locale}/app/settings': typeof Char123LocaleChar125AppSettingsRoute
+  '/{-$locale}/policy/imprint': typeof Char123LocaleChar125PolicyImprintRoute
+  '/{-$locale}/policy/privacy': typeof Char123LocaleChar125PolicyPrivacyRoute
   '/{-$locale}/app/': typeof Char123LocaleChar125AppIndexRoute
   '/.well-known/oauth-authorization-server/api/auth': typeof DotwellKnownOauthAuthorizationServerApiAuthRoute
   '/{-$locale}/app/admin/runs': typeof Char123LocaleChar125AppAdminRunsRoute
@@ -232,8 +232,6 @@ export interface FileRoutesByTo {
   '/.well-known/openid-configuration': typeof DotwellKnownOpenidConfigurationRoute
   '/{-$locale}/about': typeof Char123LocaleChar125AboutRoute
   '/{-$locale}/goodbye': typeof Char123LocaleChar125GoodbyeRoute
-  '/{-$locale}/privacy': typeof Char123LocaleChar125PrivacyRoute
-  '/{-$locale}/terms': typeof Char123LocaleChar125TermsRoute
   '/{-$locale}': typeof Char123LocaleChar125IndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/{-$locale}/complete-profile': typeof Char123LocaleChar125AuthCompleteProfileRoute
@@ -246,6 +244,8 @@ export interface FileRoutesByTo {
   '/{-$locale}/app/feed': typeof Char123LocaleChar125AppFeedRoute
   '/{-$locale}/app/leaderboard': typeof Char123LocaleChar125AppLeaderboardRoute
   '/{-$locale}/app/settings': typeof Char123LocaleChar125AppSettingsRoute
+  '/{-$locale}/policy/imprint': typeof Char123LocaleChar125PolicyImprintRoute
+  '/{-$locale}/policy/privacy': typeof Char123LocaleChar125PolicyPrivacyRoute
   '/{-$locale}/app': typeof Char123LocaleChar125AppIndexRoute
   '/.well-known/oauth-authorization-server/api/auth': typeof DotwellKnownOauthAuthorizationServerApiAuthRoute
   '/{-$locale}/app/admin/runs': typeof Char123LocaleChar125AppAdminRunsRoute
@@ -261,8 +261,6 @@ export interface FileRoutesById {
   '/{-$locale}/about': typeof Char123LocaleChar125AboutRoute
   '/{-$locale}/app': typeof Char123LocaleChar125AppRouteWithChildren
   '/{-$locale}/goodbye': typeof Char123LocaleChar125GoodbyeRoute
-  '/{-$locale}/privacy': typeof Char123LocaleChar125PrivacyRoute
-  '/{-$locale}/terms': typeof Char123LocaleChar125TermsRoute
   '/{-$locale}/': typeof Char123LocaleChar125IndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/{-$locale}/_auth/complete-profile': typeof Char123LocaleChar125AuthCompleteProfileRoute
@@ -276,6 +274,8 @@ export interface FileRoutesById {
   '/{-$locale}/app/feed': typeof Char123LocaleChar125AppFeedRoute
   '/{-$locale}/app/leaderboard': typeof Char123LocaleChar125AppLeaderboardRoute
   '/{-$locale}/app/settings': typeof Char123LocaleChar125AppSettingsRoute
+  '/{-$locale}/policy/imprint': typeof Char123LocaleChar125PolicyImprintRoute
+  '/{-$locale}/policy/privacy': typeof Char123LocaleChar125PolicyPrivacyRoute
   '/{-$locale}/app/': typeof Char123LocaleChar125AppIndexRoute
   '/.well-known/oauth-authorization-server/api/auth': typeof DotwellKnownOauthAuthorizationServerApiAuthRoute
   '/{-$locale}/app/admin/runs': typeof Char123LocaleChar125AppAdminRunsRoute
@@ -292,8 +292,6 @@ export interface FileRouteTypes {
     | '/{-$locale}/about'
     | '/{-$locale}/app'
     | '/{-$locale}/goodbye'
-    | '/{-$locale}/privacy'
-    | '/{-$locale}/terms'
     | '/{-$locale}/'
     | '/api/auth/$'
     | '/{-$locale}/complete-profile'
@@ -307,6 +305,8 @@ export interface FileRouteTypes {
     | '/{-$locale}/app/feed'
     | '/{-$locale}/app/leaderboard'
     | '/{-$locale}/app/settings'
+    | '/{-$locale}/policy/imprint'
+    | '/{-$locale}/policy/privacy'
     | '/{-$locale}/app/'
     | '/.well-known/oauth-authorization-server/api/auth'
     | '/{-$locale}/app/admin/runs'
@@ -319,8 +319,6 @@ export interface FileRouteTypes {
     | '/.well-known/openid-configuration'
     | '/{-$locale}/about'
     | '/{-$locale}/goodbye'
-    | '/{-$locale}/privacy'
-    | '/{-$locale}/terms'
     | '/{-$locale}'
     | '/api/auth/$'
     | '/{-$locale}/complete-profile'
@@ -333,6 +331,8 @@ export interface FileRouteTypes {
     | '/{-$locale}/app/feed'
     | '/{-$locale}/app/leaderboard'
     | '/{-$locale}/app/settings'
+    | '/{-$locale}/policy/imprint'
+    | '/{-$locale}/policy/privacy'
     | '/{-$locale}/app'
     | '/.well-known/oauth-authorization-server/api/auth'
     | '/{-$locale}/app/admin/runs'
@@ -347,8 +347,6 @@ export interface FileRouteTypes {
     | '/{-$locale}/about'
     | '/{-$locale}/app'
     | '/{-$locale}/goodbye'
-    | '/{-$locale}/privacy'
-    | '/{-$locale}/terms'
     | '/{-$locale}/'
     | '/api/auth/$'
     | '/{-$locale}/_auth/complete-profile'
@@ -362,6 +360,8 @@ export interface FileRouteTypes {
     | '/{-$locale}/app/feed'
     | '/{-$locale}/app/leaderboard'
     | '/{-$locale}/app/settings'
+    | '/{-$locale}/policy/imprint'
+    | '/{-$locale}/policy/privacy'
     | '/{-$locale}/app/'
     | '/.well-known/oauth-authorization-server/api/auth'
     | '/{-$locale}/app/admin/runs'
@@ -392,20 +392,6 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/{-$locale}/'
       preLoaderRoute: typeof Char123LocaleChar125IndexRouteImport
-      parentRoute: typeof Char123LocaleChar125RouteRoute
-    }
-    '/{-$locale}/terms': {
-      id: '/{-$locale}/terms'
-      path: '/terms'
-      fullPath: '/{-$locale}/terms'
-      preLoaderRoute: typeof Char123LocaleChar125TermsRouteImport
-      parentRoute: typeof Char123LocaleChar125RouteRoute
-    }
-    '/{-$locale}/privacy': {
-      id: '/{-$locale}/privacy'
-      path: '/privacy'
-      fullPath: '/{-$locale}/privacy'
-      preLoaderRoute: typeof Char123LocaleChar125PrivacyRouteImport
       parentRoute: typeof Char123LocaleChar125RouteRoute
     }
     '/{-$locale}/goodbye': {
@@ -449,6 +435,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/{-$locale}/app/'
       preLoaderRoute: typeof Char123LocaleChar125AppIndexRouteImport
       parentRoute: typeof Char123LocaleChar125AppRoute
+    }
+    '/{-$locale}/policy/privacy': {
+      id: '/{-$locale}/policy/privacy'
+      path: '/policy/privacy'
+      fullPath: '/{-$locale}/policy/privacy'
+      preLoaderRoute: typeof Char123LocaleChar125PolicyPrivacyRouteImport
+      parentRoute: typeof Char123LocaleChar125RouteRoute
+    }
+    '/{-$locale}/policy/imprint': {
+      id: '/{-$locale}/policy/imprint'
+      path: '/policy/imprint'
+      fullPath: '/{-$locale}/policy/imprint'
+      preLoaderRoute: typeof Char123LocaleChar125PolicyImprintRouteImport
+      parentRoute: typeof Char123LocaleChar125RouteRoute
     }
     '/{-$locale}/app/settings': {
       id: '/{-$locale}/app/settings'
@@ -624,8 +624,6 @@ interface Char123LocaleChar125RouteRouteChildren {
   Char123LocaleChar125AboutRoute: typeof Char123LocaleChar125AboutRoute
   Char123LocaleChar125AppRoute: typeof Char123LocaleChar125AppRouteWithChildren
   Char123LocaleChar125GoodbyeRoute: typeof Char123LocaleChar125GoodbyeRoute
-  Char123LocaleChar125PrivacyRoute: typeof Char123LocaleChar125PrivacyRoute
-  Char123LocaleChar125TermsRoute: typeof Char123LocaleChar125TermsRoute
   Char123LocaleChar125IndexRoute: typeof Char123LocaleChar125IndexRoute
   Char123LocaleChar125AuthCompleteProfileRoute: typeof Char123LocaleChar125AuthCompleteProfileRoute
   Char123LocaleChar125AuthConsentRoute: typeof Char123LocaleChar125AuthConsentRoute
@@ -634,6 +632,8 @@ interface Char123LocaleChar125RouteRouteChildren {
   Char123LocaleChar125AuthResetPasswordRoute: typeof Char123LocaleChar125AuthResetPasswordRoute
   Char123LocaleChar125AuthSignupRoute: typeof Char123LocaleChar125AuthSignupRoute
   Char123LocaleChar125AuthVerifyOtpRoute: typeof Char123LocaleChar125AuthVerifyOtpRoute
+  Char123LocaleChar125PolicyImprintRoute: typeof Char123LocaleChar125PolicyImprintRoute
+  Char123LocaleChar125PolicyPrivacyRoute: typeof Char123LocaleChar125PolicyPrivacyRoute
 }
 
 const Char123LocaleChar125RouteRouteChildren: Char123LocaleChar125RouteRouteChildren =
@@ -641,8 +641,6 @@ const Char123LocaleChar125RouteRouteChildren: Char123LocaleChar125RouteRouteChil
     Char123LocaleChar125AboutRoute: Char123LocaleChar125AboutRoute,
     Char123LocaleChar125AppRoute: Char123LocaleChar125AppRouteWithChildren,
     Char123LocaleChar125GoodbyeRoute: Char123LocaleChar125GoodbyeRoute,
-    Char123LocaleChar125PrivacyRoute: Char123LocaleChar125PrivacyRoute,
-    Char123LocaleChar125TermsRoute: Char123LocaleChar125TermsRoute,
     Char123LocaleChar125IndexRoute: Char123LocaleChar125IndexRoute,
     Char123LocaleChar125AuthCompleteProfileRoute:
       Char123LocaleChar125AuthCompleteProfileRoute,
@@ -655,6 +653,10 @@ const Char123LocaleChar125RouteRouteChildren: Char123LocaleChar125RouteRouteChil
     Char123LocaleChar125AuthSignupRoute: Char123LocaleChar125AuthSignupRoute,
     Char123LocaleChar125AuthVerifyOtpRoute:
       Char123LocaleChar125AuthVerifyOtpRoute,
+    Char123LocaleChar125PolicyImprintRoute:
+      Char123LocaleChar125PolicyImprintRoute,
+    Char123LocaleChar125PolicyPrivacyRoute:
+      Char123LocaleChar125PolicyPrivacyRoute,
   }
 
 const Char123LocaleChar125RouteRouteWithChildren =

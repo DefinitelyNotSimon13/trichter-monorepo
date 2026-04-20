@@ -35,6 +35,7 @@ export const requireAdminSession = createServerFn({ method: "GET" }).handler(
 
     return {
       ok: true as const,
+      reason: "" as const,
       session,
     };
   },

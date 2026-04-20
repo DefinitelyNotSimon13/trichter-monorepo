@@ -18,10 +18,13 @@ export function SocialLoginButton({
     try {
       setIsLoading(true);
 
-      await authClient.signIn.social({
+      const result = await authClient.signIn.social({
         provider: "google",
         callbackURL,
+        newUserCallbackURL: `/complete-profile?callbackUrl=${encodeURI(callbackURL)}`,
       });
+
+      console.log("RESULT: ", result);
     } finally {
       setIsLoading(false);
     }

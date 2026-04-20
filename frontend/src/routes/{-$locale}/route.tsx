@@ -1,5 +1,6 @@
 import {
   createFileRoute,
+  notFound,
   Outlet,
   redirect,
   useNavigate,
@@ -17,9 +18,7 @@ import {
 export const Route = createFileRoute("/{-$locale}")({
   beforeLoad: ({ params }) => {
     if (params.locale && !isSupportedLocale(params.locale)) {
-      throw redirect({
-        to: "/{-$locale}",
-      });
+      throw notFound();
     }
 
     return {
@@ -30,33 +29,19 @@ export const Route = createFileRoute("/{-$locale}")({
 });
 
 function LocaleLayout() {
-  const navigate = useNavigate();
-  const location = useRouterState({ select: (s) => s.location });
   const { locale } = Route.useParams();
   const context = Route.useRouteContext();
 
   const routeLocale = context.locale;
 
-  // useEffect(() => {
-  //   if (!locale) {
-  //     const detected = detectClientLocale();
-  //     const prefix = `/${detected}`;
-  //     const href = location.publicHref;
-  //     const alreadyNormalized =
-  //       href === prefix || href.startsWith(`${prefix}/`);
-  //
-  //     if (!alreadyNormalized) {
-  //       void navigate({
-  //         href: `${prefix}${href}`,
-  //         replace: true,
-  //       });
-  //       return;
-  //     }
-  //   }
-  //
-  //   persistLocale(routeLocale);
-  //   document.documentElement.lang = routeLocale;
-  // }, [locale, routeLocale, location.publicHref, navigate]);
+  useEffect(() => {
+    if (!locale) {
+      return;
+    }
+
+    persistLocale(routeLocale);
+    document.documentElement.lang = routeLocale;
+  }, [locale, routeLocale]);
 
   return (
     <PageWrapper>

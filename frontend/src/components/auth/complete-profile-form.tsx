@@ -2,7 +2,7 @@ import { useRouter } from "@tanstack/react-router";
 import { Field, FieldDescription, FieldGroup } from "#/components/ui/field";
 import { useAppForm } from "#/hooks/form";
 import { useFormError } from "#/hooks/use-form-error";
-import { authClient } from "#/lib/auth-client";
+import { authClient, type ClientUser } from "#/lib/auth-client";
 import { AuthCard } from "./auth-card";
 
 type CompleteProfileFormValues = {
@@ -10,7 +10,13 @@ type CompleteProfileFormValues = {
   displayUsername: string;
 };
 
-export function CompleteProfileForm() {
+export function CompleteProfileForm({
+  user,
+  callbackUrl,
+}: {
+  user: ClientUser;
+  callbackUrl?: string;
+}) {
   const {
     error: formError,
     setError: setFormError,
@@ -20,8 +26,8 @@ export function CompleteProfileForm() {
 
   const form = useAppForm({
     defaultValues: {
-      username: "",
-      displayUsername: "",
+      username: user.username ?? "",
+      displayUsername: user.displayUsername ?? "",
     } satisfies CompleteProfileFormValues,
     onSubmit: async ({ value }) => {
       clearError();
@@ -36,7 +42,11 @@ export function CompleteProfileForm() {
         return;
       }
 
-      await router.navigate({ to: "/{-$locale}/app/feed", search: {} });
+      if (callbackUrl) {
+        await router.navigate({ to: callbackUrl, search: {} });
+      } else {
+        await router.navigate({ to: "/{-$locale}/app/feed", search: {} });
+      }
     },
   });
 

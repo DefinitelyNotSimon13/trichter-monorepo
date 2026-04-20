@@ -2,8 +2,12 @@ import { createFileRoute, redirect } from "@tanstack/react-router";
 import { AuthCardWrapper } from "#/components/auth/auth-card-wrapper";
 import { CompleteProfileForm } from "#/components/auth/complete-profile-form";
 import { getSession } from "#/lib/auth.functions";
+import z from "zod";
 
 export const Route = createFileRoute("/{-$locale}/_auth/complete-profile")({
+  validateSearch: z.object({
+    callbackUrl: z.string().optional(),
+  }),
   beforeLoad: async () => {
     const session = await getSession();
 
@@ -11,17 +15,19 @@ export const Route = createFileRoute("/{-$locale}/_auth/complete-profile")({
       throw redirect({ to: "/{-$locale}/login" });
     }
 
-    if (session.user.username) {
-      throw redirect({ to: "/{-$locale}/app/feed", search: {} });
-    }
+    return { session };
   },
   component: CompleteProfilePage,
 });
 
 function CompleteProfilePage() {
+  const { session } = Route.useRouteContext();
+  const { callbackUrl } = Route.useSearch();
+
   return (
     <AuthCardWrapper>
-      <CompleteProfileForm />
+      <h1>CallbackUrl: {callbackUrl}</h1>
+      <CompleteProfileForm user={session.user} />
     </AuthCardWrapper>
   );
 }

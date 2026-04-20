@@ -34,6 +34,7 @@ type LoginFormValues = {
 type LoginFormProps = React.ComponentProps<"div"> & {
   redirectTo?: string;
   initialLogin?: string;
+  isOauth?: boolean;
 };
 
 type MoreOption = "passkey" | null;
@@ -43,6 +44,7 @@ export function LoginForm({
   className,
   redirectTo,
   initialLogin,
+  isOauth,
   ...props
 }: LoginFormProps) {
   const {
@@ -216,20 +218,22 @@ export function LoginForm({
 
           return (
             <div className="pt-5">
-              <FieldDescription className="text-center">
-                Don&apos;t have an account?{" "}
-                <Link
-                  to="/{-$locale}/signup"
-                  search={{
-                    redirectTo: redirectTo,
-                    initialLogin:
-                      trimmedLogin.length > 0 ? trimmedLogin : undefined,
-                  }}
-                  className="underline underline-offset-4"
-                >
-                  Sign up
-                </Link>
-              </FieldDescription>
+              {!isOauth && (
+                <FieldDescription className="text-center">
+                  Don&apos;t have an account?{" "}
+                  <Link
+                    to="/{-$locale}/signup"
+                    search={{
+                      redirectTo: redirectTo,
+                      initialLogin:
+                        trimmedLogin.length > 0 ? trimmedLogin : undefined,
+                    }}
+                    className="underline underline-offset-4"
+                  >
+                    Sign up
+                  </Link>
+                </FieldDescription>
+              )}
               <MoreSignInOptions
                 moreOptionsDefaultOpen={moreOptionsDefaultOpen}
                 canUsePasskey={canUsePasskey}

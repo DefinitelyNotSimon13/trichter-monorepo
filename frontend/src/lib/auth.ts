@@ -69,7 +69,7 @@ export const auth = betterAuth({
       });
     },
     onExistingUserSignUp: async ({ user }, request) => {
-      //TODO: Verify user about it
+      //TODO: Notify user about it?
       console.log(`Someone tried to sign up with ${user.email}`);
       console.debug(request);
     },
@@ -78,6 +78,47 @@ export const auth = betterAuth({
     google: {
       clientId: clientEnv.VITE_GOOGLE_CLIENT_ID,
       clientSecret: serverEnv.GOOGLE_CLIENT_SECRET,
+    },
+  },
+  databaseHooks: {
+    user: {
+      create: {
+        before: async (user) => {
+          const userData = user;
+
+          if (!user.username) {
+            let generatedUsername = userData.name
+              .toLowerCase()
+              .replace(/[^a-z0-9]/g, "-")
+              .replace(/-+/g, "-")
+              .replace(/^-|-$/g, "");
+
+            if (!generatedUsername) {
+              generatedUsername = "user";
+            }
+
+            const timestamp = Date.now().toString().slice(-4);
+            const finalUsername = `${generatedUsername}-${timestamp}`;
+
+            return {
+              data: {
+                ...user,
+                username: finalUsername,
+                displayUsername: user.name,
+              },
+            };
+          } else if (user.username && !user.displayUsername) {
+            return {
+              data: {
+                ...user,
+                displayUsername: userData.username,
+              },
+            };
+          }
+
+          return;
+        },
+      },
     },
   },
   advanced: {
@@ -143,6 +184,9 @@ export const auth = betterAuth({
     }),
     oauthProvider({
       loginPage: "/login",
+      signup: {
+        page: "/signup",
+      },
       consentPage: "/consent",
       silenceWarnings: {
         oauthAuthServerConfig: true,
