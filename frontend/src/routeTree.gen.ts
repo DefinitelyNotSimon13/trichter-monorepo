@@ -10,22 +10,22 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as Char123LocaleChar125RouteRouteImport } from './routes/{-$locale}/route'
-import { Route as Char123LocaleChar125IndexRouteImport } from './routes/{-$locale}/index'
-import { Route as Char123LocaleChar125NewMobileRouteImport } from './routes/{-$locale}/new-mobile'
-import { Route as Char123LocaleChar125MobileRouteImport } from './routes/{-$locale}/mobile'
-import { Route as Char123LocaleChar125GoodbyeRouteImport } from './routes/{-$locale}/goodbye'
 import { Route as Char123LocaleChar125AppRouteImport } from './routes/{-$locale}/app'
-import { Route as Char123LocaleChar125AboutRouteImport } from './routes/{-$locale}/about'
 import { Route as DePrivacyRouteImport } from './routes/de.privacy'
 import { Route as DotwellKnownOpenidConfigurationRouteImport } from './routes/[.]well-known/openid-configuration'
 import { Route as DotwellKnownAssetlinksDotjsonRouteImport } from './routes/[.]well-known/assetlinks[.]json'
+import { Route as Char123LocaleChar125PublicRouteRouteImport } from './routes/{-$locale}/_public/route'
 import { Route as Char123LocaleChar125AppIndexRouteImport } from './routes/{-$locale}/app/index'
-import { Route as Char123LocaleChar125PolicyPrivacyRouteImport } from './routes/{-$locale}/policy/privacy'
-import { Route as Char123LocaleChar125PolicyImprintRouteImport } from './routes/{-$locale}/policy/imprint'
+import { Route as Char123LocaleChar125PublicIndexRouteImport } from './routes/{-$locale}/_public/index'
+import { Route as Char123LocaleChar125OauthLoginRouteImport } from './routes/{-$locale}/oauth/login'
 import { Route as Char123LocaleChar125AppSettingsRouteImport } from './routes/{-$locale}/app/settings'
 import { Route as Char123LocaleChar125AppLeaderboardRouteImport } from './routes/{-$locale}/app/leaderboard'
 import { Route as Char123LocaleChar125AppFeedRouteImport } from './routes/{-$locale}/app/feed'
 import { Route as Char123LocaleChar125AppAdminRouteImport } from './routes/{-$locale}/app/admin'
+import { Route as Char123LocaleChar125PublicNewMobileRouteImport } from './routes/{-$locale}/_public/new-mobile'
+import { Route as Char123LocaleChar125PublicMobileRouteImport } from './routes/{-$locale}/_public/mobile'
+import { Route as Char123LocaleChar125PublicGoodbyeRouteImport } from './routes/{-$locale}/_public/goodbye'
+import { Route as Char123LocaleChar125PublicAboutRouteImport } from './routes/{-$locale}/_public/about'
 import { Route as Char123LocaleChar125AuthVerifyOtpRouteImport } from './routes/{-$locale}/_auth/verify-otp'
 import { Route as Char123LocaleChar125AuthSignupRouteImport } from './routes/{-$locale}/_auth/signup'
 import { Route as Char123LocaleChar125AuthResetPasswordRouteImport } from './routes/{-$locale}/_auth/reset-password'
@@ -38,6 +38,8 @@ import { Route as Char123LocaleChar125AppAdminIndexRouteImport } from './routes/
 import { Route as Char123LocaleChar125AppProfileChar123UserIdChar125RouteImport } from './routes/{-$locale}/app/profile.{-$userId}'
 import { Route as Char123LocaleChar125AppAdminUsersRouteImport } from './routes/{-$locale}/app/admin/users'
 import { Route as Char123LocaleChar125AppAdminRunsRouteImport } from './routes/{-$locale}/app/admin/runs'
+import { Route as Char123LocaleChar125PublicPolicyPrivacyRouteImport } from './routes/{-$locale}/_public/policy/privacy'
+import { Route as Char123LocaleChar125PublicPolicyImprintRouteImport } from './routes/{-$locale}/_public/policy/imprint'
 import { Route as DotwellKnownOauthAuthorizationServerApiAuthRouteImport } from './routes/[.]well-known/oauth-authorization-server.api.auth'
 
 const Char123LocaleChar125RouteRoute =
@@ -46,41 +48,11 @@ const Char123LocaleChar125RouteRoute =
     path: '/{-$locale}',
     getParentRoute: () => rootRouteImport,
   } as any)
-const Char123LocaleChar125IndexRoute =
-  Char123LocaleChar125IndexRouteImport.update({
-    id: '/',
-    path: '/',
-    getParentRoute: () => Char123LocaleChar125RouteRoute,
-  } as any)
-const Char123LocaleChar125NewMobileRoute =
-  Char123LocaleChar125NewMobileRouteImport.update({
-    id: '/new-mobile',
-    path: '/new-mobile',
-    getParentRoute: () => Char123LocaleChar125RouteRoute,
-  } as any)
-const Char123LocaleChar125MobileRoute =
-  Char123LocaleChar125MobileRouteImport.update({
-    id: '/mobile',
-    path: '/mobile',
-    getParentRoute: () => Char123LocaleChar125RouteRoute,
-  } as any)
-const Char123LocaleChar125GoodbyeRoute =
-  Char123LocaleChar125GoodbyeRouteImport.update({
-    id: '/goodbye',
-    path: '/goodbye',
-    getParentRoute: () => Char123LocaleChar125RouteRoute,
-  } as any)
 const Char123LocaleChar125AppRoute = Char123LocaleChar125AppRouteImport.update({
   id: '/app',
   path: '/app',
   getParentRoute: () => Char123LocaleChar125RouteRoute,
 } as any)
-const Char123LocaleChar125AboutRoute =
-  Char123LocaleChar125AboutRouteImport.update({
-    id: '/about',
-    path: '/about',
-    getParentRoute: () => Char123LocaleChar125RouteRoute,
-  } as any)
 const DePrivacyRoute = DePrivacyRouteImport.update({
   id: '/de/privacy',
   path: '/de/privacy',
@@ -98,22 +70,27 @@ const DotwellKnownAssetlinksDotjsonRoute =
     path: '/.well-known/assetlinks.json',
     getParentRoute: () => rootRouteImport,
   } as any)
+const Char123LocaleChar125PublicRouteRoute =
+  Char123LocaleChar125PublicRouteRouteImport.update({
+    id: '/_public',
+    getParentRoute: () => Char123LocaleChar125RouteRoute,
+  } as any)
 const Char123LocaleChar125AppIndexRoute =
   Char123LocaleChar125AppIndexRouteImport.update({
     id: '/',
     path: '/',
     getParentRoute: () => Char123LocaleChar125AppRoute,
   } as any)
-const Char123LocaleChar125PolicyPrivacyRoute =
-  Char123LocaleChar125PolicyPrivacyRouteImport.update({
-    id: '/policy/privacy',
-    path: '/policy/privacy',
-    getParentRoute: () => Char123LocaleChar125RouteRoute,
+const Char123LocaleChar125PublicIndexRoute =
+  Char123LocaleChar125PublicIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => Char123LocaleChar125PublicRouteRoute,
   } as any)
-const Char123LocaleChar125PolicyImprintRoute =
-  Char123LocaleChar125PolicyImprintRouteImport.update({
-    id: '/policy/imprint',
-    path: '/policy/imprint',
+const Char123LocaleChar125OauthLoginRoute =
+  Char123LocaleChar125OauthLoginRouteImport.update({
+    id: '/oauth/login',
+    path: '/oauth/login',
     getParentRoute: () => Char123LocaleChar125RouteRoute,
   } as any)
 const Char123LocaleChar125AppSettingsRoute =
@@ -139,6 +116,30 @@ const Char123LocaleChar125AppAdminRoute =
     id: '/admin',
     path: '/admin',
     getParentRoute: () => Char123LocaleChar125AppRoute,
+  } as any)
+const Char123LocaleChar125PublicNewMobileRoute =
+  Char123LocaleChar125PublicNewMobileRouteImport.update({
+    id: '/new-mobile',
+    path: '/new-mobile',
+    getParentRoute: () => Char123LocaleChar125PublicRouteRoute,
+  } as any)
+const Char123LocaleChar125PublicMobileRoute =
+  Char123LocaleChar125PublicMobileRouteImport.update({
+    id: '/mobile',
+    path: '/mobile',
+    getParentRoute: () => Char123LocaleChar125PublicRouteRoute,
+  } as any)
+const Char123LocaleChar125PublicGoodbyeRoute =
+  Char123LocaleChar125PublicGoodbyeRouteImport.update({
+    id: '/goodbye',
+    path: '/goodbye',
+    getParentRoute: () => Char123LocaleChar125PublicRouteRoute,
+  } as any)
+const Char123LocaleChar125PublicAboutRoute =
+  Char123LocaleChar125PublicAboutRouteImport.update({
+    id: '/about',
+    path: '/about',
+    getParentRoute: () => Char123LocaleChar125PublicRouteRoute,
   } as any)
 const Char123LocaleChar125AuthVerifyOtpRoute =
   Char123LocaleChar125AuthVerifyOtpRouteImport.update({
@@ -211,6 +212,18 @@ const Char123LocaleChar125AppAdminRunsRoute =
     path: '/runs',
     getParentRoute: () => Char123LocaleChar125AppAdminRoute,
   } as any)
+const Char123LocaleChar125PublicPolicyPrivacyRoute =
+  Char123LocaleChar125PublicPolicyPrivacyRouteImport.update({
+    id: '/policy/privacy',
+    path: '/policy/privacy',
+    getParentRoute: () => Char123LocaleChar125PublicRouteRoute,
+  } as any)
+const Char123LocaleChar125PublicPolicyImprintRoute =
+  Char123LocaleChar125PublicPolicyImprintRouteImport.update({
+    id: '/policy/imprint',
+    path: '/policy/imprint',
+    getParentRoute: () => Char123LocaleChar125PublicRouteRoute,
+  } as any)
 const DotwellKnownOauthAuthorizationServerApiAuthRoute =
   DotwellKnownOauthAuthorizationServerApiAuthRouteImport.update({
     id: '/.well-known/oauth-authorization-server/api/auth',
@@ -219,16 +232,11 @@ const DotwellKnownOauthAuthorizationServerApiAuthRoute =
   } as any)
 
 export interface FileRoutesByFullPath {
-  '/{-$locale}': typeof Char123LocaleChar125RouteRouteWithChildren
+  '/{-$locale}': typeof Char123LocaleChar125PublicRouteRouteWithChildren
   '/.well-known/assetlinks.json': typeof DotwellKnownAssetlinksDotjsonRoute
   '/.well-known/openid-configuration': typeof DotwellKnownOpenidConfigurationRoute
   '/de/privacy': typeof DePrivacyRoute
-  '/{-$locale}/about': typeof Char123LocaleChar125AboutRoute
   '/{-$locale}/app': typeof Char123LocaleChar125AppRouteWithChildren
-  '/{-$locale}/goodbye': typeof Char123LocaleChar125GoodbyeRoute
-  '/{-$locale}/mobile': typeof Char123LocaleChar125MobileRoute
-  '/{-$locale}/new-mobile': typeof Char123LocaleChar125NewMobileRoute
-  '/{-$locale}/': typeof Char123LocaleChar125IndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/{-$locale}/complete-profile': typeof Char123LocaleChar125AuthCompleteProfileRoute
   '/{-$locale}/consent': typeof Char123LocaleChar125AuthConsentRoute
@@ -237,28 +245,30 @@ export interface FileRoutesByFullPath {
   '/{-$locale}/reset-password': typeof Char123LocaleChar125AuthResetPasswordRoute
   '/{-$locale}/signup': typeof Char123LocaleChar125AuthSignupRoute
   '/{-$locale}/verify-otp': typeof Char123LocaleChar125AuthVerifyOtpRoute
+  '/{-$locale}/about': typeof Char123LocaleChar125PublicAboutRoute
+  '/{-$locale}/goodbye': typeof Char123LocaleChar125PublicGoodbyeRoute
+  '/{-$locale}/mobile': typeof Char123LocaleChar125PublicMobileRoute
+  '/{-$locale}/new-mobile': typeof Char123LocaleChar125PublicNewMobileRoute
   '/{-$locale}/app/admin': typeof Char123LocaleChar125AppAdminRouteWithChildren
   '/{-$locale}/app/feed': typeof Char123LocaleChar125AppFeedRoute
   '/{-$locale}/app/leaderboard': typeof Char123LocaleChar125AppLeaderboardRoute
   '/{-$locale}/app/settings': typeof Char123LocaleChar125AppSettingsRoute
-  '/{-$locale}/policy/imprint': typeof Char123LocaleChar125PolicyImprintRoute
-  '/{-$locale}/policy/privacy': typeof Char123LocaleChar125PolicyPrivacyRoute
+  '/{-$locale}/oauth/login': typeof Char123LocaleChar125OauthLoginRoute
+  '/{-$locale}/': typeof Char123LocaleChar125PublicIndexRoute
   '/{-$locale}/app/': typeof Char123LocaleChar125AppIndexRoute
   '/.well-known/oauth-authorization-server/api/auth': typeof DotwellKnownOauthAuthorizationServerApiAuthRoute
+  '/{-$locale}/policy/imprint': typeof Char123LocaleChar125PublicPolicyImprintRoute
+  '/{-$locale}/policy/privacy': typeof Char123LocaleChar125PublicPolicyPrivacyRoute
   '/{-$locale}/app/admin/runs': typeof Char123LocaleChar125AppAdminRunsRoute
   '/{-$locale}/app/admin/users': typeof Char123LocaleChar125AppAdminUsersRoute
   '/{-$locale}/app/profile/{-$userId}': typeof Char123LocaleChar125AppProfileChar123UserIdChar125Route
   '/{-$locale}/app/admin/': typeof Char123LocaleChar125AppAdminIndexRoute
 }
 export interface FileRoutesByTo {
+  '/{-$locale}': typeof Char123LocaleChar125PublicIndexRoute
   '/.well-known/assetlinks.json': typeof DotwellKnownAssetlinksDotjsonRoute
   '/.well-known/openid-configuration': typeof DotwellKnownOpenidConfigurationRoute
   '/de/privacy': typeof DePrivacyRoute
-  '/{-$locale}/about': typeof Char123LocaleChar125AboutRoute
-  '/{-$locale}/goodbye': typeof Char123LocaleChar125GoodbyeRoute
-  '/{-$locale}/mobile': typeof Char123LocaleChar125MobileRoute
-  '/{-$locale}/new-mobile': typeof Char123LocaleChar125NewMobileRoute
-  '/{-$locale}': typeof Char123LocaleChar125IndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/{-$locale}/complete-profile': typeof Char123LocaleChar125AuthCompleteProfileRoute
   '/{-$locale}/consent': typeof Char123LocaleChar125AuthConsentRoute
@@ -267,13 +277,18 @@ export interface FileRoutesByTo {
   '/{-$locale}/reset-password': typeof Char123LocaleChar125AuthResetPasswordRoute
   '/{-$locale}/signup': typeof Char123LocaleChar125AuthSignupRoute
   '/{-$locale}/verify-otp': typeof Char123LocaleChar125AuthVerifyOtpRoute
+  '/{-$locale}/about': typeof Char123LocaleChar125PublicAboutRoute
+  '/{-$locale}/goodbye': typeof Char123LocaleChar125PublicGoodbyeRoute
+  '/{-$locale}/mobile': typeof Char123LocaleChar125PublicMobileRoute
+  '/{-$locale}/new-mobile': typeof Char123LocaleChar125PublicNewMobileRoute
   '/{-$locale}/app/feed': typeof Char123LocaleChar125AppFeedRoute
   '/{-$locale}/app/leaderboard': typeof Char123LocaleChar125AppLeaderboardRoute
   '/{-$locale}/app/settings': typeof Char123LocaleChar125AppSettingsRoute
-  '/{-$locale}/policy/imprint': typeof Char123LocaleChar125PolicyImprintRoute
-  '/{-$locale}/policy/privacy': typeof Char123LocaleChar125PolicyPrivacyRoute
+  '/{-$locale}/oauth/login': typeof Char123LocaleChar125OauthLoginRoute
   '/{-$locale}/app': typeof Char123LocaleChar125AppIndexRoute
   '/.well-known/oauth-authorization-server/api/auth': typeof DotwellKnownOauthAuthorizationServerApiAuthRoute
+  '/{-$locale}/policy/imprint': typeof Char123LocaleChar125PublicPolicyImprintRoute
+  '/{-$locale}/policy/privacy': typeof Char123LocaleChar125PublicPolicyPrivacyRoute
   '/{-$locale}/app/admin/runs': typeof Char123LocaleChar125AppAdminRunsRoute
   '/{-$locale}/app/admin/users': typeof Char123LocaleChar125AppAdminUsersRoute
   '/{-$locale}/app/profile/{-$userId}': typeof Char123LocaleChar125AppProfileChar123UserIdChar125Route
@@ -282,15 +297,11 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/{-$locale}': typeof Char123LocaleChar125RouteRouteWithChildren
+  '/{-$locale}/_public': typeof Char123LocaleChar125PublicRouteRouteWithChildren
   '/.well-known/assetlinks.json': typeof DotwellKnownAssetlinksDotjsonRoute
   '/.well-known/openid-configuration': typeof DotwellKnownOpenidConfigurationRoute
   '/de/privacy': typeof DePrivacyRoute
-  '/{-$locale}/about': typeof Char123LocaleChar125AboutRoute
   '/{-$locale}/app': typeof Char123LocaleChar125AppRouteWithChildren
-  '/{-$locale}/goodbye': typeof Char123LocaleChar125GoodbyeRoute
-  '/{-$locale}/mobile': typeof Char123LocaleChar125MobileRoute
-  '/{-$locale}/new-mobile': typeof Char123LocaleChar125NewMobileRoute
-  '/{-$locale}/': typeof Char123LocaleChar125IndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/{-$locale}/_auth/complete-profile': typeof Char123LocaleChar125AuthCompleteProfileRoute
   '/{-$locale}/_auth/consent': typeof Char123LocaleChar125AuthConsentRoute
@@ -299,14 +310,20 @@ export interface FileRoutesById {
   '/{-$locale}/_auth/reset-password': typeof Char123LocaleChar125AuthResetPasswordRoute
   '/{-$locale}/_auth/signup': typeof Char123LocaleChar125AuthSignupRoute
   '/{-$locale}/_auth/verify-otp': typeof Char123LocaleChar125AuthVerifyOtpRoute
+  '/{-$locale}/_public/about': typeof Char123LocaleChar125PublicAboutRoute
+  '/{-$locale}/_public/goodbye': typeof Char123LocaleChar125PublicGoodbyeRoute
+  '/{-$locale}/_public/mobile': typeof Char123LocaleChar125PublicMobileRoute
+  '/{-$locale}/_public/new-mobile': typeof Char123LocaleChar125PublicNewMobileRoute
   '/{-$locale}/app/admin': typeof Char123LocaleChar125AppAdminRouteWithChildren
   '/{-$locale}/app/feed': typeof Char123LocaleChar125AppFeedRoute
   '/{-$locale}/app/leaderboard': typeof Char123LocaleChar125AppLeaderboardRoute
   '/{-$locale}/app/settings': typeof Char123LocaleChar125AppSettingsRoute
-  '/{-$locale}/policy/imprint': typeof Char123LocaleChar125PolicyImprintRoute
-  '/{-$locale}/policy/privacy': typeof Char123LocaleChar125PolicyPrivacyRoute
+  '/{-$locale}/oauth/login': typeof Char123LocaleChar125OauthLoginRoute
+  '/{-$locale}/_public/': typeof Char123LocaleChar125PublicIndexRoute
   '/{-$locale}/app/': typeof Char123LocaleChar125AppIndexRoute
   '/.well-known/oauth-authorization-server/api/auth': typeof DotwellKnownOauthAuthorizationServerApiAuthRoute
+  '/{-$locale}/_public/policy/imprint': typeof Char123LocaleChar125PublicPolicyImprintRoute
+  '/{-$locale}/_public/policy/privacy': typeof Char123LocaleChar125PublicPolicyPrivacyRoute
   '/{-$locale}/app/admin/runs': typeof Char123LocaleChar125AppAdminRunsRoute
   '/{-$locale}/app/admin/users': typeof Char123LocaleChar125AppAdminUsersRoute
   '/{-$locale}/app/profile/{-$userId}': typeof Char123LocaleChar125AppProfileChar123UserIdChar125Route
@@ -319,12 +336,7 @@ export interface FileRouteTypes {
     | '/.well-known/assetlinks.json'
     | '/.well-known/openid-configuration'
     | '/de/privacy'
-    | '/{-$locale}/about'
     | '/{-$locale}/app'
-    | '/{-$locale}/goodbye'
-    | '/{-$locale}/mobile'
-    | '/{-$locale}/new-mobile'
-    | '/{-$locale}/'
     | '/api/auth/$'
     | '/{-$locale}/complete-profile'
     | '/{-$locale}/consent'
@@ -333,28 +345,30 @@ export interface FileRouteTypes {
     | '/{-$locale}/reset-password'
     | '/{-$locale}/signup'
     | '/{-$locale}/verify-otp'
+    | '/{-$locale}/about'
+    | '/{-$locale}/goodbye'
+    | '/{-$locale}/mobile'
+    | '/{-$locale}/new-mobile'
     | '/{-$locale}/app/admin'
     | '/{-$locale}/app/feed'
     | '/{-$locale}/app/leaderboard'
     | '/{-$locale}/app/settings'
-    | '/{-$locale}/policy/imprint'
-    | '/{-$locale}/policy/privacy'
+    | '/{-$locale}/oauth/login'
+    | '/{-$locale}/'
     | '/{-$locale}/app/'
     | '/.well-known/oauth-authorization-server/api/auth'
+    | '/{-$locale}/policy/imprint'
+    | '/{-$locale}/policy/privacy'
     | '/{-$locale}/app/admin/runs'
     | '/{-$locale}/app/admin/users'
     | '/{-$locale}/app/profile/{-$userId}'
     | '/{-$locale}/app/admin/'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/{-$locale}'
     | '/.well-known/assetlinks.json'
     | '/.well-known/openid-configuration'
     | '/de/privacy'
-    | '/{-$locale}/about'
-    | '/{-$locale}/goodbye'
-    | '/{-$locale}/mobile'
-    | '/{-$locale}/new-mobile'
-    | '/{-$locale}'
     | '/api/auth/$'
     | '/{-$locale}/complete-profile'
     | '/{-$locale}/consent'
@@ -363,13 +377,18 @@ export interface FileRouteTypes {
     | '/{-$locale}/reset-password'
     | '/{-$locale}/signup'
     | '/{-$locale}/verify-otp'
+    | '/{-$locale}/about'
+    | '/{-$locale}/goodbye'
+    | '/{-$locale}/mobile'
+    | '/{-$locale}/new-mobile'
     | '/{-$locale}/app/feed'
     | '/{-$locale}/app/leaderboard'
     | '/{-$locale}/app/settings'
-    | '/{-$locale}/policy/imprint'
-    | '/{-$locale}/policy/privacy'
+    | '/{-$locale}/oauth/login'
     | '/{-$locale}/app'
     | '/.well-known/oauth-authorization-server/api/auth'
+    | '/{-$locale}/policy/imprint'
+    | '/{-$locale}/policy/privacy'
     | '/{-$locale}/app/admin/runs'
     | '/{-$locale}/app/admin/users'
     | '/{-$locale}/app/profile/{-$userId}'
@@ -377,15 +396,11 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/{-$locale}'
+    | '/{-$locale}/_public'
     | '/.well-known/assetlinks.json'
     | '/.well-known/openid-configuration'
     | '/de/privacy'
-    | '/{-$locale}/about'
     | '/{-$locale}/app'
-    | '/{-$locale}/goodbye'
-    | '/{-$locale}/mobile'
-    | '/{-$locale}/new-mobile'
-    | '/{-$locale}/'
     | '/api/auth/$'
     | '/{-$locale}/_auth/complete-profile'
     | '/{-$locale}/_auth/consent'
@@ -394,14 +409,20 @@ export interface FileRouteTypes {
     | '/{-$locale}/_auth/reset-password'
     | '/{-$locale}/_auth/signup'
     | '/{-$locale}/_auth/verify-otp'
+    | '/{-$locale}/_public/about'
+    | '/{-$locale}/_public/goodbye'
+    | '/{-$locale}/_public/mobile'
+    | '/{-$locale}/_public/new-mobile'
     | '/{-$locale}/app/admin'
     | '/{-$locale}/app/feed'
     | '/{-$locale}/app/leaderboard'
     | '/{-$locale}/app/settings'
-    | '/{-$locale}/policy/imprint'
-    | '/{-$locale}/policy/privacy'
+    | '/{-$locale}/oauth/login'
+    | '/{-$locale}/_public/'
     | '/{-$locale}/app/'
     | '/.well-known/oauth-authorization-server/api/auth'
+    | '/{-$locale}/_public/policy/imprint'
+    | '/{-$locale}/_public/policy/privacy'
     | '/{-$locale}/app/admin/runs'
     | '/{-$locale}/app/admin/users'
     | '/{-$locale}/app/profile/{-$userId}'
@@ -426,46 +447,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof Char123LocaleChar125RouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/{-$locale}/': {
-      id: '/{-$locale}/'
-      path: '/'
-      fullPath: '/{-$locale}/'
-      preLoaderRoute: typeof Char123LocaleChar125IndexRouteImport
-      parentRoute: typeof Char123LocaleChar125RouteRoute
-    }
-    '/{-$locale}/new-mobile': {
-      id: '/{-$locale}/new-mobile'
-      path: '/new-mobile'
-      fullPath: '/{-$locale}/new-mobile'
-      preLoaderRoute: typeof Char123LocaleChar125NewMobileRouteImport
-      parentRoute: typeof Char123LocaleChar125RouteRoute
-    }
-    '/{-$locale}/mobile': {
-      id: '/{-$locale}/mobile'
-      path: '/mobile'
-      fullPath: '/{-$locale}/mobile'
-      preLoaderRoute: typeof Char123LocaleChar125MobileRouteImport
-      parentRoute: typeof Char123LocaleChar125RouteRoute
-    }
-    '/{-$locale}/goodbye': {
-      id: '/{-$locale}/goodbye'
-      path: '/goodbye'
-      fullPath: '/{-$locale}/goodbye'
-      preLoaderRoute: typeof Char123LocaleChar125GoodbyeRouteImport
-      parentRoute: typeof Char123LocaleChar125RouteRoute
-    }
     '/{-$locale}/app': {
       id: '/{-$locale}/app'
       path: '/app'
       fullPath: '/{-$locale}/app'
       preLoaderRoute: typeof Char123LocaleChar125AppRouteImport
-      parentRoute: typeof Char123LocaleChar125RouteRoute
-    }
-    '/{-$locale}/about': {
-      id: '/{-$locale}/about'
-      path: '/about'
-      fullPath: '/{-$locale}/about'
-      preLoaderRoute: typeof Char123LocaleChar125AboutRouteImport
       parentRoute: typeof Char123LocaleChar125RouteRoute
     }
     '/de/privacy': {
@@ -489,6 +475,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DotwellKnownAssetlinksDotjsonRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/{-$locale}/_public': {
+      id: '/{-$locale}/_public'
+      path: ''
+      fullPath: '/{-$locale}'
+      preLoaderRoute: typeof Char123LocaleChar125PublicRouteRouteImport
+      parentRoute: typeof Char123LocaleChar125RouteRoute
+    }
     '/{-$locale}/app/': {
       id: '/{-$locale}/app/'
       path: '/'
@@ -496,18 +489,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof Char123LocaleChar125AppIndexRouteImport
       parentRoute: typeof Char123LocaleChar125AppRoute
     }
-    '/{-$locale}/policy/privacy': {
-      id: '/{-$locale}/policy/privacy'
-      path: '/policy/privacy'
-      fullPath: '/{-$locale}/policy/privacy'
-      preLoaderRoute: typeof Char123LocaleChar125PolicyPrivacyRouteImport
-      parentRoute: typeof Char123LocaleChar125RouteRoute
+    '/{-$locale}/_public/': {
+      id: '/{-$locale}/_public/'
+      path: '/'
+      fullPath: '/{-$locale}/'
+      preLoaderRoute: typeof Char123LocaleChar125PublicIndexRouteImport
+      parentRoute: typeof Char123LocaleChar125PublicRouteRoute
     }
-    '/{-$locale}/policy/imprint': {
-      id: '/{-$locale}/policy/imprint'
-      path: '/policy/imprint'
-      fullPath: '/{-$locale}/policy/imprint'
-      preLoaderRoute: typeof Char123LocaleChar125PolicyImprintRouteImport
+    '/{-$locale}/oauth/login': {
+      id: '/{-$locale}/oauth/login'
+      path: '/oauth/login'
+      fullPath: '/{-$locale}/oauth/login'
+      preLoaderRoute: typeof Char123LocaleChar125OauthLoginRouteImport
       parentRoute: typeof Char123LocaleChar125RouteRoute
     }
     '/{-$locale}/app/settings': {
@@ -537,6 +530,34 @@ declare module '@tanstack/react-router' {
       fullPath: '/{-$locale}/app/admin'
       preLoaderRoute: typeof Char123LocaleChar125AppAdminRouteImport
       parentRoute: typeof Char123LocaleChar125AppRoute
+    }
+    '/{-$locale}/_public/new-mobile': {
+      id: '/{-$locale}/_public/new-mobile'
+      path: '/new-mobile'
+      fullPath: '/{-$locale}/new-mobile'
+      preLoaderRoute: typeof Char123LocaleChar125PublicNewMobileRouteImport
+      parentRoute: typeof Char123LocaleChar125PublicRouteRoute
+    }
+    '/{-$locale}/_public/mobile': {
+      id: '/{-$locale}/_public/mobile'
+      path: '/mobile'
+      fullPath: '/{-$locale}/mobile'
+      preLoaderRoute: typeof Char123LocaleChar125PublicMobileRouteImport
+      parentRoute: typeof Char123LocaleChar125PublicRouteRoute
+    }
+    '/{-$locale}/_public/goodbye': {
+      id: '/{-$locale}/_public/goodbye'
+      path: '/goodbye'
+      fullPath: '/{-$locale}/goodbye'
+      preLoaderRoute: typeof Char123LocaleChar125PublicGoodbyeRouteImport
+      parentRoute: typeof Char123LocaleChar125PublicRouteRoute
+    }
+    '/{-$locale}/_public/about': {
+      id: '/{-$locale}/_public/about'
+      path: '/about'
+      fullPath: '/{-$locale}/about'
+      preLoaderRoute: typeof Char123LocaleChar125PublicAboutRouteImport
+      parentRoute: typeof Char123LocaleChar125PublicRouteRoute
     }
     '/{-$locale}/_auth/verify-otp': {
       id: '/{-$locale}/_auth/verify-otp'
@@ -622,6 +643,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof Char123LocaleChar125AppAdminRunsRouteImport
       parentRoute: typeof Char123LocaleChar125AppAdminRoute
     }
+    '/{-$locale}/_public/policy/privacy': {
+      id: '/{-$locale}/_public/policy/privacy'
+      path: '/policy/privacy'
+      fullPath: '/{-$locale}/policy/privacy'
+      preLoaderRoute: typeof Char123LocaleChar125PublicPolicyPrivacyRouteImport
+      parentRoute: typeof Char123LocaleChar125PublicRouteRoute
+    }
+    '/{-$locale}/_public/policy/imprint': {
+      id: '/{-$locale}/_public/policy/imprint'
+      path: '/policy/imprint'
+      fullPath: '/{-$locale}/policy/imprint'
+      preLoaderRoute: typeof Char123LocaleChar125PublicPolicyImprintRouteImport
+      parentRoute: typeof Char123LocaleChar125PublicRouteRoute
+    }
     '/.well-known/oauth-authorization-server/api/auth': {
       id: '/.well-known/oauth-authorization-server/api/auth'
       path: '/.well-known/oauth-authorization-server/api/auth'
@@ -631,6 +666,37 @@ declare module '@tanstack/react-router' {
     }
   }
 }
+
+interface Char123LocaleChar125PublicRouteRouteChildren {
+  Char123LocaleChar125PublicAboutRoute: typeof Char123LocaleChar125PublicAboutRoute
+  Char123LocaleChar125PublicGoodbyeRoute: typeof Char123LocaleChar125PublicGoodbyeRoute
+  Char123LocaleChar125PublicMobileRoute: typeof Char123LocaleChar125PublicMobileRoute
+  Char123LocaleChar125PublicNewMobileRoute: typeof Char123LocaleChar125PublicNewMobileRoute
+  Char123LocaleChar125PublicIndexRoute: typeof Char123LocaleChar125PublicIndexRoute
+  Char123LocaleChar125PublicPolicyImprintRoute: typeof Char123LocaleChar125PublicPolicyImprintRoute
+  Char123LocaleChar125PublicPolicyPrivacyRoute: typeof Char123LocaleChar125PublicPolicyPrivacyRoute
+}
+
+const Char123LocaleChar125PublicRouteRouteChildren: Char123LocaleChar125PublicRouteRouteChildren =
+  {
+    Char123LocaleChar125PublicAboutRoute: Char123LocaleChar125PublicAboutRoute,
+    Char123LocaleChar125PublicGoodbyeRoute:
+      Char123LocaleChar125PublicGoodbyeRoute,
+    Char123LocaleChar125PublicMobileRoute:
+      Char123LocaleChar125PublicMobileRoute,
+    Char123LocaleChar125PublicNewMobileRoute:
+      Char123LocaleChar125PublicNewMobileRoute,
+    Char123LocaleChar125PublicIndexRoute: Char123LocaleChar125PublicIndexRoute,
+    Char123LocaleChar125PublicPolicyImprintRoute:
+      Char123LocaleChar125PublicPolicyImprintRoute,
+    Char123LocaleChar125PublicPolicyPrivacyRoute:
+      Char123LocaleChar125PublicPolicyPrivacyRoute,
+  }
+
+const Char123LocaleChar125PublicRouteRouteWithChildren =
+  Char123LocaleChar125PublicRouteRoute._addFileChildren(
+    Char123LocaleChar125PublicRouteRouteChildren,
+  )
 
 interface Char123LocaleChar125AppAdminRouteChildren {
   Char123LocaleChar125AppAdminRunsRoute: typeof Char123LocaleChar125AppAdminRunsRoute
@@ -681,12 +747,8 @@ const Char123LocaleChar125AppRouteWithChildren =
   )
 
 interface Char123LocaleChar125RouteRouteChildren {
-  Char123LocaleChar125AboutRoute: typeof Char123LocaleChar125AboutRoute
+  Char123LocaleChar125PublicRouteRoute: typeof Char123LocaleChar125PublicRouteRouteWithChildren
   Char123LocaleChar125AppRoute: typeof Char123LocaleChar125AppRouteWithChildren
-  Char123LocaleChar125GoodbyeRoute: typeof Char123LocaleChar125GoodbyeRoute
-  Char123LocaleChar125MobileRoute: typeof Char123LocaleChar125MobileRoute
-  Char123LocaleChar125NewMobileRoute: typeof Char123LocaleChar125NewMobileRoute
-  Char123LocaleChar125IndexRoute: typeof Char123LocaleChar125IndexRoute
   Char123LocaleChar125AuthCompleteProfileRoute: typeof Char123LocaleChar125AuthCompleteProfileRoute
   Char123LocaleChar125AuthConsentRoute: typeof Char123LocaleChar125AuthConsentRoute
   Char123LocaleChar125AuthForgotPasswordRoute: typeof Char123LocaleChar125AuthForgotPasswordRoute
@@ -694,18 +756,14 @@ interface Char123LocaleChar125RouteRouteChildren {
   Char123LocaleChar125AuthResetPasswordRoute: typeof Char123LocaleChar125AuthResetPasswordRoute
   Char123LocaleChar125AuthSignupRoute: typeof Char123LocaleChar125AuthSignupRoute
   Char123LocaleChar125AuthVerifyOtpRoute: typeof Char123LocaleChar125AuthVerifyOtpRoute
-  Char123LocaleChar125PolicyImprintRoute: typeof Char123LocaleChar125PolicyImprintRoute
-  Char123LocaleChar125PolicyPrivacyRoute: typeof Char123LocaleChar125PolicyPrivacyRoute
+  Char123LocaleChar125OauthLoginRoute: typeof Char123LocaleChar125OauthLoginRoute
 }
 
 const Char123LocaleChar125RouteRouteChildren: Char123LocaleChar125RouteRouteChildren =
   {
-    Char123LocaleChar125AboutRoute: Char123LocaleChar125AboutRoute,
+    Char123LocaleChar125PublicRouteRoute:
+      Char123LocaleChar125PublicRouteRouteWithChildren,
     Char123LocaleChar125AppRoute: Char123LocaleChar125AppRouteWithChildren,
-    Char123LocaleChar125GoodbyeRoute: Char123LocaleChar125GoodbyeRoute,
-    Char123LocaleChar125MobileRoute: Char123LocaleChar125MobileRoute,
-    Char123LocaleChar125NewMobileRoute: Char123LocaleChar125NewMobileRoute,
-    Char123LocaleChar125IndexRoute: Char123LocaleChar125IndexRoute,
     Char123LocaleChar125AuthCompleteProfileRoute:
       Char123LocaleChar125AuthCompleteProfileRoute,
     Char123LocaleChar125AuthConsentRoute: Char123LocaleChar125AuthConsentRoute,
@@ -717,10 +775,7 @@ const Char123LocaleChar125RouteRouteChildren: Char123LocaleChar125RouteRouteChil
     Char123LocaleChar125AuthSignupRoute: Char123LocaleChar125AuthSignupRoute,
     Char123LocaleChar125AuthVerifyOtpRoute:
       Char123LocaleChar125AuthVerifyOtpRoute,
-    Char123LocaleChar125PolicyImprintRoute:
-      Char123LocaleChar125PolicyImprintRoute,
-    Char123LocaleChar125PolicyPrivacyRoute:
-      Char123LocaleChar125PolicyPrivacyRoute,
+    Char123LocaleChar125OauthLoginRoute: Char123LocaleChar125OauthLoginRoute,
   }
 
 const Char123LocaleChar125RouteRouteWithChildren =

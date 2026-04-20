@@ -80,7 +80,10 @@ class TrichterWebSocketServiceImpl(
         val wsUrl = config.baseUrl
             .replace("https://", "wss://")
             .replace("http://", "ws://")
-            .trimEnd('/') + "/ws"
+            .trimEnd('/') + "/api/v2/ws"
+
+        Log.i("WS", "WS URL: $wsUrl")
+
 
         httpClient.webSocket(
             urlString = wsUrl,

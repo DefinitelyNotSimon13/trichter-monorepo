@@ -7,22 +7,20 @@ import { ChangePasswordSection } from "#/components/settings/change-password-sec
 import { ConnectedAccountsSection } from "#/components/settings/connected-accounts-section";
 import { DisplayNameSection } from "#/components/settings/display-name-section";
 import { PasskeysSection } from "#/components/settings/passkeys-section";
-import { getSession } from "#/lib/auth.functions";
 import { DeleteAccountSection } from "#/components/settings/delete-account-section";
 
 export const Route = createFileRoute("/{-$locale}/app/settings")({
   staticData: {
     breadcrumb: "Settings",
   },
-  beforeLoad: async ({ location }) => {
-    const session = await getSession();
-    if (!session?.user) {
+  beforeLoad: ({ context, location }) => {
+    if (!context.session?.user) {
       throw redirect({
         to: "/{-$locale}/login",
         search: { redirectTo: location.href },
       });
     }
-    return { user: session.user };
+    return { user: context.session.user };
   },
   component: SettingsPage,
 });

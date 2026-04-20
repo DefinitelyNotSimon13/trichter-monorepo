@@ -3,10 +3,12 @@ package org.trichter.app.features.auth.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.trichter.app.features.auth.domain.model.AuthState
 import org.trichter.app.features.auth.domain.usecases.InitializeAuth
@@ -22,6 +24,8 @@ class AuthViewModel(
     private val logoutUseCase: Logout,
 ) : ViewModel() {
 
+    val loggedInAgain: MutableStateFlow<Boolean> = MutableStateFlow(false)
+
     val uiState: StateFlow<AuthUiState> = observeAuthState()
         .map { state ->
             when (state) {
@@ -29,7 +33,18 @@ class AuthViewModel(
                 AuthState.Unauthenticated -> AuthUiState.Unauthenticated
                 AuthState.Authenticating -> AuthUiState.Authenticating
                 is AuthState.Authenticated -> AuthUiState.Authenticated
-                is AuthState.Error -> AuthUiState.Error(state.message)
+                is AuthState.Error -> {
+                    if(state.message == "No auth code" && !loggedInAgain.value) {
+                        loggedInAgain.update { true }
+                        viewModelScope.launch {
+                            login()
+                        }
+                        return@map AuthUiState.Authenticating
+                    } else {
+
+                        AuthUiState.Error(state.message)
+                    }
+                }
             }
         }
         .stateIn(

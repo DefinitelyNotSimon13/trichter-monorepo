@@ -1,18 +1,18 @@
 import {
+  Link,
   createFileRoute,
   notFound,
   Outlet,
   redirect,
   useRouterState,
 } from "@tanstack/react-router";
-import { LocalizedLink } from "#/components/localized-link";
 import { requireAdminSession } from "#/lib/auth.functions";
 import { cn } from "#/lib/utils";
 
 const NAV_ITEMS = [
-  { to: "/app/admin" as const, label: "Dashboard", exact: true },
-  { to: "/app/admin/users" as const, label: "Users", exact: false },
-  { to: "/app/admin/runs" as const, label: "Runs", exact: false },
+  { to: "/{-$locale}/app/admin" as const, label: "Dashboard", exact: true },
+  { to: "/{-$locale}/app/admin/users" as const, label: "Users", exact: false },
+  { to: "/{-$locale}/app/admin/runs" as const, label: "Runs", exact: false },
 ] as const;
 
 function AdminNav() {
@@ -26,7 +26,7 @@ function AdminNav() {
           : pathname.includes(to.split("/app/admin")[1] ?? "");
 
         return (
-          <LocalizedLink
+          <Link
             key={to}
             to={to}
             className={cn(
@@ -37,7 +37,7 @@ function AdminNav() {
             )}
           >
             {label}
-          </LocalizedLink>
+          </Link>
         );
       })}
     </nav>

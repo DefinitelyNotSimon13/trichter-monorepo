@@ -53,7 +53,7 @@ class RunsViewModel(
         _uiState.update { state ->
             state.copy(
                 runs = state.runs.map { run ->
-                    if (run.id == runId) run.copy(imageUrl = imageUrl) else run
+                    if (run.id == runId) run.copy(image = imageUrl) else run
                 }
             )
         }

@@ -6,11 +6,13 @@ import { authClient } from "#/lib/auth-client";
 type SocialLoginButtonProps = {
   label?: string;
   callbackURL?: string;
+  newUserCallbackURL?: string;
 };
 
 export function SocialLoginButton({
   label = "Continue with Google",
   callbackURL = "/app/feed",
+  newUserCallbackURL = "/complete-profile",
 }: SocialLoginButtonProps) {
   const [isLoading, setIsLoading] = useState(false);
 
@@ -20,10 +22,8 @@ export function SocialLoginButton({
 
       await authClient.signIn.social({
         provider: "google",
-        callbackURL: encodeURI(callbackURL),
-        newUserCallbackURL: encodeURI(
-          `/complete-profile?callbackUrl=${callbackURL}`,
-        ),
+        callbackURL,
+        newUserCallbackURL: encodeURI(newUserCallbackURL),
       });
     } finally {
       setIsLoading(false);

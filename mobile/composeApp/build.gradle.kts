@@ -15,10 +15,10 @@ val appVersionMajor = 1
 val appVersionMinor = 0
 val appVersionPatch = 0
 
-val suffixVersion: Int = 1
+val suffixVersion: Int = 2
 
 val appVersionName = "$appVersionMajor.$appVersionMinor.$appVersionPatch"
-val appVersionCode = appVersionMajor * 10000 + appVersionMinor * 100 + appVersionPatch
+val appVersionCode = appVersionMajor * 1000000 + appVersionMinor * 10000 + appVersionPatch * 100 + suffixVersion
 
 kotlin {
     androidTarget {

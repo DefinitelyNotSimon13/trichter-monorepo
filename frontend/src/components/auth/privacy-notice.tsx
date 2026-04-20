@@ -1,16 +1,16 @@
-import { LocalizedLink } from "../localized-link";
+import { Link } from "@tanstack/react-router";
 
 export function PrivacyNotice() {
   return (
     <>
       By continuing, you agree to our{" "}
-      <LocalizedLink to="/terms" className="underline underline-offset-4">
+      <a href="/terms" className="underline underline-offset-4">
         Terms of Service
-      </LocalizedLink>{" "}
+      </a>{" "}
       and{" "}
-      <LocalizedLink to="/privacy" className="underline underline-offset-4">
+      <Link to="/{-$locale}/policy/privacy" className="underline underline-offset-4">
         Privacy Policy
-      </LocalizedLink>
+      </Link>
       .
     </>
   );

@@ -1,10 +1,10 @@
+import { Link } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import { LocalePicker } from "#/components/locale-picker";
 import { Button } from "#/components/ui/button";
 import { useTheme } from "#/hooks/use-theme";
 import { authClient } from "#/lib/auth-client";
 import { Spinner } from "./ui/spinner";
-import { LocalizedLink } from "./localized-link";
 
 function IconThemeToggle() {
   const { toggle, icon: Icon } = useTheme();
@@ -29,28 +29,28 @@ export function BrandHeader() {
   return (
     <header className="sticky top-0 z-50 border-b bg-background/90 backdrop-blur">
       <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4 sm:px-6">
-        <LocalizedLink className="text-base font-black tracking-tight text-foreground">
+        <Link to="/{-$locale}" className="text-base font-black tracking-tight text-foreground">
           {t("common:appName")}
-        </LocalizedLink>
+        </Link>
 
         <div className="flex items-center gap-3">
           <LocalePicker />
           <IconThemeToggle />
           {isPending ? (
             <Button size="sm" asChild disabled>
-              <LocalizedLink disabled>
+              <Link to="/{-$locale}" disabled>
                 <Spinner className="w-12" />
-              </LocalizedLink>
+              </Link>
             </Button>
           ) : user ? (
             <Button size="sm" asChild>
-              <LocalizedLink to="/app/feed">Go to app</LocalizedLink>
+              <Link to="/{-$locale}/app/feed">Go to app</Link>
             </Button>
           ) : (
             <Button size="sm" asChild>
-              <LocalizedLink to="/login">
+              <Link to="/{-$locale}/login">
                 {t("common:actions:getStarted")}
-              </LocalizedLink>
+              </Link>
             </Button>
           )}
         </div>

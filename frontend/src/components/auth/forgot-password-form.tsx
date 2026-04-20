@@ -6,7 +6,7 @@ import { authClient } from "#/lib/auth-client";
 import { emailValidator } from "#/lib/validators";
 import { AuthCard } from "./auth-card";
 import { TurnstileWidget } from "./turnstile-widget";
-import { LocalizedLink } from "../localized-link";
+import { Link } from "@tanstack/react-router";
 
 type ForgotPasswordFormValues = {
   email: string;
@@ -61,9 +61,9 @@ export function ForgotPasswordForm({
       footer={
         <>
           Remembered it?{" "}
-          <LocalizedLink to="/login" className="underline underline-offset-4">
+          <Link to="/{-$locale}/login" className="underline underline-offset-4">
             Back to login
-          </LocalizedLink>
+          </Link>
         </>
       }
       {...props}

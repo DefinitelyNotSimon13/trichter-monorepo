@@ -8,8 +8,8 @@ import type { RunView } from "#/client/types.gen";
 import { InfiniteScrollSentinel } from "#/components/runs/feed/infinite-scroll-sentinel";
 import { RunFeed } from "#/components/runs/feed/run-feed";
 import { Skeleton } from "#/components/ui/skeleton";
-import { StatePanel } from "#/components/ui/state-panel";
 import { Spinner } from "#/components/ui/spinner";
+import { StatePanel } from "#/components/ui/state-panel";
 
 const PAGE_SIZE = 10;
 
@@ -17,6 +17,15 @@ export const Route = createFileRoute("/{-$locale}/app/feed")({
   staticData: {
     breadcrumb: "Feed",
   },
+  loader: ({ context: { queryClient } }) =>
+    queryClient.ensureQueryData({
+      ...getRunsInfiniteOptions({
+        query: { size: PAGE_SIZE, sort: ["createdAt,desc"] },
+      }),
+      initialPageParam: 0,
+      pages: 1,
+    }),
+  pendingComponent: FeedSkeleton,
   component: FeedPage,
 });
 
@@ -68,7 +77,6 @@ function FeedPage() {
     void query.fetchNextPage();
   }, [query.hasNextPage, query.isFetchingNextPage, query.fetchNextPage]);
 
-  if (query.isPending) return <FeedSkeleton />;
   if (query.isError)
     return (
       <StatePanel tone="destructive" onRetry={() => void query.refetch()}>

@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { Activity, Users } from "lucide-react";
 import { getRunsOptions } from "#/client/@tanstack/react-query.gen";
-import { LocalizedLink } from "#/components/localized-link";
+import { Link } from "@tanstack/react-router";
 import { Button } from "#/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "#/components/ui/card";
 import { Skeleton } from "#/components/ui/skeleton";
@@ -92,7 +92,7 @@ export function AdminDashboard() {
           <CardHeader className="flex flex-row items-center justify-between space-y-0">
             <CardTitle className="text-base">Recent runs</CardTitle>
             <Button variant="ghost" size="sm" asChild>
-              <LocalizedLink to="/app/admin/runs">View all</LocalizedLink>
+              <Link to="/{-$locale}/app/admin/runs">View all</Link>
             </Button>
           </CardHeader>
           <CardContent>
@@ -142,16 +142,16 @@ export function AdminDashboard() {
           </CardHeader>
           <CardContent className="flex flex-col gap-3">
             <Button variant="outline" className="w-full justify-start" asChild>
-              <LocalizedLink to="/app/admin/users">
+              <Link to="/{-$locale}/app/admin/users">
                 <Users className="mr-2 size-4" />
                 Manage users
-              </LocalizedLink>
+              </Link>
             </Button>
             <Button variant="outline" className="w-full justify-start" asChild>
-              <LocalizedLink to="/app/admin/runs">
+              <Link to="/{-$locale}/app/admin/runs">
                 <Activity className="mr-2 size-4" />
                 Manage runs
-              </LocalizedLink>
+              </Link>
             </Button>
           </CardContent>
         </Card>

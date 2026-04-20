@@ -1,4 +1,4 @@
-import { useNavigate, useRouterState } from "@tanstack/react-router";
+import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import {
   CircleUser,
   LogIn,
@@ -19,7 +19,6 @@ import {
 } from "#/components/ui/sidebar";
 import { useTheme } from "#/hooks/use-theme";
 import { authClient } from "#/lib/auth-client";
-import { LocalizedLink } from "./localized-link";
 
 const navItems = [
   {
@@ -47,9 +46,9 @@ function SidebarLogo() {
 
   return (
     <SidebarHeader className="border-b px-4 py-4">
-      <LocalizedLink className="font-black tracking-tight text-foreground">
+      <Link to="/{-$locale}" className="font-black tracking-tight text-foreground">
         {state === "collapsed" ? "T" : "Trichter"}
-      </LocalizedLink>
+      </Link>
     </SidebarHeader>
   );
 }
@@ -116,12 +115,12 @@ function SidebarUserSection() {
             tooltip="Log In"
             className="h-auto min-h-11"
           >
-            <LocalizedLink to="/login" viewTransition>
+            <Link to="/{-$locale}/login" viewTransition>
               <LogIn />
               <span className="leading-[normal] truncate group-data-[collapsible=icon]:hidden">
                 {state === "collapsed" ? "Log In" : "Log In"}
               </span>
-            </LocalizedLink>
+            </Link>
           </SidebarMenuButton>
         </SidebarMenuItem>
         <SidebarMenuItem>
@@ -139,12 +138,12 @@ function SidebarUserSection() {
           tooltip={profileLabel}
           className="h-auto min-h-11"
         >
-          <LocalizedLink to="/app/profile" viewTransition>
+          <Link to="/{-$locale}/app/profile" viewTransition>
             <CircleUser />
             <span className="truncate group-data-[collapsible=icon]:hidden">
               {state === "collapsed" ? "Profile" : profileLabel}
             </span>
-          </LocalizedLink>
+          </Link>
         </SidebarMenuButton>
       </SidebarMenuItem>
 
@@ -182,12 +181,12 @@ export function AppSidebar() {
                 isActive={pathname.startsWith(activePath)}
                 tooltip={label}
               >
-                <LocalizedLink to={to} viewTransition>
+                <Link to={to} viewTransition>
                   <Icon />
                   <span className="truncate group-data-[collapsible=icon]:hidden">
                     {label}
                   </span>
-                </LocalizedLink>
+                </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
           ))}

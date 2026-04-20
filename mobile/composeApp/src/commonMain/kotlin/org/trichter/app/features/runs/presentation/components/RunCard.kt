@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import nl.jacobras.humanreadable.HumanReadable
 import org.trichter.app.features.runs.domain.model.Run
+import org.trichter.app.util.Log
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 
@@ -34,6 +35,7 @@ fun RunCard(
     run: Run,
     modifier: Modifier = Modifier,
 ) {
+    Log.i("TEST", "run.image: ${run.image}")
     Card(
         modifier = modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
@@ -42,17 +44,16 @@ fun RunCard(
         elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
     ) {
         Column {
-            // Image
-            if (run.hasImage && run.imageUrl != null) {
+            run.image?.let {
                 AsyncImage(
-                    model = run.imageUrl,
+                    //TODO: Hardcoded URL
+                    model = "https://next.trichter.hauptspeicher.com/api/v2/runs/${run.id}/image",
                     contentDescription = null,
                     contentScale = ContentScale.FillWidth,
                     modifier = Modifier.fillMaxWidth(),
                 )
             }
 
-            // Metrics grid
             Row(
                 modifier = Modifier
                     .fillMaxWidth()

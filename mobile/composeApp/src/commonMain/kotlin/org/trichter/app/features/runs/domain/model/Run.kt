@@ -12,8 +12,7 @@ fun RunDto.toRun() = Run(
         duration = duration,
         volume = volume
     ),
-    hasImage = !image.isNullOrEmpty(),
-    imageUrl = image,
+    image = image,
     createdAt = createdAt?.toString(),
     user = user?.let {
         User(
@@ -30,8 +29,7 @@ data class Run @OptIn(ExperimentalTime::class) constructor(
     val id: String,
     val userId: String? = null,
     val data: RunData? = null,
-    val hasImage: Boolean = false,
-    val imageUrl: String? = null,
+    val image: String? = null,
     val createdAt: String? = null,
     val user: User? = null,
 )

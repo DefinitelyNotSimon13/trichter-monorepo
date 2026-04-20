@@ -1,6 +1,12 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/de/privacy")({
+  beforeLoad: () => {
+    // throw redirect({
+    //   to: "/{-$locale}/policy/privacy",
+    //   params: { locale: "de" },
+    // });
+  },
   component: RouteComponent,
 });
 

@@ -25,7 +25,6 @@ import {
 import { authClient } from "#/lib/auth-client";
 import { getSession } from "#/lib/auth.functions";
 import { cn } from "#/lib/utils";
-import { LocalizedLink } from "#/components/localized-link";
 import z from "zod";
 import { useEffect, useState } from "react";
 import { PasskeyPromptDialog } from "#/components/auth/passkey-prompt-dialog";
@@ -36,6 +35,7 @@ export const Route = createFileRoute("/{-$locale}/app")({
     if (session?.user && !session.user.username) {
       throw redirect({ to: "/{-$locale}/complete-profile" });
     }
+    return { session };
   },
   component: AppLayout,
   validateSearch: z.object({
@@ -83,7 +83,7 @@ function AppHeader() {
       <Breadcrumb className="min-w-0 flex-1">
         <BreadcrumbList>
           <BreadcrumbItem className="text-muted-foreground">
-            <LocalizedLink className="hover:underline">Trichter</LocalizedLink>
+            <Link to="/{-$locale}" className="hover:underline">Trichter</Link>
           </BreadcrumbItem>{" "}
           <BreadcrumbSeparator />
           {breadcrumbs.map((crumb, index) => {
@@ -107,7 +107,7 @@ function AppHeader() {
 
       {session?.user ? (
         <div className="flex items-center gap-1">
-          <LocalizedLink to="/app/settings">
+          <Link to="/{-$locale}/app/settings">
             <Button
               type="button"
               variant="ghost"
@@ -117,7 +117,7 @@ function AppHeader() {
               <Settings2 className="size-4" />
               <span className="sr-only">Settings</span>
             </Button>
-          </LocalizedLink>
+          </Link>
           <Button
             type="button"
             variant="ghost"
@@ -140,7 +140,7 @@ function MobileNavLink({
   icon,
   label,
 }: {
-  to: "/app/feed" | "/app/leaderboard" | "/app/profile";
+  to: "/{-$locale}/app/feed" | "/{-$locale}/app/leaderboard" | "/{-$locale}/app/profile";
   activePath: string;
   icon: React.ReactNode;
   label: string;
@@ -149,7 +149,7 @@ function MobileNavLink({
   const isActive = pathname.includes(activePath);
 
   return (
-    <LocalizedLink
+    <Link
       to={to}
       viewTransition
       className={cn(
@@ -161,7 +161,7 @@ function MobileNavLink({
     >
       {icon}
       <span>{label}</span>
-    </LocalizedLink>
+    </Link>
   );
 }
 
@@ -169,19 +169,19 @@ function MobileBottomNav() {
   return (
     <nav className="fixed inset-x-0 bottom-0 z-50 flex border-t bg-background/95 backdrop-blur md:hidden">
       <MobileNavLink
-        to="/app/feed"
+        to="/{-$locale}/app/feed"
         activePath="/app/feed"
         icon={<Rss className="size-5" />}
         label="Feed"
       />
       <MobileNavLink
-        to="/app/leaderboard"
+        to="/{-$locale}/app/leaderboard"
         activePath="/app/leaderboard"
         icon={<Trophy className="size-5" />}
         label="Board"
       />
       <MobileNavLink
-        to="/app/profile"
+        to="/{-$locale}/app/profile"
         activePath="/app/profile"
         icon={<CircleUser className="size-5" />}
         label="Profile"

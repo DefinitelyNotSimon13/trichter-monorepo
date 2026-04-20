@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
+import { Link } from "@tanstack/react-router";
 import { infoOptions } from "#/client/@tanstack/react-query.gen";
 import { clientEnv } from "#/env/client";
-import { LocalizedLink } from "./localized-link";
 
 function readBuildId(data: unknown): string | undefined {
   if (!data || typeof data !== "object") return undefined;
@@ -52,16 +52,16 @@ export function Footer() {
           </div>
         </div>
         <div className="flex flex-wrap items-center gap-4">
-          <LocalizedLink className="hover:text-foreground">Home</LocalizedLink>
-          <LocalizedLink to="/app/feed" className="hover:text-foreground">
+          <Link to="/{-$locale}" className="hover:text-foreground">Home</Link>
+          <Link to="/{-$locale}/app/feed" className="hover:text-foreground">
             Feed
-          </LocalizedLink>
-          <LocalizedLink
-            to="/app/leaderboard"
+          </Link>
+          <Link
+            to="/{-$locale}/app/leaderboard"
             className="hover:text-foreground"
           >
             Leaderboard
-          </LocalizedLink>
+          </Link>
           <span>© {year}</span>
         </div>
       </div>

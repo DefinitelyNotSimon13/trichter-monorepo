@@ -1,17 +1,21 @@
-import { useQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { getRunsByUserOptions } from "#/client/@tanstack/react-query.gen";
 import { ProfileRunsPreview } from "#/components/profile/profile-runs-preview";
 import { ProfileStats } from "#/components/profile/profile-stats";
 import { Avatar, AvatarFallback } from "#/components/ui/avatar";
 import { Skeleton } from "#/components/ui/skeleton";
-import { StatePanel } from "#/components/ui/state-panel";
 import { getSession } from "#/lib/auth.functions";
 
 export const Route = createFileRoute("/{-$locale}/app/profile/{-$userId}")({
   staticData: {
     breadcrumb: "Profile",
   },
+  loader: ({ context: { queryClient, userId } }) =>
+    queryClient.ensureQueryData(
+      getRunsByUserOptions({ path: { userId }, query: { size: 500, sort: ["createdAt,desc"] } }),
+    ),
+  pendingComponent: ProfileSkeleton,
   beforeLoad: async ({ params, location }) => {
     if (params.userId) {
       return {
@@ -67,14 +71,14 @@ function ProfileSkeleton() {
 function PublicProfilePage() {
   const { userId } = Route.useRouteContext();
 
-  const runsQuery = useQuery({
-    ...getRunsByUserOptions({
+  const { data } = useSuspenseQuery(
+    getRunsByUserOptions({
       path: { userId },
       query: { size: 500, sort: ["createdAt,desc"] },
     }),
-  });
+  );
 
-  const runs = runsQuery.data?.content ?? [];
+  const runs = data.content ?? [];
 
   const userInfo = runs[0]?.user;
   const displayName = userInfo?.name ?? userInfo?.username ?? userId;
@@ -82,40 +86,30 @@ function PublicProfilePage() {
 
   return (
     <section className="space-y-6">
-      {runsQuery.isPending ? (
-        <ProfileSkeleton />
-      ) : runsQuery.isError ? (
-        <StatePanel tone="destructive" onRetry={() => void runsQuery.refetch()}>
-          Failed to load profile.
-        </StatePanel>
-      ) : (
-        <>
-          <header className="flex items-center gap-4">
-            <Avatar className="size-16">
-              <AvatarFallback className="text-xl font-bold bg-primary/15 text-primary">
-                {initial}
-              </AvatarFallback>
-            </Avatar>
-            <div>
-              <h1 className="text-2xl font-semibold tracking-tight">
-                {displayName}
-              </h1>
-              {userInfo?.username ? (
-                <p className="text-sm text-muted-foreground">
-                  @{userInfo.username}
-                </p>
-              ) : null}
-            </div>
-          </header>
-          <ProfileStats runs={runs} />
-          <div>
-            <h2 className="mb-4 text-lg font-semibold tracking-tight">
-              Recent runs
-            </h2>
-            <ProfileRunsPreview runs={runs} count={5} />
-          </div>
-        </>
-      )}
+      <header className="flex items-center gap-4">
+        <Avatar className="size-16">
+          <AvatarFallback className="text-xl font-bold bg-primary/15 text-primary">
+            {initial}
+          </AvatarFallback>
+        </Avatar>
+        <div>
+          <h1 className="text-2xl font-semibold tracking-tight">
+            {displayName}
+          </h1>
+          {userInfo?.username ? (
+            <p className="text-sm text-muted-foreground">
+              @{userInfo.username}
+            </p>
+          ) : null}
+        </div>
+      </header>
+      <ProfileStats runs={runs} />
+      <div>
+        <h2 className="mb-4 text-lg font-semibold tracking-tight">
+          Recent runs
+        </h2>
+        <ProfileRunsPreview runs={runs} count={5} />
+      </div>
     </section>
   );
 }

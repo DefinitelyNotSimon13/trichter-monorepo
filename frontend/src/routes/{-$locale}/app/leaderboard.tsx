@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 
 import { getRunsOptions } from "#/client/@tanstack/react-query.gen";
@@ -6,7 +6,6 @@ import type { RunView } from "#/client/types.gen";
 import { LeaderboardStats } from "#/components/runs/leaderboard/leaderboard-stats";
 import { LeaderboardTable } from "#/components/runs/leaderboard/leaderboard-table";
 import { Skeleton } from "#/components/ui/skeleton";
-import { StatePanel } from "#/components/ui/state-panel";
 
 const PAGE_SIZE = 100;
 
@@ -14,6 +13,13 @@ export const Route = createFileRoute("/{-$locale}/app/leaderboard")({
   staticData: {
     breadcrumb: "Leaderboard",
   },
+  loader: ({ context: { queryClient } }) =>
+    queryClient.ensureQueryData(
+      getRunsOptions({
+        query: { page: 0, size: PAGE_SIZE, sort: ["createdAt,desc"] },
+      }),
+    ),
+  pendingComponent: LeaderboardSkeleton,
   component: LeaderboardPage,
 });
 
@@ -31,7 +37,7 @@ function LeaderboardSkeleton() {
 }
 
 function LeaderboardPage() {
-  const query = useQuery(
+  const { data } = useSuspenseQuery(
     getRunsOptions({
       query: {
         page: 0,
@@ -41,15 +47,7 @@ function LeaderboardPage() {
     }),
   );
 
-  if (query.isPending) return <LeaderboardSkeleton />;
-  if (query.isError)
-    return (
-      <StatePanel tone="destructive" onRetry={() => void query.refetch()}>
-        Failed to load leaderboard.
-      </StatePanel>
-    );
-
-  const runs: RunView[] = query.data.content ?? [];
+  const runs: RunView[] = data.content ?? [];
 
   return (
     <div className="space-y-8">

@@ -5,7 +5,7 @@ import { useFormMessages } from "#/hooks/use-form-error";
 import { authClient } from "#/lib/auth-client";
 import { passwordValidator } from "#/lib/validators";
 import { AuthCard } from "./auth-card";
-import { LocalizedLink } from "../localized-link";
+import { Link } from "@tanstack/react-router";
 
 type ResetPasswordFormValues = {
   password: string;
@@ -79,9 +79,9 @@ export function ResetPasswordForm({
       footer={
         <>
           Back to{" "}
-          <LocalizedLink to="/login" className="underline underline-offset-4">
+          <Link to="/{-$locale}/login" className="underline underline-offset-4">
             login
-          </LocalizedLink>
+          </Link>
         </>
       }
       {...props}
@@ -141,12 +141,12 @@ export function ResetPasswordForm({
               <FieldDescription className="text-center text-foreground">
                 {successMessage}
                 <br />
-                <LocalizedLink
-                  to="/login"
+                <Link
+                  to="/{-$locale}/login"
                   className="underline underline-offset-4"
                 >
                   Go to login
-                </LocalizedLink>
+                </Link>
                 .
               </FieldDescription>
             </Field>

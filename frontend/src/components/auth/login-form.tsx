@@ -1,4 +1,9 @@
-import { Link, useHydrated, useRouter } from "@tanstack/react-router";
+import {
+  Link,
+  useHydrated,
+  useLocation,
+  useRouter,
+} from "@tanstack/react-router";
 import { ChevronDown, KeyRound, Link2, Mail } from "lucide-react";
 import { useState } from "react";
 import { Button } from "#/components/ui/button";
@@ -23,7 +28,6 @@ import { toast } from "sonner";
 import { AuthCard } from "./auth-card";
 import { SocialLoginButton } from "./social-login-button";
 import { TurnstileWidget } from "./turnstile-widget";
-import { LocalizedLink } from "../localized-link";
 import { PrivacyNotice } from "./privacy-notice";
 
 type LoginFormValues = {
@@ -55,9 +59,22 @@ export function LoginForm({
 
   const { ref: turnstileRef, getFetchOptions } = useTurnstile();
   const hydrated = useHydrated();
+  const location = useLocation();
 
   const lastMethod = authClient.getLastUsedLoginMethod();
+
   const callbackURL = redirectTo ?? "/app/feed";
+
+  var newUserSocialCallbackURL: string;
+  if (isOauth) {
+    newUserSocialCallbackURL = encodeURI(
+      `/complete-profile?callbackUrl=${encodeURI("/new-mobile")}`,
+    );
+  } else {
+    newUserSocialCallbackURL = encodeURI(
+      `/complete-profile?callbackUrl=${callbackURL}`,
+    );
+  }
 
   const canUsePasskey =
     hydrated && typeof window !== "undefined" && !!window.PublicKeyCredential;
@@ -130,6 +147,7 @@ export function LoginForm({
                   : "Login with Google"
               }
               callbackURL={callbackURL}
+              newUserCallbackURL={newUserSocialCallbackURL}
             />
           </Field>
 
@@ -170,12 +188,12 @@ export function LoginForm({
               <Field>
                 <div className="flex items-center">
                   <FieldLabel htmlFor={field.name}>Password</FieldLabel>
-                  <LocalizedLink
-                    to="/forgot-password"
+                  <Link
+                    to="/{-$locale}/forgot-password"
                     className="ml-auto text-sm underline-offset-4 hover:underline"
                   >
                     Forgot your password?
-                  </LocalizedLink>
+                  </Link>
                 </div>
                 <field.FormPasswordInput
                   hideLabel

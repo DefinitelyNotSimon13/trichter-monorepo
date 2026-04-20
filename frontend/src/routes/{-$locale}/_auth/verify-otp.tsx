@@ -1,4 +1,4 @@
-import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
+import { createFileRoute, Link, redirect, useRouter } from "@tanstack/react-router";
 import { Field, FieldDescription, FieldGroup } from "#/components/ui/field";
 import { AuthCard } from "#/components/auth/auth-card";
 import { useAppForm } from "#/hooks/form";
@@ -8,13 +8,19 @@ import { authClient } from "#/lib/auth-client";
 import { TurnstileWidget } from "#/components/auth/turnstile-widget";
 import { AuthCardWrapper } from "#/components/auth/auth-card-wrapper";
 import z from "zod";
+import { getSession } from "#/lib/auth.functions";
 
 export const Route = createFileRoute("/{-$locale}/_auth/verify-otp")({
   validateSearch: z.object({
     email: z.string().default(""),
     redirectTo: z.string().default("/app/feed"),
   }),
-
+  beforeLoad: async () => {
+    const session = await getSession();
+    if (session?.user) {
+      throw redirect({ to: "/{-$locale}/app/feed" });
+    }
+  },
   component: VerifyOtpPage,
 });
 

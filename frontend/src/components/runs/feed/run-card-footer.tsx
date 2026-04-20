@@ -1,5 +1,5 @@
 import type { RunDto } from "#/client/types.gen";
-import { LocalizedLink } from "#/components/localized-link";
+import { Link } from "@tanstack/react-router";
 import { Avatar, AvatarFallback, AvatarImage } from "#/components/ui/avatar";
 import { CardFooter } from "#/components/ui/card";
 import { formatTimestamp } from "#/lib/formatters";
@@ -21,13 +21,13 @@ export function RunCardFooter(props: { run: RunDto }) {
           </AvatarFallback>
         </Avatar>
         {userId ? (
-          <LocalizedLink
-            to="/app/profile/$userId"
+          <Link
+            to="/{-$locale}/app/profile/$userId"
             params={{ userId }}
             className="truncate text-sm font-semibold hover:underline underline-offset-2"
           >
             {displayName}
-          </LocalizedLink>
+          </Link>
         ) : (
           <span className="truncate text-sm font-semibold">{displayName}</span>
         )}

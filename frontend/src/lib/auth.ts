@@ -183,7 +183,7 @@ export const auth = betterAuth({
       ],
     }),
     oauthProvider({
-      loginPage: "/login?oauth=mobile&redirectTo=%2Fnew-mobile",
+      loginPage: "/oauth/login",
       signup: {
         page: "/signup",
       },
