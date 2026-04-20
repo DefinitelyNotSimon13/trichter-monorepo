@@ -10,20 +10,20 @@ export const Route = createFileRoute("/{-$locale}/_auth/login")({
     redirectTo: z.string().optional(),
     initialLogin: z.string().optional(),
     newUser: z.boolean().optional(),
-    isOauth: z.boolean().optional(),
+    oauth: z.string().default("none"),
   }),
   component: LoginPage,
 });
 
 function LoginPage() {
-  const { redirectTo, initialLogin, isOauth } = Route.useSearch();
+  const { redirectTo, initialLogin, oauth } = Route.useSearch();
 
   return (
     <AuthCardWrapper>
       <LoginForm
         redirectTo={redirectTo}
         initialLogin={initialLogin}
-        isOauth={isOauth}
+        isOauth={oauth === "mobile"}
       />
     </AuthCardWrapper>
   );

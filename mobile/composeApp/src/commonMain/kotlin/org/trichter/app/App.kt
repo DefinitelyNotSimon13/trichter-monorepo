@@ -11,14 +11,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.UriHandler
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import coil3.ImageLoader
+import coil3.Uri
 import coil3.compose.setSingletonImageLoaderFactory
 import coil3.request.crossfade
+import kotlinx.coroutines.flow.StateFlow
 import org.koin.compose.KoinMultiplatformApplication
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.annotation.KoinExperimentalAPI
@@ -42,13 +45,15 @@ import org.trichter.app.ui.theme.TrichterTheme
 @OptIn(KoinExperimentalAPI::class)
 @Composable
 fun App(
-    codeAuthFlowFactory: CodeAuthFlowFactory
+    codeAuthFlowFactory: CodeAuthFlowFactory,
+    deepLinkUriFlow: StateFlow<String?>
 ) {
     setSingletonImageLoaderFactory { context ->
         ImageLoader.Builder(context).crossfade(true).build()
     }
 
     val composableAppModules = getComposableAppModules()
+    val deepLinkUri by deepLinkUriFlow.collectAsState()
 
     KoinMultiplatformApplication(
         config = KoinConfiguration {
@@ -62,15 +67,21 @@ fun App(
         }
     ) {
         TrichterTheme {
-            AppRoot()
+            AppRoot(deepLinkUri.toString())
         }
     }
 }
 
 @Composable
-private fun AppRoot() {
+private fun AppRoot(
+    deepLinkUri: String?
+) {
     val authViewModel: AuthViewModel = koinViewModel()
     val uiState by authViewModel.uiState.collectAsState()
+
+    if(deepLinkUri?.startsWith("org.trichter.app:///login") ?: false) {
+        authViewModel.login()
+    }
 
     when (val state = uiState) {
         AuthUiState.Initializing -> AuthLoadingScreen(message = "Checking session…")

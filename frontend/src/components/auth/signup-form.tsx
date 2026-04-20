@@ -106,7 +106,7 @@ export function SignupForm({
           <Field>
             <SocialLoginButton
               label="Sign up with Google"
-              callbackURL={`/app/feed`}
+              callbackURL={redirectTo ?? `/app/feed`}
             />
           </Field>
 

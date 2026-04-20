@@ -89,8 +89,8 @@ export const auth = betterAuth({
           if (!user.username) {
             let generatedUsername = userData.name
               .toLowerCase()
-              .replace(/[^a-z0-9]/g, "-")
-              .replace(/-+/g, "-")
+              .replace(/[^a-z0-9]/g, "_")
+              .replace(/-+/g, "_")
               .replace(/^-|-$/g, "");
 
             if (!generatedUsername) {
@@ -183,7 +183,7 @@ export const auth = betterAuth({
       ],
     }),
     oauthProvider({
-      loginPage: "/login?isOauth=true",
+      loginPage: "/login?oauth=mobile",
       signup: {
         page: "/signup",
       },

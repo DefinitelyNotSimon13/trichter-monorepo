@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as Char123LocaleChar125RouteRouteImport } from './routes/{-$locale}/route'
 import { Route as Char123LocaleChar125IndexRouteImport } from './routes/{-$locale}/index'
+import { Route as Char123LocaleChar125MobileRouteImport } from './routes/{-$locale}/mobile'
 import { Route as Char123LocaleChar125GoodbyeRouteImport } from './routes/{-$locale}/goodbye'
 import { Route as Char123LocaleChar125AppRouteImport } from './routes/{-$locale}/app'
 import { Route as Char123LocaleChar125AboutRouteImport } from './routes/{-$locale}/about'
@@ -47,6 +48,12 @@ const Char123LocaleChar125IndexRoute =
   Char123LocaleChar125IndexRouteImport.update({
     id: '/',
     path: '/',
+    getParentRoute: () => Char123LocaleChar125RouteRoute,
+  } as any)
+const Char123LocaleChar125MobileRoute =
+  Char123LocaleChar125MobileRouteImport.update({
+    id: '/mobile',
+    path: '/mobile',
     getParentRoute: () => Char123LocaleChar125RouteRoute,
   } as any)
 const Char123LocaleChar125GoodbyeRoute =
@@ -205,6 +212,7 @@ export interface FileRoutesByFullPath {
   '/{-$locale}/about': typeof Char123LocaleChar125AboutRoute
   '/{-$locale}/app': typeof Char123LocaleChar125AppRouteWithChildren
   '/{-$locale}/goodbye': typeof Char123LocaleChar125GoodbyeRoute
+  '/{-$locale}/mobile': typeof Char123LocaleChar125MobileRoute
   '/{-$locale}/': typeof Char123LocaleChar125IndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/{-$locale}/complete-profile': typeof Char123LocaleChar125AuthCompleteProfileRoute
@@ -232,6 +240,7 @@ export interface FileRoutesByTo {
   '/.well-known/openid-configuration': typeof DotwellKnownOpenidConfigurationRoute
   '/{-$locale}/about': typeof Char123LocaleChar125AboutRoute
   '/{-$locale}/goodbye': typeof Char123LocaleChar125GoodbyeRoute
+  '/{-$locale}/mobile': typeof Char123LocaleChar125MobileRoute
   '/{-$locale}': typeof Char123LocaleChar125IndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/{-$locale}/complete-profile': typeof Char123LocaleChar125AuthCompleteProfileRoute
@@ -261,6 +270,7 @@ export interface FileRoutesById {
   '/{-$locale}/about': typeof Char123LocaleChar125AboutRoute
   '/{-$locale}/app': typeof Char123LocaleChar125AppRouteWithChildren
   '/{-$locale}/goodbye': typeof Char123LocaleChar125GoodbyeRoute
+  '/{-$locale}/mobile': typeof Char123LocaleChar125MobileRoute
   '/{-$locale}/': typeof Char123LocaleChar125IndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/{-$locale}/_auth/complete-profile': typeof Char123LocaleChar125AuthCompleteProfileRoute
@@ -292,6 +302,7 @@ export interface FileRouteTypes {
     | '/{-$locale}/about'
     | '/{-$locale}/app'
     | '/{-$locale}/goodbye'
+    | '/{-$locale}/mobile'
     | '/{-$locale}/'
     | '/api/auth/$'
     | '/{-$locale}/complete-profile'
@@ -319,6 +330,7 @@ export interface FileRouteTypes {
     | '/.well-known/openid-configuration'
     | '/{-$locale}/about'
     | '/{-$locale}/goodbye'
+    | '/{-$locale}/mobile'
     | '/{-$locale}'
     | '/api/auth/$'
     | '/{-$locale}/complete-profile'
@@ -347,6 +359,7 @@ export interface FileRouteTypes {
     | '/{-$locale}/about'
     | '/{-$locale}/app'
     | '/{-$locale}/goodbye'
+    | '/{-$locale}/mobile'
     | '/{-$locale}/'
     | '/api/auth/$'
     | '/{-$locale}/_auth/complete-profile'
@@ -392,6 +405,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/{-$locale}/'
       preLoaderRoute: typeof Char123LocaleChar125IndexRouteImport
+      parentRoute: typeof Char123LocaleChar125RouteRoute
+    }
+    '/{-$locale}/mobile': {
+      id: '/{-$locale}/mobile'
+      path: '/mobile'
+      fullPath: '/{-$locale}/mobile'
+      preLoaderRoute: typeof Char123LocaleChar125MobileRouteImport
       parentRoute: typeof Char123LocaleChar125RouteRoute
     }
     '/{-$locale}/goodbye': {
@@ -624,6 +644,7 @@ interface Char123LocaleChar125RouteRouteChildren {
   Char123LocaleChar125AboutRoute: typeof Char123LocaleChar125AboutRoute
   Char123LocaleChar125AppRoute: typeof Char123LocaleChar125AppRouteWithChildren
   Char123LocaleChar125GoodbyeRoute: typeof Char123LocaleChar125GoodbyeRoute
+  Char123LocaleChar125MobileRoute: typeof Char123LocaleChar125MobileRoute
   Char123LocaleChar125IndexRoute: typeof Char123LocaleChar125IndexRoute
   Char123LocaleChar125AuthCompleteProfileRoute: typeof Char123LocaleChar125AuthCompleteProfileRoute
   Char123LocaleChar125AuthConsentRoute: typeof Char123LocaleChar125AuthConsentRoute
@@ -641,6 +662,7 @@ const Char123LocaleChar125RouteRouteChildren: Char123LocaleChar125RouteRouteChil
     Char123LocaleChar125AboutRoute: Char123LocaleChar125AboutRoute,
     Char123LocaleChar125AppRoute: Char123LocaleChar125AppRouteWithChildren,
     Char123LocaleChar125GoodbyeRoute: Char123LocaleChar125GoodbyeRoute,
+    Char123LocaleChar125MobileRoute: Char123LocaleChar125MobileRoute,
     Char123LocaleChar125IndexRoute: Char123LocaleChar125IndexRoute,
     Char123LocaleChar125AuthCompleteProfileRoute:
       Char123LocaleChar125AuthCompleteProfileRoute,
