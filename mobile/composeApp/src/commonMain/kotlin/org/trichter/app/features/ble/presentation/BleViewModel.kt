@@ -33,6 +33,7 @@ import org.trichter.app.features.ble.domain.models.UserDto
 import org.trichter.app.features.ble.domain.models.id
 import org.trichter.app.features.ble.domain.usecases.ConnectToDevice
 import org.trichter.app.features.ble.domain.usecases.DisconnectFromDevice
+import org.trichter.app.features.ble.domain.usecases.GetCurrentUser
 import org.trichter.app.features.ble.domain.usecases.ObservePermissionsState
 import org.trichter.app.features.ble.domain.usecases.ObserveScanResults
 import org.trichter.app.features.ble.domain.usecases.ObserveTrichterState
@@ -64,6 +65,7 @@ class BleViewModel(
     private val sendFakeRunUseCase: SendFakeRun,
     private val saveRunUseCase: SaveRun,
     private val searchUsersUseCase: SearchUsers,
+    private val getCurrentUserUseCase: GetCurrentUser,
     private val bleServiceController: BleServiceController,
 ) : ViewModel() {
 
@@ -211,6 +213,21 @@ class BleViewModel(
 
     fun onClearUser() {
         _searchUserState.update { it.copy(selectedUser = null) }
+    }
+
+    fun onSelectSelf() {
+        viewModelScope.launch {
+            _searchUserState.update { it.copy(loading = true, error = null) }
+            getCurrentUserUseCase().fold(
+                onSuccess = { user ->
+                    _searchUserState.update { it.copy(selectedUser = user, loading = false, query = "", results = emptyList()) }
+                    query.value = ""
+                },
+                onFailure = { e ->
+                    _searchUserState.update { it.copy(loading = false, error = e.message) }
+                }
+            )
+        }
     }
 }
 

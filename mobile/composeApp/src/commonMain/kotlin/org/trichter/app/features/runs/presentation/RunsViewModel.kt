@@ -11,6 +11,8 @@ import org.trichter.app.features.runs.domain.model.Run
 import org.trichter.app.features.runs.data.repository.Result
 import org.trichter.app.features.runs.data.repository.RunsRepository
 import org.trichter.app.features.runs.domain.usecases.GetRuns
+import org.trichter.app.features.websocket.RunWsEvent
+import org.trichter.app.features.websocket.TrichterWebSocketService
 import org.trichter.app.util.Log
 
 data class RunsUiState(
@@ -24,7 +26,8 @@ data class RunsUiState(
 )
 
 class RunsViewModel(
-    private val getRunsUseCase: GetRuns
+    private val getRunsUseCase: GetRuns,
+    private val webSocketService: TrichterWebSocketService,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(RunsUiState())
@@ -32,12 +35,34 @@ class RunsViewModel(
 
     init {
         loadInitial()
+        observeWebSocketEvents()
+    }
+
+    private fun observeWebSocketEvents() {
+        viewModelScope.launch {
+            webSocketService.events.collect { event ->
+                when (event) {
+                    is RunWsEvent.RunCreated -> refresh()
+                    is RunWsEvent.RunImageUploaded -> updateRunImage(event.runId, event.imageUrl)
+                }
+            }
+        }
+    }
+
+    private fun updateRunImage(runId: String, imageUrl: String) {
+        _uiState.update { state ->
+            state.copy(
+                runs = state.runs.map { run ->
+                    if (run.id == runId) run.copy(imageUrl = imageUrl) else run
+                }
+            )
+        }
     }
 
     private fun loadInitial() {
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true, errorMessage = null) }
-            when (val result =  getRunsUseCase(page = 0)) {
+            when (val result = getRunsUseCase(page = 0)) {
                 is Result.Success -> _uiState.update {
                     it.copy(
                         runs = result.data.first,

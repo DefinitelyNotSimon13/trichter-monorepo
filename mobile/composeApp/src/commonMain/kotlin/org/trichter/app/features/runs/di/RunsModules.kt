@@ -3,7 +3,7 @@ package org.trichter.app.features.runs.di
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
-import org.koin.core.module.Module
+import io.ktor.client.plugins.websocket.WebSockets
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
@@ -15,9 +15,8 @@ import kotlinx.serialization.json.Json
 import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.viewModelOf
 import org.trichter.api.client.apis.RunsApi
+import org.trichter.api.client.apis.UsersApi
 import org.trichter.app.di.ApiConfig
-import org.trichter.app.features.runs.data.network.ApiService
-import org.trichter.app.features.runs.data.network.ApiServiceImpl
 import org.trichter.app.features.runs.domain.usecases.GetRuns
 import org.trichter.app.features.runs.presentation.LeaderboardViewModel
 import org.trichter.app.features.runs.presentation.RunsViewModel
@@ -44,6 +43,13 @@ val runsDataModule = module {
         )
     }
 
+    single {
+        UsersApi(
+            baseUrl = get<ApiConfig>().baseUrl,
+            httpClient = get()
+        )
+    }
+
     single<HttpClient> {
         HttpClient {
             install(ContentNegotiation) {
@@ -63,6 +69,7 @@ val runsDataModule = module {
                 level = LogLevel.INFO
                 logger = Logger.DEFAULT
             }
+            install(WebSockets)
         }
     }
 

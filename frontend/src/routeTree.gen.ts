@@ -16,6 +16,7 @@ import { Route as Char123LocaleChar125MobileRouteImport } from './routes/{-$loca
 import { Route as Char123LocaleChar125GoodbyeRouteImport } from './routes/{-$locale}/goodbye'
 import { Route as Char123LocaleChar125AppRouteImport } from './routes/{-$locale}/app'
 import { Route as Char123LocaleChar125AboutRouteImport } from './routes/{-$locale}/about'
+import { Route as DePrivacyRouteImport } from './routes/de.privacy'
 import { Route as DotwellKnownOpenidConfigurationRouteImport } from './routes/[.]well-known/openid-configuration'
 import { Route as DotwellKnownAssetlinksDotjsonRouteImport } from './routes/[.]well-known/assetlinks[.]json'
 import { Route as Char123LocaleChar125AppIndexRouteImport } from './routes/{-$locale}/app/index'
@@ -80,6 +81,11 @@ const Char123LocaleChar125AboutRoute =
     path: '/about',
     getParentRoute: () => Char123LocaleChar125RouteRoute,
   } as any)
+const DePrivacyRoute = DePrivacyRouteImport.update({
+  id: '/de/privacy',
+  path: '/de/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DotwellKnownOpenidConfigurationRoute =
   DotwellKnownOpenidConfigurationRouteImport.update({
     id: '/.well-known/openid-configuration',
@@ -216,6 +222,7 @@ export interface FileRoutesByFullPath {
   '/{-$locale}': typeof Char123LocaleChar125RouteRouteWithChildren
   '/.well-known/assetlinks.json': typeof DotwellKnownAssetlinksDotjsonRoute
   '/.well-known/openid-configuration': typeof DotwellKnownOpenidConfigurationRoute
+  '/de/privacy': typeof DePrivacyRoute
   '/{-$locale}/about': typeof Char123LocaleChar125AboutRoute
   '/{-$locale}/app': typeof Char123LocaleChar125AppRouteWithChildren
   '/{-$locale}/goodbye': typeof Char123LocaleChar125GoodbyeRoute
@@ -246,6 +253,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/.well-known/assetlinks.json': typeof DotwellKnownAssetlinksDotjsonRoute
   '/.well-known/openid-configuration': typeof DotwellKnownOpenidConfigurationRoute
+  '/de/privacy': typeof DePrivacyRoute
   '/{-$locale}/about': typeof Char123LocaleChar125AboutRoute
   '/{-$locale}/goodbye': typeof Char123LocaleChar125GoodbyeRoute
   '/{-$locale}/mobile': typeof Char123LocaleChar125MobileRoute
@@ -276,6 +284,7 @@ export interface FileRoutesById {
   '/{-$locale}': typeof Char123LocaleChar125RouteRouteWithChildren
   '/.well-known/assetlinks.json': typeof DotwellKnownAssetlinksDotjsonRoute
   '/.well-known/openid-configuration': typeof DotwellKnownOpenidConfigurationRoute
+  '/de/privacy': typeof DePrivacyRoute
   '/{-$locale}/about': typeof Char123LocaleChar125AboutRoute
   '/{-$locale}/app': typeof Char123LocaleChar125AppRouteWithChildren
   '/{-$locale}/goodbye': typeof Char123LocaleChar125GoodbyeRoute
@@ -309,6 +318,7 @@ export interface FileRouteTypes {
     | '/{-$locale}'
     | '/.well-known/assetlinks.json'
     | '/.well-known/openid-configuration'
+    | '/de/privacy'
     | '/{-$locale}/about'
     | '/{-$locale}/app'
     | '/{-$locale}/goodbye'
@@ -339,6 +349,7 @@ export interface FileRouteTypes {
   to:
     | '/.well-known/assetlinks.json'
     | '/.well-known/openid-configuration'
+    | '/de/privacy'
     | '/{-$locale}/about'
     | '/{-$locale}/goodbye'
     | '/{-$locale}/mobile'
@@ -368,6 +379,7 @@ export interface FileRouteTypes {
     | '/{-$locale}'
     | '/.well-known/assetlinks.json'
     | '/.well-known/openid-configuration'
+    | '/de/privacy'
     | '/{-$locale}/about'
     | '/{-$locale}/app'
     | '/{-$locale}/goodbye'
@@ -400,6 +412,7 @@ export interface RootRouteChildren {
   Char123LocaleChar125RouteRoute: typeof Char123LocaleChar125RouteRouteWithChildren
   DotwellKnownAssetlinksDotjsonRoute: typeof DotwellKnownAssetlinksDotjsonRoute
   DotwellKnownOpenidConfigurationRoute: typeof DotwellKnownOpenidConfigurationRoute
+  DePrivacyRoute: typeof DePrivacyRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
   DotwellKnownOauthAuthorizationServerApiAuthRoute: typeof DotwellKnownOauthAuthorizationServerApiAuthRoute
 }
@@ -454,6 +467,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/{-$locale}/about'
       preLoaderRoute: typeof Char123LocaleChar125AboutRouteImport
       parentRoute: typeof Char123LocaleChar125RouteRoute
+    }
+    '/de/privacy': {
+      id: '/de/privacy'
+      path: '/de/privacy'
+      fullPath: '/de/privacy'
+      preLoaderRoute: typeof DePrivacyRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/.well-known/openid-configuration': {
       id: '/.well-known/openid-configuration'
@@ -712,6 +732,7 @@ const rootRouteChildren: RootRouteChildren = {
   Char123LocaleChar125RouteRoute: Char123LocaleChar125RouteRouteWithChildren,
   DotwellKnownAssetlinksDotjsonRoute: DotwellKnownAssetlinksDotjsonRoute,
   DotwellKnownOpenidConfigurationRoute: DotwellKnownOpenidConfigurationRoute,
+  DePrivacyRoute: DePrivacyRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
   DotwellKnownOauthAuthorizationServerApiAuthRoute:
     DotwellKnownOauthAuthorizationServerApiAuthRoute,

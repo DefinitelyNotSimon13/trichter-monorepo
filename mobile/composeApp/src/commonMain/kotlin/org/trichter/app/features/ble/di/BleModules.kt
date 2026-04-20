@@ -17,6 +17,7 @@ import org.trichter.app.features.ble.domain.BleRepository
 import org.trichter.app.features.ble.domain.PermissionsGateway
 import org.trichter.app.features.ble.domain.usecases.ConnectToDevice
 import org.trichter.app.features.ble.domain.usecases.DisconnectFromDevice
+import org.trichter.app.features.ble.domain.usecases.GetCurrentUser
 import org.trichter.app.features.ble.domain.usecases.ObservePermissionsState
 import org.trichter.app.features.ble.domain.usecases.ObserveScanResults
 import org.trichter.app.features.ble.domain.usecases.ObserveTrichterState
@@ -60,4 +61,5 @@ val bleDomainModule = module {
     factoryOf(::SendFakeRun)
     factoryOf(::SaveRun)
     factoryOf(::SearchUsers)
+    factoryOf(::GetCurrentUser)
 }

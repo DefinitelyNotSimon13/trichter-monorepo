@@ -54,6 +54,7 @@ fun BleConnectedScreen(
     onQueryChange: (String) -> Unit,
     onUserClick: (UserDto) -> Unit,
     onClearUser: () -> Unit,
+    onSelectSelf: () -> Unit,
     onDisconnect: () -> Unit,
     onAck: () -> Unit,
     onReset: () -> Unit,
@@ -104,6 +105,7 @@ fun BleConnectedScreen(
                             onQueryChange = onQueryChange,
                             onUserClick = onUserClick,
                             onClearUser = onClearUser,
+                            onSelectSelf = onSelectSelf,
                             onSaveRun = onSaveRun,
                             onAck = onAck,
                         )
@@ -270,6 +272,7 @@ private fun CompletePanel(
     onQueryChange: (String) -> Unit,
     onUserClick: (UserDto) -> Unit,
     onClearUser: () -> Unit,
+    onSelectSelf: () -> Unit,
     onSaveRun: (ResultMeta) -> Unit,
     onAck: () -> Unit,
     modifier: Modifier = Modifier,
@@ -380,6 +383,7 @@ private fun CompletePanel(
                         searchUserState = searchUserState,
                         onQueryChange = onQueryChange,
                         onUserClick = onUserClick,
+                        onSelectSelf = onSelectSelf,
                     )
                 }
 
@@ -388,13 +392,20 @@ private fun CompletePanel(
                     modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
+                    if (selected == null && !runSaved) {
+                        Text(
+                            "Assign a user to save this run",
+                            style = MaterialTheme.typography.labelMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                    }
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
                         Button(
                             onClick = { onSaveRun(meta) },
-                            enabled = !transferring && !runSaved,
+                            enabled = !transferring && !runSaved && selected != null,
                             modifier = Modifier.weight(1f)
                         ) {
                             if (runSaved) {
@@ -590,16 +601,28 @@ fun UsersSearchScreen(
     searchUserState: SearchUserState,
     onQueryChange: (String) -> Unit,
     onUserClick: (UserDto) -> Unit,
+    onSelectSelf: () -> Unit = {},
 ) {
     Column(Modifier.fillMaxWidth()) {
-        OutlinedTextField(
-            value = searchUserState.query,
-            onValueChange = onQueryChange,
+        Row(
             modifier = Modifier.fillMaxWidth(),
-            label = { Text("Search users") },
-            singleLine = true,
-            leadingIcon = { Icon(Icons.Outlined.Search, null) }
-        )
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            OutlinedTextField(
+                value = searchUserState.query,
+                onValueChange = onQueryChange,
+                modifier = Modifier.weight(1f),
+                label = { Text("Search users") },
+                singleLine = true,
+                leadingIcon = { Icon(Icons.Outlined.Search, null) }
+            )
+            FilledTonalButton(onClick = onSelectSelf) {
+                Icon(Icons.Outlined.Person, contentDescription = null)
+                Spacer(Modifier.width(4.dp))
+                Text("Me")
+            }
+        }
 
         if (searchUserState.loading) {
             LinearProgressIndicator(Modifier.fillMaxWidth().padding(top = 8.dp))
@@ -678,6 +701,7 @@ private fun NoImagePanelPreview() {
         onQueryChange = {},
         onUserClick = {},
         onClearUser = {},
+        onSelectSelf = {},
         onSaveRun = {},
         onAck = {},
     )

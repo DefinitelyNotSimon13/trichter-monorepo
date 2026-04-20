@@ -58,7 +58,6 @@ export function LoginForm({
 
   const lastMethod = authClient.getLastUsedLoginMethod();
   const callbackURL = redirectTo ?? "/app/feed";
-  console.log("LOGIN CallbackUrl: ", callbackURL);
 
   const canUsePasskey =
     hydrated && typeof window !== "undefined" && !!window.PublicKeyCredential;
@@ -88,17 +87,17 @@ export function LoginForm({
 
       const { data, error } = isEmail(identifier)
         ? await authClient.signIn.email({
-          email: identifier,
-          password,
-          callbackURL,
-          fetchOptions,
-        })
+            email: identifier,
+            password,
+            callbackURL,
+            fetchOptions,
+          })
         : await authClient.signIn.username({
-          username: identifier,
-          password,
-          callbackURL,
-          fetchOptions,
-        });
+            username: identifier,
+            password,
+            callbackURL,
+            fetchOptions,
+          });
 
       if (error) {
         setFormError(error.message ?? "Login failed");

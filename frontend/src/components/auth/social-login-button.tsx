@@ -18,12 +18,12 @@ export function SocialLoginButton({
     try {
       setIsLoading(true);
 
-      console.log("CallbackURL: ", callbackURL);
-
       await authClient.signIn.social({
         provider: "google",
-        callbackURL: callbackURL,
-        newUserCallbackURL: `/complete-profile?callbackUrl=${encodeURI(callbackURL)}`,
+        callbackURL: encodeURI(callbackURL),
+        newUserCallbackURL: encodeURI(
+          `/complete-profile?callbackUrl=${callbackURL}`,
+        ),
       });
     } finally {
       setIsLoading(false);

@@ -11,6 +11,15 @@ plugins {
     alias(libs.plugins.openapiGenerator)
 }
 
+val appVersionMajor = 1
+val appVersionMinor = 0
+val appVersionPatch = 0
+
+val suffixVersion: Int = 1
+
+val appVersionName = "$appVersionMajor.$appVersionMinor.$appVersionPatch"
+val appVersionCode = appVersionMajor * 10000 + appVersionMinor * 100 + appVersionPatch
+
 kotlin {
     androidTarget {
         compilerOptions {
@@ -45,6 +54,7 @@ kotlin {
             implementation(libs.ktor.client.content.negotiation)
             implementation(libs.ktor.serialization.kotlinx.json)
             implementation(libs.ktor.client.logging)
+            implementation(libs.ktor.client.websockets)
 
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.kotlinx.serialization.json)
@@ -102,24 +112,19 @@ kotlin {
 
 val keystorePropertiesFile = rootProject.file("keystore.properties")
 val keystoreProperties = Properties().apply {
-    if (keystorePropertiesFile.exists()) load(keystorePropertiesFile.inputStream())
+    if (keystorePropertiesFile.exists()) {
+        load(keystorePropertiesFile.inputStream())
+    }
 }
 
+val hasReleaseKeystore =
+    keystorePropertiesFile.exists() &&
+            !keystoreProperties.getProperty("storeFile").isNullOrBlank() &&
+            !keystoreProperties.getProperty("storePassword").isNullOrBlank() &&
+            !keystoreProperties.getProperty("keyAlias").isNullOrBlank() &&
+            !keystoreProperties.getProperty("keyPassword").isNullOrBlank()
+
 android {
-    signingConfigs {
-//        getByName("debug") {
-//            storeFile = rootProject.file(keystoreProperties.getProperty("storeFile") ?: "upload-keystore.jks")
-//            storePassword = keystoreProperties.getProperty("storePassword") ?: ""
-//            keyAlias = keystoreProperties.getProperty("keyAlias") ?: "upload"
-//            keyPassword = keystoreProperties.getProperty("keyPassword") ?: ""
-//        }
-//        create("release") {
-//            storeFile = rootProject.file(keystoreProperties.getProperty("storeFile") ?: "upload-keystore.jks")
-//            storePassword = keystoreProperties.getProperty("storePassword") ?: ""
-//            keyAlias = keystoreProperties.getProperty("keyAlias") ?: "upload"
-//            keyPassword = keystoreProperties.getProperty("keyPassword") ?: ""
-//        }
-    }
     namespace = "org.trichter.app"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
@@ -132,31 +137,82 @@ android {
         applicationId = "org.trichter.app"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
-        versionCode = 1
-        versionName = "1.0"
 
-        addManifestPlaceholders(
-            mapOf("oidcRedirectScheme" to "trichter")
-        )
-        signingConfig = signingConfigs.getByName("debug")
+        versionCode = appVersionCode
+        versionName = appVersionName
+
+        manifestPlaceholders["oidcRedirectScheme"] = "trichter"
     }
+
+    signingConfigs {
+        getByName("debug") {
+        }
+
+        if (hasReleaseKeystore) {
+            create("release") {
+                storeFile = rootProject.file(keystoreProperties.getProperty("storeFile"))
+                storePassword = keystoreProperties.getProperty("storePassword")
+                keyAlias = keystoreProperties.getProperty("keyAlias")
+                keyPassword = keystoreProperties.getProperty("keyPassword")
+            }
+        }
+    }
+
+    flavorDimensions += "env"
+    flavorDimensions += "type"
+    productFlavors {
+        create("local") {
+            dimension = "env"
+            buildConfigField("String", "BASE_URL", "\"http://10.0.2.2:8080\"")
+        }
+        create("prod") {
+            dimension = "env"
+            buildConfigField("String", "BASE_URL", "\"https://next.trichter.hauptspeicher.com\"")
+        }
+        create("dev") {
+            dimension = "type"
+            applicationIdSuffix = ".dev"
+            versionNameSuffix = "-dev"
+        }
+        create("alpha") {
+            dimension = "type"
+            versionNameSuffix = "-alpha.$suffixVersion"
+        }
+        create("beta") {
+            dimension = "type"
+            versionNameSuffix = "-beta.$suffixVersion"
+        }
+        create("default") {
+            dimension = "type"
+        }
+    }
+
+    buildTypes {
+        getByName("debug") {
+            applicationIdSuffix = ".debug"
+            versionNameSuffix = "-debug"
+            isMinifyEnabled = false
+            signingConfig = signingConfigs.getByName("debug")
+        }
+
+        getByName("release") {
+            isMinifyEnabled = false
+
+            if (hasReleaseKeystore) {
+                signingConfig = signingConfigs.getByName("release")
+            }
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
+    }
+
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
-    }
-    buildTypes {
-        getByName("release") {
-            isMinifyEnabled = false
-//            signingConfig = signingConfigs.getByName("release")
-        }
-        getByName("debug") {
-//            applicationIdSuffix = ".debug"
-        }
-    }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
     }
 }
 

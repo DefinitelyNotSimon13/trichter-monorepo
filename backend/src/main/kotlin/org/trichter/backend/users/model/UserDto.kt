@@ -9,6 +9,7 @@ data class UserDto(
     val createdAt: Instant,
     val username: String,
     val displayUsername: String,
+    val image: String? = null,
     val lastActiveAt: OffsetDateTime? = null,
 ) : Serializable
 
@@ -17,5 +18,6 @@ fun User.toDto() = UserDto(
     createdAt = createdAt,
     username = username,
     displayUsername = displayUsername,
+    image = if(image != null && image != "trichter-images/placeholder.jpg") image else null,
     lastActiveAt = lastActiveAt
 )

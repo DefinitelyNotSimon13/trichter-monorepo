@@ -69,6 +69,7 @@ fun BleScreen(viewModel: BleViewModel) {
                     onQueryChange = viewModel::onQueryChange,
                     onUserClick = { viewModel.onUserClick(it) },
                     onClearUser = { viewModel.onClearUser() },
+                    onSelectSelf = { viewModel.onSelectSelf() },
                 )
 
                 uiState.error != null -> ErrorView(uiState.error!!) { viewModel.startScan() }

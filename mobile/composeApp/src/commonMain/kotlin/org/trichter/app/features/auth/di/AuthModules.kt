@@ -7,6 +7,7 @@ import org.koin.dsl.module
 import org.publicvalue.multiplatform.oidc.OpenIdConnectClient
 import org.publicvalue.multiplatform.oidc.appsupport.CodeAuthFlowFactory
 import org.publicvalue.multiplatform.oidc.types.CodeChallengeMethod
+import org.trichter.app.appBaseUrl
 import org.trichter.app.features.auth.data.AuthPreferences
 import org.trichter.app.features.auth.data.OidcAuthRepository
 import org.trichter.app.features.auth.domain.AuthRepository
@@ -19,7 +20,7 @@ fun authModules() = listOf(
     module {
         single {
             OpenIdConnectClient(
-                discoveryUri = "https://next.trichter.hauptspeicher.com/.well-known/openid-configuration"
+                discoveryUri = "$appBaseUrl/.well-known/openid-configuration"
             ) {
                 clientId = "oNcRqjIhVYutaWUODwHgNOBfZYwkODxz"
                 scope = "openid profile offline_access"
