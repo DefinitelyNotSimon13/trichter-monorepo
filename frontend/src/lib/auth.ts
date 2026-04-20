@@ -183,7 +183,7 @@ export const auth = betterAuth({
       ],
     }),
     oauthProvider({
-      loginPage: "/login",
+      loginPage: "/login?isOauth=true",
       signup: {
         page: "/signup",
       },

@@ -43,7 +43,7 @@ export function CompleteProfileForm({
       }
 
       if (callbackUrl) {
-        await router.navigate({ to: callbackUrl, search: {} });
+        await router.navigate({ to: decodeURI(callbackUrl), search: {} });
       } else {
         await router.navigate({ to: "/{-$locale}/app/feed", search: {} });
       }

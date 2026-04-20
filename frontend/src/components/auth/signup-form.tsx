@@ -63,9 +63,7 @@ export function SignupForm({
         username: value.username.trim(),
         displayUsername: value.username.trim(),
         password: value.password,
-        callbackURL: redirectTo
-          ? redirectTo + "?newUser=true"
-          : "/app/feed?newUser=true",
+        callbackURL: "/app/feed?newUser=true",
         fetchOptions,
       });
 
@@ -74,12 +72,18 @@ export function SignupForm({
         return;
       }
 
-      router.navigate({
-        to: "/{-$locale}/login",
-        search: {
-          newUser: true,
-        },
-      });
+      if (redirectTo) {
+        router.navigate({
+          href: redirectTo,
+        });
+      } else {
+        router.navigate({
+          to: "/{-$locale}/login",
+          search: {
+            newUser: true,
+          },
+        });
+      }
     },
   });
 

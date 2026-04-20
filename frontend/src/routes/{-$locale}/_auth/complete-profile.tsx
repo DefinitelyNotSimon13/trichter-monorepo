@@ -26,8 +26,7 @@ function CompleteProfilePage() {
 
   return (
     <AuthCardWrapper>
-      <h1>CallbackUrl: {callbackUrl}</h1>
-      <CompleteProfileForm user={session.user} />
+      <CompleteProfileForm user={session.user} callbackUrl={callbackUrl} />
     </AuthCardWrapper>
   );
 }
