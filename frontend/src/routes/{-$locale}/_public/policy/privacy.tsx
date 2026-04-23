@@ -1,6 +1,25 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { clientEnv } from "#/env/client";
 
 export const Route = createFileRoute("/{-$locale}/_public/policy/privacy")({
+  head: ({ params }) => {
+    const locale = params.locale;
+    const title = "Privacy Policy | Trichter";
+    const siteUrl = clientEnv.VITE_PUBLIC_URL;
+    const pageUrl = locale
+      ? `${siteUrl}/${locale}/policy/privacy`
+      : `${siteUrl}/policy/privacy`;
+
+    return {
+      meta: [
+        { title },
+        { name: "robots", content: "noindex,follow" },
+        { property: "og:title", content: title },
+        { property: "og:url", content: pageUrl },
+      ],
+      links: [{ rel: "canonical", href: pageUrl }],
+    };
+  },
   component: RouteComponent,
 });
 

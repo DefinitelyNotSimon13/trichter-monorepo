@@ -1,11 +1,15 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { createFileRoute } from "@tanstack/react-router";
+import {
+  createFileRoute,
+  type ErrorComponentProps,
+} from "@tanstack/react-router";
 
 import { getRunsOptions } from "#/client/@tanstack/react-query.gen";
-import type { RunView } from "#/client/types.gen";
+import type { RunDto } from "#/client/types.gen";
 import { LeaderboardStats } from "#/components/runs/leaderboard/leaderboard-stats";
 import { LeaderboardTable } from "#/components/runs/leaderboard/leaderboard-table";
 import { Skeleton } from "#/components/ui/skeleton";
+import { StatePanel } from "#/components/ui/state-panel";
 
 const PAGE_SIZE = 100;
 
@@ -20,8 +24,18 @@ export const Route = createFileRoute("/{-$locale}/app/leaderboard")({
       }),
     ),
   pendingComponent: LeaderboardSkeleton,
+  errorComponent: LeaderboardError,
   component: LeaderboardPage,
 });
+
+function LeaderboardError({ error, reset }: ErrorComponentProps) {
+  return (
+    <StatePanel tone="destructive" onRetry={reset}>
+      Failed to load leaderboard.{" "}
+      {error instanceof Error ? error.message : null}
+    </StatePanel>
+  );
+}
 
 function LeaderboardSkeleton() {
   return (
@@ -47,7 +61,7 @@ function LeaderboardPage() {
     }),
   );
 
-  const runs: RunView[] = data.content ?? [];
+  const runs: RunDto[] = data.content ?? [];
 
   return (
     <div className="space-y-8">

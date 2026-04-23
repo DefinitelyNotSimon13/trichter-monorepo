@@ -13,7 +13,7 @@ export function StatePanel({
   return (
     <div
       className={cn(
-        "flex flex-col items-center gap-4 rounded-2xl border border-dashed p-8 text-sm",
+        "w-full flex flex-col items-center gap-4 rounded-2xl border border-dashed p-8 text-sm",
         tone === "destructive" ? "text-destructive" : "text-muted-foreground",
       )}
     >

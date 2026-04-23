@@ -1,35 +1,34 @@
 import { Activity, Clock, Droplets, Trophy } from "lucide-react";
-import type { RunView } from "#/client/types.gen";
+import type { RunDto } from "#/client/types.gen";
 import { Card, CardContent } from "#/components/ui/card";
 import { formatRate, formatVolume } from "#/lib/formatters";
 
 type ProfileStats = {
-  bestRun: RunView | undefined;
+  bestRun: RunDto | undefined;
   totalLiters: number;
   averageRate: number;
   totalRuns: number;
 };
 
-export function computeProfileStats(runs: RunView[]): ProfileStats {
-  const withRate = runs.filter((r) => typeof r.data?.rate === "number");
+export function computeProfileStats(runs: RunDto[]): ProfileStats {
+  const withRate = runs.filter((r) => typeof r.rate === "number");
 
-  const bestRun = withRate.reduce<RunView | undefined>((best, run) => {
+  const bestRun = withRate.reduce<RunDto | undefined>((best, run) => {
     if (!best) return run;
-    return (run.data?.rate ?? 0) > (best.data?.rate ?? 0) ? run : best;
+    return (run.rate ?? 0) > (best.rate ?? 0) ? run : best;
   }, undefined);
 
-  const totalLiters = runs.reduce((sum, r) => sum + (r.data?.volume ?? 0), 0);
+  const totalLiters = runs.reduce((sum, r) => sum + (r.volume ?? 0), 0);
 
   const averageRate =
     withRate.length > 0
-      ? withRate.reduce((sum, r) => sum + (r.data?.rate ?? 0), 0) /
-        withRate.length
+      ? withRate.reduce((sum, r) => sum + (r.rate ?? 0), 0) / withRate.length
       : 0;
 
   return { bestRun, totalLiters, averageRate, totalRuns: runs.length };
 }
 
-export function ProfileStats({ runs }: { runs: RunView[] }) {
+export function ProfileStats({ runs }: { runs: RunDto[] }) {
   const { bestRun, totalLiters, averageRate, totalRuns } =
     computeProfileStats(runs);
 
@@ -57,7 +56,7 @@ export function ProfileStats({ runs }: { runs: RunView[] }) {
             <div>
               <p className="text-sm text-muted-foreground">Best Rate</p>
               <p className="mt-1 text-3xl font-black tracking-tight text-primary">
-                {bestRun ? formatRate(bestRun.data?.rate) : "—"}
+                {bestRun ? formatRate(bestRun.rate) : "—"}
               </p>
             </div>
             <div

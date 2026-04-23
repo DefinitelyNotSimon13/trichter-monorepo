@@ -26,7 +26,7 @@ import { authClient } from "#/lib/auth-client";
 import { getSession } from "#/lib/auth.functions";
 import { cn } from "#/lib/utils";
 import { z } from "zod/mini";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { PasskeyPromptDialog } from "#/components/auth/passkey-prompt-dialog";
 
 export const Route = createFileRoute("/{-$locale}/app")({
@@ -86,14 +86,16 @@ function AppHeader() {
       <Breadcrumb className="min-w-0 flex-1">
         <BreadcrumbList>
           <BreadcrumbItem className="text-muted-foreground">
-            <Link to="/{-$locale}" className="hover:underline">Trichter</Link>
+            <Link to="/{-$locale}" className="hover:underline">
+              Trichter
+            </Link>
           </BreadcrumbItem>{" "}
           <BreadcrumbSeparator />
           {breadcrumbs.map((crumb, index) => {
             const isLast = index === breadcrumbs.length - 1;
 
             return (
-              <>
+              <React.Fragment key={crumb.id}>
                 <BreadcrumbItem>
                   <BreadcrumbPage>
                     <Link to={crumb.href} className="hover:underline">
@@ -102,7 +104,7 @@ function AppHeader() {
                   </BreadcrumbPage>
                 </BreadcrumbItem>
                 {!isLast ? <BreadcrumbSeparator /> : null}
-              </>
+              </React.Fragment>
             );
           })}
         </BreadcrumbList>
@@ -143,7 +145,10 @@ function MobileNavLink({
   icon,
   label,
 }: {
-  to: "/{-$locale}/app/feed" | "/{-$locale}/app/leaderboard" | "/{-$locale}/app/profile";
+  to:
+    | "/{-$locale}/app/feed"
+    | "/{-$locale}/app/leaderboard"
+    | "/{-$locale}/app/profile";
   activePath: string;
   icon: React.ReactNode;
   label: string;

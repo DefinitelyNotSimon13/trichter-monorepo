@@ -8,7 +8,10 @@ export function PrivacyNotice() {
         Terms of Service
       </a>{" "}
       and{" "}
-      <Link to="/{-$locale}/policy/privacy" className="underline underline-offset-4">
+      <Link
+        to="/{-$locale}/policy/privacy"
+        className="underline underline-offset-4"
+      >
         Privacy Policy
       </Link>
       .

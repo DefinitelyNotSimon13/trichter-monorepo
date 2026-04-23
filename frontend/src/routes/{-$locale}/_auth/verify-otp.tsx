@@ -1,4 +1,9 @@
-import { createFileRoute, Link, redirect, useRouter } from "@tanstack/react-router";
+import {
+  createFileRoute,
+  Link,
+  redirect,
+  useRouter,
+} from "@tanstack/react-router";
 import { Field, FieldDescription, FieldGroup } from "#/components/ui/field";
 import { AuthCard } from "#/components/auth/auth-card";
 import { useAppForm } from "#/hooks/form";

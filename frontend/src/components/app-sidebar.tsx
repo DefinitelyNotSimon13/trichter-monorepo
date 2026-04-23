@@ -46,7 +46,10 @@ function SidebarLogo() {
 
   return (
     <SidebarHeader className="border-b px-4 py-4">
-      <Link to="/{-$locale}" className="font-black tracking-tight text-foreground">
+      <Link
+        to="/{-$locale}"
+        className="font-black tracking-tight text-foreground"
+      >
         {state === "collapsed" ? "T" : "Trichter"}
       </Link>
     </SidebarHeader>

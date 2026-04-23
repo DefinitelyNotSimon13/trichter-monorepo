@@ -1,6 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/{-$locale}/_public/mobile")({
+  head: () => ({
+    meta: [
+      { title: "Trichter" },
+      { name: "robots", content: "noindex,nofollow" },
+    ],
+  }),
   component: RouteComponent,
 });
 
@@ -17,8 +23,8 @@ function RouteComponent() {
         Return to the app
       </a>
       <p className="text-center max-w-100 italic">
-        If you see this page, you may need to restart the App and click on
-        "Sign In" again.
+        If you see this page, you may need to restart the App and click on "Sign
+        In" again.
       </p>
     </main>
   );

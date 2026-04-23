@@ -1,4 +1,4 @@
-import type { RunView } from "#/client/types.gen";
+import type { RunDto } from "#/client/types.gen";
 import { RunCard } from "#/components/runs/feed/run-card";
 import { StatePanel } from "#/components/ui/state-panel";
 
@@ -6,7 +6,7 @@ export function ProfileRunsPreview({
   runs,
   count = 5,
 }: {
-  runs: RunView[];
+  runs: RunDto[];
   count?: number;
 }) {
   const preview = runs.slice(0, count);

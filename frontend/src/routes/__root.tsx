@@ -101,10 +101,10 @@ export const Route = createRootRouteWithContext<RouterContext>()({
       links: [
         { rel: "stylesheet", href: appCss },
         { rel: "icon", type: "image/svg+xml", href: "/favicon.svg" },
-        // hreflang — root-level so present on every page
-        { rel: "alternate", hreflang: "x-default", href: siteUrl },
-        { rel: "alternate", hreflang: "en", href: `${siteUrl}/en` },
-        { rel: "alternate", hreflang: "de", href: `${siteUrl}/de` },
+        // hrefLang — root-level so present on every page
+        { rel: "alternate", hrefLang: "x-default", href: siteUrl },
+        { rel: "alternate", hrefLang: "en", href: `${siteUrl}/en` },
+        { rel: "alternate", hrefLang: "de", href: `${siteUrl}/de` },
       ],
       scripts: [
         {

@@ -1,9 +1,12 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { createFileRoute } from "@tanstack/react-router";
+import {
+  createFileRoute,
+  type ErrorComponentProps,
+} from "@tanstack/react-router";
 import { useCallback, useMemo } from "react";
 
 import { getRunsInfiniteOptions } from "#/client/@tanstack/react-query.gen";
-import type { RunView } from "#/client/types.gen";
+import type { RunDto } from "#/client/types.gen";
 
 import { InfiniteScrollSentinel } from "#/components/runs/feed/infinite-scroll-sentinel";
 import { RunFeed } from "#/components/runs/feed/run-feed";
@@ -18,16 +21,24 @@ export const Route = createFileRoute("/{-$locale}/app/feed")({
     breadcrumb: "Feed",
   },
   loader: ({ context: { queryClient } }) =>
-    queryClient.ensureQueryData({
+    queryClient.ensureInfiniteQueryData({
       ...getRunsInfiniteOptions({
         query: { size: PAGE_SIZE, sort: ["createdAt,desc"] },
       }),
       initialPageParam: 0,
-      pages: 1,
     }),
   pendingComponent: FeedSkeleton,
+  errorComponent: FeedError,
   component: FeedPage,
 });
+
+function FeedError({ error, reset }: ErrorComponentProps) {
+  return (
+    <StatePanel tone="destructive" onRetry={reset}>
+      Failed to load feed. {error instanceof Error ? error.message : null}
+    </StatePanel>
+  );
+}
 
 function FeedSkeleton() {
   return (
@@ -44,7 +55,7 @@ function FeedSkeleton() {
             <Skeleton className="h-16 rounded-xl" />
           </div>
           <div className="flex items-center gap-3 border-t px-5 py-3">
-            <Skeleton className="size-7 rounded-full shrink-0" />
+            <Skeleton className="size-7 shrink-0 rounded-full" />
             <Skeleton className="h-4 w-36" />
           </div>
         </div>
@@ -63,12 +74,15 @@ function FeedPage() {
     }),
     initialPageParam: 0,
     getNextPageParam: (lastPage) => {
-      if (lastPage.page?.number === lastPage.page?.totalPages) return undefined;
-      return (lastPage.page?.number ?? 0) + 1;
+      const pageNumber = lastPage.page?.number ?? 0;
+      const totalPages = lastPage.page?.totalPages ?? 0;
+
+      if (pageNumber + 1 >= totalPages) return undefined;
+      return pageNumber + 1;
     },
   });
 
-  const runs = useMemo<RunView[]>(() => {
+  const runs = useMemo<RunDto[]>(() => {
     return query.data?.pages.flatMap((page) => page.content ?? []) ?? [];
   }, [query.data]);
 
@@ -77,12 +91,17 @@ function FeedPage() {
     void query.fetchNextPage();
   }, [query.hasNextPage, query.isFetchingNextPage, query.fetchNextPage]);
 
-  if (query.isError)
+  if (query.isError) {
     return (
       <StatePanel tone="destructive" onRetry={() => void query.refetch()}>
         Failed to load runs.
       </StatePanel>
     );
+  }
+
+  if (query.isPending) {
+    return <FeedSkeleton />;
+  }
 
   return (
     <div className="flex flex-col items-center gap-6 lg:items-start">

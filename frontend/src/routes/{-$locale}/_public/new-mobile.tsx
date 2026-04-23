@@ -1,6 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/{-$locale}/_public/new-mobile")({
+  head: () => ({
+    meta: [
+      { title: "Trichter" },
+      { name: "robots", content: "noindex,nofollow" },
+    ],
+  }),
   component: RouteComponent,
 });
 

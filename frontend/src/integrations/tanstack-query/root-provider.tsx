@@ -22,11 +22,13 @@ function getQueryClient() {
   return browserQueryClient;
 }
 
+const serverBaseUrl = clientEnv.VITE_API_BASE_URL || "http://localhost:8080";
+
 export function getContext() {
   const queryClient = getQueryClient();
 
   client.setConfig({
-    baseUrl: "",
+    baseUrl: environmentManager.isServer() ? serverBaseUrl : "",
   });
 
   return {

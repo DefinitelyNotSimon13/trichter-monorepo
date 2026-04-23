@@ -1,6 +1,12 @@
 import { Link, createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/{-$locale}/_public/goodbye")({
+  head: () => ({
+    meta: [
+      { title: "Goodbye | Trichter" },
+      { name: "robots", content: "noindex,nofollow" },
+    ],
+  }),
   component: RouteComponent,
 });
 
@@ -10,7 +16,9 @@ function RouteComponent() {
       <h1 className="text-center text-4xl font-black text-highlight">
         Account deleted
       </h1>
-      <Link to="/{-$locale}" className="underline">Homepage</Link>
+      <Link to="/{-$locale}" className="underline">
+        Homepage
+      </Link>
     </main>
   );
 }

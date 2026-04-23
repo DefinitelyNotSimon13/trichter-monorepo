@@ -29,7 +29,10 @@ export function BrandHeader() {
   return (
     <header className="sticky top-0 z-50 border-b bg-background/90 backdrop-blur">
       <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4 sm:px-6">
-        <Link to="/{-$locale}" className="text-base font-black tracking-tight text-foreground">
+        <Link
+          to="/{-$locale}"
+          className="text-base font-black tracking-tight text-foreground"
+        >
           {t("common:appName")}
         </Link>
 

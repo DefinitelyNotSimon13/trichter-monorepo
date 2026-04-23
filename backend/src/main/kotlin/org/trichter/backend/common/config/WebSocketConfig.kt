@@ -18,7 +18,7 @@ class BackendWebSocketConfig(
     override fun registerWebSocketHandlers(registry: WebSocketHandlerRegistry) {
         val origins = allowedOrigins.split(",").map { it.trim() }.filter { it.isNotBlank() }.toTypedArray()
         registry
-            .addHandler(eventsWebSocketHandler, "/api/v2ws")
+            .addHandler(eventsWebSocketHandler, "/api/v2/ws")
             .setAllowedOrigins(*origins)
     }
 }

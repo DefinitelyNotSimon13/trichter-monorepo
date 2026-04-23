@@ -5,7 +5,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { useMemo } from "react";
-import type { RunView } from "#/client/types.gen";
+import type { RunDto } from "#/client/types.gen";
 import { Badge } from "#/components/ui/badge";
 import {
   formatDuration,
@@ -27,18 +27,18 @@ type LeaderboardRow = {
   userId?: string;
 };
 
-export function LeaderboardTable(props: { runs: RunView[] }) {
+export function LeaderboardTable(props: { runs: RunDto[] }) {
   const data = useMemo<LeaderboardRow[]>(() => {
     return [...props.runs]
-      .sort((a, b) => (b.data?.rate ?? -Infinity) - (a.data?.rate ?? -Infinity))
+      .sort((a, b) => (b.rate ?? -Infinity) - (a.rate ?? -Infinity))
       .map((run, index) => ({
         rank: index + 1,
         id: run.id ?? String(index),
-        name: run.user?.name ?? "Unknown",
+        name: run.user?.displayUsername ?? "Unknown",
         username: run.user?.username ?? "unknown",
-        duration: run.data?.duration,
-        volume: run.data?.volume,
-        rate: run.data?.rate,
+        duration: run.duration,
+        volume: run.volume,
+        rate: run.rate,
         createdAt: run.createdAt,
         userId: run.user?.id,
       }));
@@ -116,7 +116,7 @@ export function LeaderboardTable(props: { runs: RunView[] }) {
   return (
     <div className="overflow-hidden rounded-2xl border bg-card shadow-sm">
       <div className="overflow-x-auto">
-        <table className="w-full min-w-[760px] text-sm">
+        <table className="w-full min-w-190 text-sm">
           <thead className="bg-muted/30">
             {table.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id} className="border-b">

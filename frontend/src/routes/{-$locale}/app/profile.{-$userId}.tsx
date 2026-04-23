@@ -1,10 +1,15 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { createFileRoute, redirect } from "@tanstack/react-router";
+import {
+  createFileRoute,
+  redirect,
+  type ErrorComponentProps,
+} from "@tanstack/react-router";
 import { getRunsByUserOptions } from "#/client/@tanstack/react-query.gen";
 import { ProfileRunsPreview } from "#/components/profile/profile-runs-preview";
 import { ProfileStats } from "#/components/profile/profile-stats";
 import { Avatar, AvatarFallback } from "#/components/ui/avatar";
 import { Skeleton } from "#/components/ui/skeleton";
+import { StatePanel } from "#/components/ui/state-panel";
 import { getSession } from "#/lib/auth.functions";
 
 export const Route = createFileRoute("/{-$locale}/app/profile/{-$userId}")({
@@ -13,9 +18,13 @@ export const Route = createFileRoute("/{-$locale}/app/profile/{-$userId}")({
   },
   loader: ({ context: { queryClient, userId } }) =>
     queryClient.ensureQueryData(
-      getRunsByUserOptions({ path: { userId }, query: { size: 500, sort: ["createdAt,desc"] } }),
+      getRunsByUserOptions({
+        path: { userId },
+        query: { size: 500, sort: ["createdAt,desc"] },
+      }),
     ),
   pendingComponent: ProfileSkeleton,
+  errorComponent: ProfileError,
   beforeLoad: async ({ params, location }) => {
     if (params.userId) {
       return {
@@ -47,6 +56,14 @@ export const Route = createFileRoute("/{-$locale}/app/profile/{-$userId}")({
   },
   component: PublicProfilePage,
 });
+
+function ProfileError({ error, reset }: ErrorComponentProps) {
+  return (
+    <StatePanel tone="destructive" onRetry={reset}>
+      Failed to load profile. {error instanceof Error ? error.message : null}
+    </StatePanel>
+  );
+}
 
 function ProfileSkeleton() {
   return (

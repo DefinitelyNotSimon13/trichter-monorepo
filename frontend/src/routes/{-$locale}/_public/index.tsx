@@ -2,8 +2,32 @@ import { Link, createFileRoute } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 
 import { Button } from "#/components/ui/button";
+import { clientEnv } from "#/env/client";
+import { seoT } from "#/lib/i18n/seo";
 
 export const Route = createFileRoute("/{-$locale}/_public/")({
+  head: ({ params }) => {
+    const locale = params.locale;
+    const description = seoT(locale, "landing", "hero.description");
+    const title = "Trichter — Competitive Drinking";
+    const siteUrl = clientEnv.VITE_PUBLIC_URL;
+    const pageUrl = locale ? `${siteUrl}/${locale}` : siteUrl;
+    const ogImage = `${siteUrl}/og-image.svg`;
+
+    return {
+      meta: [
+        { title },
+        { name: "description", content: description },
+        { property: "og:title", content: title },
+        { property: "og:description", content: description },
+        { property: "og:url", content: pageUrl },
+        { property: "og:image", content: ogImage },
+        { name: "twitter:title", content: title },
+        { name: "twitter:description", content: description },
+      ],
+      links: [{ rel: "canonical", href: pageUrl }],
+    };
+  },
   component: LandingPage,
 });
 

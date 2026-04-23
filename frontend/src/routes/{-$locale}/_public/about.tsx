@@ -1,6 +1,26 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { clientEnv } from "#/env/client";
 
 export const Route = createFileRoute("/{-$locale}/_public/about")({
+  head: ({ params }) => {
+    const locale = params.locale;
+    const title = "About | Trichter";
+    const description =
+      "Learn about Trichter, the competitive drinking tracker.";
+    const siteUrl = clientEnv.VITE_PUBLIC_URL;
+    const pageUrl = locale ? `${siteUrl}/${locale}/about` : `${siteUrl}/about`;
+
+    return {
+      meta: [
+        { title },
+        { name: "description", content: description },
+        { property: "og:title", content: title },
+        { property: "og:description", content: description },
+        { property: "og:url", content: pageUrl },
+      ],
+      links: [{ rel: "canonical", href: pageUrl }],
+    };
+  },
   component: AboutPage,
 });
 
