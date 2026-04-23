@@ -2,11 +2,17 @@ import { createFileRoute, redirect } from "@tanstack/react-router";
 import { AuthCardWrapper } from "#/components/auth/auth-card-wrapper";
 import { CompleteProfileForm } from "#/components/auth/complete-profile-form";
 import { getSession } from "#/lib/auth.functions";
-import z from "zod";
+import { z } from "zod/mini";
 
 export const Route = createFileRoute("/{-$locale}/_auth/complete-profile")({
+  head: () => ({
+    meta: [
+      { title: "Complete Profile | Trichter" },
+      { name: "robots", content: "noindex,nofollow" },
+    ],
+  }),
   validateSearch: z.object({
-    callbackUrl: z.string().optional(),
+    callbackUrl: z.optional(z.string()),
   }),
   beforeLoad: async () => {
     const session = await getSession();

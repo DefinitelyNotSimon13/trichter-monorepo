@@ -52,7 +52,12 @@ export function Footer() {
           </div>
         </div>
         <div className="flex flex-wrap items-center gap-4">
-          <Link to="/{-$locale}" className="hover:text-foreground">Home</Link>
+          <Link to="/{-$locale}" className="hover:text-foreground">
+            Home
+          </Link>
+          <Link to="/{-$locale}/about" className="hover:text-foreground">
+            About
+          </Link>
           <Link to="/{-$locale}/app/feed" className="hover:text-foreground">
             Feed
           </Link>
@@ -61,6 +66,18 @@ export function Footer() {
             className="hover:text-foreground"
           >
             Leaderboard
+          </Link>
+          <Link
+            to="/{-$locale}/policy/privacy"
+            className="hover:text-foreground"
+          >
+            Privacy
+          </Link>
+          <Link
+            to="/{-$locale}/policy/imprint"
+            className="hover:text-foreground"
+          >
+            Imprint
           </Link>
           <span>© {year}</span>
         </div>

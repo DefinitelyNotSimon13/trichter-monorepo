@@ -25,11 +25,14 @@ import {
 import { authClient } from "#/lib/auth-client";
 import { getSession } from "#/lib/auth.functions";
 import { cn } from "#/lib/utils";
-import z from "zod";
+import { z } from "zod/mini";
 import { useEffect, useState } from "react";
 import { PasskeyPromptDialog } from "#/components/auth/passkey-prompt-dialog";
 
 export const Route = createFileRoute("/{-$locale}/app")({
+  head: () => ({
+    meta: [{ name: "robots", content: "noindex,nofollow" }],
+  }),
   beforeLoad: async () => {
     const session = await getSession();
     if (session?.user && !session.user.username) {
@@ -39,7 +42,7 @@ export const Route = createFileRoute("/{-$locale}/app")({
   },
   component: AppLayout,
   validateSearch: z.object({
-    newUser: z.boolean().optional(),
+    newUser: z.optional(z.boolean()),
   }),
 });
 

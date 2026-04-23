@@ -1,4 +1,5 @@
 import { createEnv } from "@t3-oss/env-core";
+import { FastResponse } from "srvx";
 import { z } from "zod";
 
 export const serverEnv = createEnv({
@@ -17,3 +18,5 @@ export const serverEnv = createEnv({
   runtimeEnv: process.env,
   emptyStringAsUndefined: true,
 });
+
+globalThis.Response = FastResponse;

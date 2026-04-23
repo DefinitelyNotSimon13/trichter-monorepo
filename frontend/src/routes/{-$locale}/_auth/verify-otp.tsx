@@ -7,13 +7,19 @@ import { useTurnstile } from "#/hooks/use-turnstile";
 import { authClient } from "#/lib/auth-client";
 import { TurnstileWidget } from "#/components/auth/turnstile-widget";
 import { AuthCardWrapper } from "#/components/auth/auth-card-wrapper";
-import z from "zod";
+import { z } from "zod/mini";
 import { getSession } from "#/lib/auth.functions";
 
 export const Route = createFileRoute("/{-$locale}/_auth/verify-otp")({
+  head: () => ({
+    meta: [
+      { title: "Verify Code | Trichter" },
+      { name: "robots", content: "noindex,nofollow" },
+    ],
+  }),
   validateSearch: z.object({
-    email: z.string().default(""),
-    redirectTo: z.string().default("/app/feed"),
+    email: z.prefault(z.string(), ""),
+    redirectTo: z.prefault(z.string(), "/app/feed"),
   }),
   beforeLoad: async () => {
     const session = await getSession();

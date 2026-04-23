@@ -4,6 +4,12 @@ import { ForgotPasswordForm } from "#/components/auth/forgot-password-form";
 import { getSession } from "#/lib/auth.functions";
 
 export const Route = createFileRoute("/{-$locale}/_auth/forgot-password")({
+  head: () => ({
+    meta: [
+      { title: "Forgot Password | Trichter" },
+      { name: "robots", content: "noindex,nofollow" },
+    ],
+  }),
   beforeLoad: async () => {
     const session = await getSession();
     if (session?.user) {

@@ -23,10 +23,34 @@ export default defineConfig({
   plugins: [
     devtools(),
     tailwindcss(),
-    tanstackStart(),
-    nitro({
-      preset: "bun",
+    tanstackStart({
+      prerender: {
+        enabled: true,
+        crawlLinks: true,
+        onSuccess: ({ page }) => {
+          console.log(`Rendered ${page.path}!`);
+        },
+      },
+      sitemap: {
+        enabled: true,
+        host: "https://next.trichter.hauptspeicher.com",
+      },
+      pages: [
+        {
+          path: "/",
+          prerender: { enabled: true },
+        },
+        {
+          path: "/de",
+          prerender: { enabled: true },
+        },
+        {
+          path: "/en",
+          prerender: { enabled: true },
+        },
+      ],
     }),
+    nitro(),
     viteReact({
       babel: {
         plugins: ["babel-plugin-react-compiler"],

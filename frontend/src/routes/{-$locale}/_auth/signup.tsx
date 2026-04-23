@@ -1,13 +1,19 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { AuthCardWrapper } from "#/components/auth/auth-card-wrapper";
 import { SignupForm } from "#/components/auth/signup-form";
-import z from "zod";
+import { z } from "zod/mini";
 import { getSession } from "#/lib/auth.functions";
 
 export const Route = createFileRoute("/{-$locale}/_auth/signup")({
+  head: () => ({
+    meta: [
+      { title: "Sign Up | Trichter" },
+      { name: "robots", content: "noindex,nofollow" },
+    ],
+  }),
   validateSearch: z.object({
-    redirectTo: z.string().optional(),
-    initialLogin: z.string().optional(),
+    redirectTo: z.optional(z.string()),
+    initialLogin: z.optional(z.string()),
   }),
   beforeLoad: async () => {
     const session = await getSession();

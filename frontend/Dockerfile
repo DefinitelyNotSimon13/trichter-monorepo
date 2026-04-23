@@ -1,4 +1,4 @@
-FROM oven/bun:1-slim
+FROM node:22-bookworm-slim
 
 WORKDIR /app
 
@@ -13,11 +13,9 @@ LABEL org.opencontainers.image.source=$REPO_URL
 LABEL org.opencontainers.image.revision=$VCS_REF
 LABEL org.opencontainers.image.created=$BUILD_DATE
 
-COPY --chown=bun:bun frontend/.output ./.output
-COPY --chown=bun:bun frontend/package.json ./package.json
-
-USER bun
+COPY frontend/.output ./.output
+COPY frontend/package.json ./package.json
 
 EXPOSE 3000
 
-CMD ["bun", ".output/server/index.mjs"]
+CMD ["node", ".output/server/index.mjs"]

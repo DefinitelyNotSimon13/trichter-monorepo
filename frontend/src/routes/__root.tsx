@@ -20,6 +20,7 @@ import appCss from "#/styles.css?url";
 import { initI18n } from "#/lib/i18n/config";
 import { Toaster } from "sonner";
 import { createOauthClients } from "#/lib/auth.functions";
+import { clientEnv } from "#/env/client";
 
 interface RouterContext {
   queryClient: QueryClient;
@@ -71,17 +72,66 @@ export const Route = createRootRouteWithContext<RouterContext>()({
   beforeLoad: async () => {
     // await createOauthClients();
   },
-  head: () => ({
-    meta: [
-      { charSet: "utf-8" },
-      { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Trichter" },
-    ],
-    links: [
-      { rel: "stylesheet", href: appCss },
-      { rel: "icon", type: "image/svg+xml", href: "/favicon.svg" },
-    ],
-  }),
+  head: () => {
+    const siteUrl = clientEnv.VITE_PUBLIC_URL;
+    const ogImage = `${siteUrl}/og-image.svg`;
+    const description =
+      "Track your runs, climb the leaderboard, and share the glory with your friends.";
+
+    return {
+      meta: [
+        { charSet: "utf-8" },
+        { name: "viewport", content: "width=device-width, initial-scale=1" },
+        { title: "Trichter" },
+        { name: "description", content: description },
+        // OpenGraph
+        { property: "og:site_name", content: "Trichter" },
+        { property: "og:type", content: "website" },
+        { property: "og:title", content: "Trichter" },
+        { property: "og:description", content: description },
+        { property: "og:image", content: ogImage },
+        { property: "og:image:width", content: "1200" },
+        { property: "og:image:height", content: "630" },
+        // Twitter / X
+        { name: "twitter:card", content: "summary_large_image" },
+        { name: "twitter:title", content: "Trichter" },
+        { name: "twitter:description", content: description },
+        { name: "twitter:image", content: ogImage },
+      ],
+      links: [
+        { rel: "stylesheet", href: appCss },
+        { rel: "icon", type: "image/svg+xml", href: "/favicon.svg" },
+        // hreflang — root-level so present on every page
+        { rel: "alternate", hreflang: "x-default", href: siteUrl },
+        { rel: "alternate", hreflang: "en", href: `${siteUrl}/en` },
+        { rel: "alternate", hreflang: "de", href: `${siteUrl}/de` },
+      ],
+      scripts: [
+        {
+          type: "application/ld+json",
+          children: JSON.stringify({
+            "@context": "https://schema.org",
+            "@graph": [
+              {
+                "@type": "WebSite",
+                name: "Trichter",
+                url: siteUrl,
+                description,
+              },
+              {
+                "@type": "SoftwareApplication",
+                name: "Trichter",
+                applicationCategory: "SportsApplication",
+                operatingSystem: "Web",
+                url: siteUrl,
+                description,
+              },
+            ],
+          }),
+        },
+      ],
+    };
+  },
   notFoundComponent: NotFoundPage,
   errorComponent: ({ error }) => <ErrorPage error={error as Error} />,
   shellComponent: RootDocument,

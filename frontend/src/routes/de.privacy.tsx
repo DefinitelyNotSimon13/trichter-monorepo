@@ -1,12 +1,19 @@
-import { createFileRoute, redirect } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/de/privacy")({
-  beforeLoad: () => {
-    // throw redirect({
-    //   to: "/{-$locale}/policy/privacy",
-    //   params: { locale: "de" },
-    // });
-  },
+  head: () => ({
+    meta: [
+      { title: "Datenschutzerklärung | Trichter" },
+      { name: "robots", content: "noindex,follow" },
+      { property: "og:title", content: "Datenschutzerklärung | Trichter" },
+    ],
+    links: [
+      {
+        rel: "canonical",
+        href: "https://next.trichter.hauptspeicher.com/de/privacy",
+      },
+    ],
+  }),
   component: RouteComponent,
 });
 

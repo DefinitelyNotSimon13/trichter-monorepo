@@ -9,6 +9,9 @@ export const clientEnv = createEnv({
     VITE_BUILD_ID: z.string().default("dev"),
     VITE_GOOGLE_CLIENT_ID: z.string().min(1),
     VITE_TURNSTYLE_SITE_KEY: z.string().min(1),
+    VITE_PUBLIC_URL: z
+      .string()
+      .default("https://next.trichter.hauptspeicher.com"),
   },
   runtimeEnv: import.meta.env,
   emptyStringAsUndefined: true,
