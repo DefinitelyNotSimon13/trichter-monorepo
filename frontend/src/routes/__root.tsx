@@ -17,6 +17,7 @@ import TanStackQueryDevtools from "#/integrations/tanstack-query/devtools";
 import TanstackQueryProvider from "#/integrations/tanstack-query/root-provider";
 import { normalizeLocale } from "#/lib/i18n/locale";
 import appCss from "#/styles.css?url";
+import interLatinFont from "@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url";
 import { initI18n } from "#/lib/i18n/config";
 import { Toaster } from "sonner";
 import { createOauthClients } from "#/lib/auth.functions";
@@ -99,6 +100,13 @@ export const Route = createRootRouteWithContext<RouterContext>()({
         { name: "twitter:image", content: ogImage },
       ],
       links: [
+        {
+          rel: "preload",
+          as: "font",
+          type: "font/woff2",
+          href: interLatinFont,
+          crossOrigin: "anonymous",
+        },
         { rel: "stylesheet", href: appCss },
         { rel: "icon", type: "image/svg+xml", href: "/favicon.svg" },
         // hrefLang — root-level so present on every page

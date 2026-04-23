@@ -17,12 +17,14 @@ export const Route = createFileRoute("/{-$locale}/app/leaderboard")({
   staticData: {
     breadcrumb: "Leaderboard",
   },
-  loader: ({ context: { queryClient } }) =>
-    queryClient.ensureQueryData(
-      getRunsOptions({
-        query: { page: 0, size: PAGE_SIZE, sort: ["createdAt,desc"] },
-      }),
-    ),
+  // loader: ({ context: { queryClient, session } }) => {
+  //   if (!session?.user) return;
+  //   return queryClient.ensureQueryData(
+  //     getRunsOptions({
+  //       query: { page: 0, size: PAGE_SIZE, sort: ["createdAt,desc"] },
+  //     }),
+  //   );
+  // },
   pendingComponent: LeaderboardSkeleton,
   errorComponent: LeaderboardError,
   component: LeaderboardPage,

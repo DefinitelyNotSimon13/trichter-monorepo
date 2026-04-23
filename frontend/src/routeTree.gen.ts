@@ -52,7 +52,9 @@ const Char123LocaleChar125AppRoute = Char123LocaleChar125AppRouteImport.update({
   id: '/app',
   path: '/app',
   getParentRoute: () => Char123LocaleChar125RouteRoute,
-} as any)
+} as any).lazy(() =>
+  import('./routes/{-$locale}/app.lazy').then((d) => d.Route),
+)
 const DePrivacyRoute = DePrivacyRouteImport.update({
   id: '/de/privacy',
   path: '/de/privacy',

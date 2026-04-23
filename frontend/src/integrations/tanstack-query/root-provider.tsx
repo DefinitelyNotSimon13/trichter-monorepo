@@ -22,13 +22,13 @@ function getQueryClient() {
   return browserQueryClient;
 }
 
-const serverBaseUrl = clientEnv.VITE_API_BASE_URL || "http://localhost:8080";
+const serverBaseUrl = clientEnv.VITE_API_BASE_URL || "http://localhost:8080q";
 
 export function getContext() {
   const queryClient = getQueryClient();
 
   client.setConfig({
-    baseUrl: environmentManager.isServer() ? serverBaseUrl : "",
+    baseUrl: environmentManager.isServer() ? serverBaseUrl : undefined,
   });
 
   return {
@@ -41,7 +41,7 @@ export default function TanstackQueryProvider(props: {
   children: ReactNode;
 }) {
   client.setConfig({
-    baseUrl: "",
+    baseUrl: undefined,
   });
 
   return (

@@ -20,13 +20,15 @@ export const Route = createFileRoute("/{-$locale}/app/feed")({
   staticData: {
     breadcrumb: "Feed",
   },
-  loader: ({ context: { queryClient } }) =>
-    queryClient.ensureInfiniteQueryData({
-      ...getRunsInfiniteOptions({
-        query: { size: PAGE_SIZE, sort: ["createdAt,desc"] },
-      }),
-      initialPageParam: 0,
-    }),
+  // loader: ({ context: { queryClient, session } }) => {
+  //   if (!session?.user) return;
+  //   return queryClient.ensureInfiniteQueryData({
+  //     ...getRunsInfiniteOptions({
+  //       query: { size: PAGE_SIZE, sort: ["createdAt,desc"] },
+  //     }),
+  //     initialPageParam: 0,
+  //   });
+  // },
   pendingComponent: FeedSkeleton,
   errorComponent: FeedError,
   component: FeedPage,

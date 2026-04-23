@@ -16,13 +16,15 @@ export const Route = createFileRoute("/{-$locale}/app/profile/{-$userId}")({
   staticData: {
     breadcrumb: "Profile",
   },
-  loader: ({ context: { queryClient, userId } }) =>
-    queryClient.ensureQueryData(
-      getRunsByUserOptions({
-        path: { userId },
-        query: { size: 500, sort: ["createdAt,desc"] },
-      }),
-    ),
+  // loader: ({ context: { queryClient, session, userId } }) => {
+  //   if (!session?.user) return;
+  //   return queryClient.ensureQueryData(
+  //     getRunsByUserOptions({
+  //       path: { userId },
+  //       query: { size: 500, sort: ["createdAt,desc"] },
+  //     }),
+  //   );
+  // },
   pendingComponent: ProfileSkeleton,
   errorComponent: ProfileError,
   beforeLoad: async ({ params, location }) => {
