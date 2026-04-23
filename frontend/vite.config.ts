@@ -27,6 +27,7 @@ export default defineConfig({
       prerender: {
         enabled: true,
         crawlLinks: true,
+        filter: ({ path }) => !path.startsWith("/api"),
         onSuccess: ({ page }) => {
           console.log(`Rendered ${page.path}!`);
         },
