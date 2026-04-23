@@ -2,4 +2,10 @@ User-agent: *
 Disallow: /app/
 Disallow: /api/
 
+User-agent: facebookexternalhit
+Allow: /
+
+User-agent: Facebot
+Allow: /
+
 Sitemap: https://next.trichter.hauptspeicher.com/sitemap.xml
