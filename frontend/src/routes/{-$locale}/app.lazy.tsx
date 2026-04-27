@@ -6,7 +6,9 @@ import {
   useRouterState,
 } from "@tanstack/react-router";
 import { CircleUser, LogOut, Rss, Settings2, Trophy } from "lucide-react";
+import React, { useEffect, useState } from "react";
 import { AppSidebar } from "#/components/app-sidebar";
+import { PasskeyPromptDialog } from "#/components/auth/passkey-prompt-dialog";
 import { PageWrapper } from "#/components/page-wrapper";
 import {
   Breadcrumb,
@@ -21,10 +23,9 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "#/components/ui/sidebar";
+import { WebSocketProvider } from "#/components/websocket-provider";
 import { authClient } from "#/lib/auth-client";
 import { cn } from "#/lib/utils";
-import React, { useEffect, useState } from "react";
-import { PasskeyPromptDialog } from "#/components/auth/passkey-prompt-dialog";
 
 export const Route = createLazyFileRoute("/{-$locale}/app")({
   component: AppLayout,
@@ -198,21 +199,23 @@ function AppLayout() {
   }, [newUser]);
 
   return (
-    <SidebarProvider defaultOpen={false}>
-      <AppSidebar />
-      <SidebarInset>
-        <AppHeader />
-        <main className="mx-auto w-full max-w-4xl px-4 py-8 pb-24 sm:px-6 md:pb-8">
-          <PageWrapper>
-            <Outlet />
-            <PasskeyPromptDialog
-              open={showPasskeyDialog}
-              onOpenChange={setShowPasskeyDialog}
-            />
-          </PageWrapper>
-        </main>
-      </SidebarInset>
-      <MobileBottomNav />
-    </SidebarProvider>
+    <WebSocketProvider>
+      <SidebarProvider defaultOpen={false}>
+        <AppSidebar />
+        <SidebarInset>
+          <AppHeader />
+          <main className="mx-auto w-full max-w-4xl px-4 py-8 pb-24 sm:px-6 md:pb-8">
+            <PageWrapper>
+              <Outlet />
+              <PasskeyPromptDialog
+                open={showPasskeyDialog}
+                onOpenChange={setShowPasskeyDialog}
+              />
+            </PageWrapper>
+          </main>
+        </SidebarInset>
+        <MobileBottomNav />
+      </SidebarProvider>
+    </WebSocketProvider>
   );
 }

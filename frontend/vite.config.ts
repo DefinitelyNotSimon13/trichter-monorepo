@@ -32,6 +32,7 @@ export default defineConfig({
       "/api/v2": {
         target: "http://localhost:8080",
         changeOrigin: true,
+        ws: true,
       },
       "/actuator": {
         target: "http://localhost:8080",

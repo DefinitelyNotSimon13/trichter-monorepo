@@ -1,3 +1,4 @@
+import interLatinFont from "@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url";
 import { TanStackDevtools } from "@tanstack/react-devtools";
 import type { QueryClient } from "@tanstack/react-query";
 import {
@@ -10,18 +11,17 @@ import {
 } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 import { I18nextProvider } from "react-i18next";
-
+import { Toaster } from "sonner";
 import { Button } from "#/components/ui/button";
 import { TooltipProvider } from "#/components/ui/tooltip";
+import { clientEnv } from "#/env/client";
 import TanStackQueryDevtools from "#/integrations/tanstack-query/devtools";
 import TanstackQueryProvider from "#/integrations/tanstack-query/root-provider";
+import { createOauthClients } from "#/lib/auth.functions";
+import { initI18n } from "#/lib/i18n/config";
 import { normalizeLocale } from "#/lib/i18n/locale";
 import appCss from "#/styles.css?url";
-import interLatinFont from "@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url";
-import { initI18n } from "#/lib/i18n/config";
-import { Toaster } from "sonner";
-import { createOauthClients } from "#/lib/auth.functions";
-import { clientEnv } from "#/env/client";
+import "#/lib/api-setup";
 
 interface RouterContext {
   queryClient: QueryClient;

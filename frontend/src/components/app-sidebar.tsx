@@ -5,6 +5,7 @@ import {
   LogOut,
   Rss,
   Settings2,
+  ShieldCogCorner,
   Trophy,
 } from "lucide-react";
 import {
@@ -33,12 +34,12 @@ const navItems = [
     icon: Trophy,
     label: "Leaderboard",
   },
-  {
-    to: "/{-$locale}/app/settings" as const,
-    activePath: "/app/settings",
-    icon: Settings2,
-    label: "Settings",
-  },
+  // {
+  //   to: "/{-$locale}/app/admin" as const,
+  //   activePath: "/app/admin",
+  //   icon: ShieldCogCorner,
+  //   label: "Admin",
+  // },
 ];
 
 function SidebarLogo() {

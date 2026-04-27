@@ -1,18 +1,21 @@
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
 import {
   createFileRoute,
   type ErrorComponentProps,
 } from "@tanstack/react-router";
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 
-import { getRunsInfiniteOptions } from "#/client/@tanstack/react-query.gen";
+import {
+  getRunsInfiniteOptions,
+  getRunsInfiniteQueryKey,
+} from "#/client/@tanstack/react-query.gen";
 import type { RunDto } from "#/client/types.gen";
-
 import { InfiniteScrollSentinel } from "#/components/runs/feed/infinite-scroll-sentinel";
 import { RunFeed } from "#/components/runs/feed/run-feed";
 import { Skeleton } from "#/components/ui/skeleton";
 import { Spinner } from "#/components/ui/spinner";
 import { StatePanel } from "#/components/ui/state-panel";
+import { useWsEvent } from "#/hooks/use-ws-event";
 
 const PAGE_SIZE = 10;
 
@@ -67,6 +70,17 @@ function FeedSkeleton() {
 }
 
 function FeedPage() {
+  const queryClient = useQueryClient();
+  const [pendingCount, setPendingCount] = useState(0);
+
+  useWsEvent("run.created", () => setPendingCount((c) => c + 1));
+
+  const handleRefresh = () => {
+    setPendingCount(0);
+    void queryClient.resetQueries({ queryKey: getRunsInfiniteQueryKey() });
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   const query = useInfiniteQuery({
     ...getRunsInfiniteOptions({
       query: {
@@ -107,6 +121,16 @@ function FeedPage() {
 
   return (
     <div className="flex flex-col items-center gap-6 lg:items-start">
+      {pendingCount > 0 && (
+        <button
+          type="button"
+          onClick={handleRefresh}
+          className="sticky top-2 z-10 flex w-full max-w-100 items-center justify-center gap-1.5 rounded-full border bg-background/95 px-4 py-2 text-sm font-medium shadow-sm backdrop-blur transition-opacity hover:opacity-90"
+        >
+          ↑ {pendingCount} new run{pendingCount !== 1 ? "s" : ""} – tap to
+          refresh
+        </button>
+      )}
       <RunFeed runs={runs} />
       {query.isFetchingNextPage && (
         <StatePanel>
