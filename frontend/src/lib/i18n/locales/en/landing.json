@@ -19,5 +19,15 @@
       "title": "Coming Soon",
       "description": "Phone app and image uploads on the way."
     }
+  },
+  "betaSignup": {
+    "badge": "Android App Closed Beta",
+    "title": "Get early access",
+    "description": "The Trichter Android app is in closed testing. Enter your Google Play account email and we'll let you in when there's a spot.",
+    "placeholder": "your@gmail.com",
+    "submit": "Request access",
+    "submitting": "Sending…",
+    "success": "You're on the list! We'll reach out when you're accepted.",
+    "error": "Something went wrong. Please try again."
   }
 }

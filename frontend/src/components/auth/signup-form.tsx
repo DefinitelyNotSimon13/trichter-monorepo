@@ -1,4 +1,5 @@
 import { Link, useRouter } from "@tanstack/react-router";
+import { useTranslation } from "react-i18next";
 import {
   Field,
   FieldDescription,
@@ -11,11 +12,9 @@ import { useTurnstile } from "#/hooks/use-turnstile";
 import { authClient } from "#/lib/auth-client";
 import { emailValidator, isEmail, passwordValidator } from "#/lib/validators";
 import { AuthCard } from "./auth-card";
+import { PrivacyNotice } from "./privacy-notice";
 import { SocialLoginButton } from "./social-login-button";
 import { TurnstileWidget } from "./turnstile-widget";
-import { PrivacyNotice } from "./privacy-notice";
-import { toast } from "sonner";
-import { useState } from "react";
 
 type SignupFormValues = {
   name: string;
@@ -43,6 +42,7 @@ export function SignupForm({
   } = useFormError();
   const { ref: turnstileRef, getFetchOptions } = useTurnstile();
   const router = useRouter();
+  const { t } = useTranslation("app");
 
   const form = useAppForm({
     defaultValues: {
@@ -57,7 +57,7 @@ export function SignupForm({
 
       const fetchOptions = getFetchOptions();
 
-      const { data, error } = await authClient.signUp.email({
+      const { error } = await authClient.signUp.email({
         name: value.name.trim(),
         email: value.email.trim(),
         username: value.username.trim(),
@@ -68,21 +68,14 @@ export function SignupForm({
       });
 
       if (error) {
-        setFormError(error.message ?? "Sign up failed");
+        setFormError(error.message ?? t("auth.signup.failed"));
         return;
       }
 
       if (redirectTo) {
-        router.navigate({
-          href: redirectTo,
-        });
+        router.navigate({ href: redirectTo });
       } else {
-        router.navigate({
-          to: "/{-$locale}/login",
-          search: {
-            newUser: true,
-          },
-        });
+        router.navigate({ to: "/{-$locale}/login", search: { newUser: true } });
       }
     },
   });
@@ -90,8 +83,8 @@ export function SignupForm({
   return (
     <AuthCard
       className={className}
-      title="Create your account"
-      description="Sign up with Google or create an account with email and username"
+      title={t("auth.signup.title")}
+      description={t("auth.signup.description")}
       footer={<PrivacyNotice />}
       {...props}
     >
@@ -105,27 +98,25 @@ export function SignupForm({
         <FieldGroup>
           <Field>
             <SocialLoginButton
-              label="Sign up with Google"
+              label={t("auth.signup.signUpWithGoogle")}
               callbackURL={redirectTo ?? `/app/feed`}
             />
           </Field>
 
           <FieldSeparator className="*:data-[slot=field-separator-content]:bg-card">
-            Or continue with
+            {t("common:auth.orContinueWith")}
           </FieldSeparator>
 
           <form.AppField
             name="name"
             validators={{
-              onChange: ({ value }) => {
-                if (!value.trim()) return "Full name is required";
-                return undefined;
-              },
+              onChange: ({ value }) =>
+                !value.trim() ? t("auth.signup.nameRequired") : undefined,
             }}
           >
             {(field) => (
               <field.FormTextInput
-                label="Full name"
+                label={t("auth.signup.fullName")}
                 type="text"
                 placeholder="John Doe"
                 autoComplete="name"
@@ -138,18 +129,18 @@ export function SignupForm({
             validators={{
               onChange: ({ value }) => {
                 const trimmed = value.trim();
-                if (!trimmed) return "Username is required";
+                if (!trimmed) return t("auth.signup.usernameRequired");
                 if (trimmed.length < 3)
-                  return "Username must be at least 3 characters";
+                  return t("auth.signup.usernameTooShort");
                 if (!/^[a-zA-Z0-9_]+$/.test(trimmed))
-                  return "Username may only contain letters, numbers, and underscores";
+                  return t("auth.signup.usernameInvalid");
                 return undefined;
               },
             }}
           >
             {(field) => (
               <field.FormTextInput
-                label="Username"
+                label={t("auth.signup.username")}
                 type="text"
                 placeholder="alcoholicjohn"
                 autoComplete="username"
@@ -160,7 +151,7 @@ export function SignupForm({
           <form.AppField name="email" validators={emailValidator}>
             {(field) => (
               <field.FormTextInput
-                label="Email"
+                label={t("auth.signup.email")}
                 type="email"
                 placeholder="m@example.com"
                 autoComplete="email"
@@ -172,9 +163,9 @@ export function SignupForm({
             <form.AppField name="password" validators={passwordValidator}>
               {(field) => (
                 <field.FormPasswordInput
-                  label="Password"
+                  label={t("auth.signup.password")}
                   autoComplete="new-password"
-                  description="Must be at least 8 characters long."
+                  description={t("auth.signup.passwordHint")}
                 />
               )}
             </form.AppField>
@@ -184,18 +175,19 @@ export function SignupForm({
               validators={{
                 onChangeListenTo: ["password"] as const,
                 onChange: ({ value, fieldApi }) => {
-                  if (!value) return "Please confirm your password";
+                  if (!value) return t("auth.resetPassword.confirmRequired");
                   const password = fieldApi.form.getFieldValue(
                     "password",
                   ) as string;
-                  if (value !== password) return "Passwords do not match";
+                  if (value !== password)
+                    return t("auth.resetPassword.passwordsMismatch");
                   return undefined;
                 },
               }}
             >
               {(field) => (
                 <field.FormPasswordInput
-                  label="Confirm password"
+                  label={t("auth.signup.confirmPassword")}
                   autoComplete="new-password"
                 />
               )}
@@ -217,7 +209,7 @@ export function SignupForm({
 
           <Field>
             <form.AppForm>
-              <form.FormSubmitButton label="Create account" />
+              <form.FormSubmitButton label={t("auth.signup.submit")} />
             </form.AppForm>
           </Field>
         </FieldGroup>
@@ -233,25 +225,20 @@ export function SignupForm({
               ? trimmedUsername
               : undefined;
         }}
-        children={(login) => {
-          return (
-            <div className="pt-2">
-              <FieldDescription className="text-center">
-                Already have an account?{" "}
-                <Link
-                  to="/{-$locale}/login"
-                  search={{
-                    redirectTo: redirectTo,
-                    initialLogin: login,
-                  }}
-                  className="underline underline-offset-4"
-                >
-                  Sign in
-                </Link>
-              </FieldDescription>
-            </div>
-          );
-        }}
+        children={(login) => (
+          <div className="pt-2">
+            <FieldDescription className="text-center">
+              {t("auth.signup.alreadyHaveAccount")}{" "}
+              <Link
+                to="/{-$locale}/login"
+                search={{ redirectTo: redirectTo, initialLogin: login }}
+                className="underline underline-offset-4"
+              >
+                {t("auth.signup.signIn")}
+              </Link>
+            </FieldDescription>
+          </div>
+        )}
       />
     </AuthCard>
   );

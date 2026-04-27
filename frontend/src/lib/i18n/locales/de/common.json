@@ -3,9 +3,37 @@
   "actions": {
     "openFeed": "Feed öffnen",
     "viewLeaderboard": "Bestenliste anzeigen",
-    "getStarted": "Los gehts"
+    "getStarted": "Los gehts",
+    "save": "Speichern",
+    "cancel": "Abbrechen",
+    "clear": "Zurücksetzen",
+    "back": "Zurück"
+  },
+  "cta": {
+    "logged-in": "Zur App"
   },
   "auth": {
-    "signIn": "Anmelden"
+    "signIn": "Anmelden",
+    "signOut": "Abmelden",
+    "signUp": "Registrieren",
+    "orContinueWith": "Oder weiter mit",
+    "redirecting": "Weiterleitung..."
+  },
+  "nav": {
+    "feed": "Feed",
+    "leaderboard": "Rangliste",
+    "profile": "Profil",
+    "settings": "Einstellungen",
+    "admin": "Admin",
+    "board": "Board",
+    "dashboard": "Dashboard",
+    "users": "Benutzer",
+    "runs": "Runs",
+    "beta": "Beta"
+  },
+  "privacy": {
+    "notice": "Mit dem Fortfahren stimmst du unseren {{terms}} und der {{privacy}} zu.",
+    "terms": "Nutzungsbedingungen",
+    "privacyPolicy": "Datenschutzerklärung"
   }
 }

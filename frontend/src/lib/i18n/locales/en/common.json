@@ -3,9 +3,34 @@
   "actions": {
     "openFeed": "Open feed",
     "viewLeaderboard": "View leaderboard",
-    "getStarted": "Get Started"
+    "getStarted": "Get Started",
+    "save": "Save",
+    "cancel": "Cancel",
+    "clear": "Clear",
+    "back": "Back"
   },
   "auth": {
-    "signIn": "Sign In"
+    "signIn": "Sign In",
+    "signOut": "Sign out",
+    "signUp": "Sign Up",
+    "orContinueWith": "Or continue with",
+    "redirecting": "Redirecting..."
+  },
+  "nav": {
+    "feed": "Feed",
+    "leaderboard": "Leaderboard",
+    "profile": "Profile",
+    "settings": "Settings",
+    "admin": "Admin",
+    "board": "Board",
+    "dashboard": "Dashboard",
+    "users": "Users",
+    "runs": "Runs",
+    "beta": "Beta"
+  },
+  "privacy": {
+    "notice": "By continuing, you agree to our {{terms}} and {{privacy}}.",
+    "terms": "Terms of Service",
+    "privacyPolicy": "Privacy Policy"
   }
 }

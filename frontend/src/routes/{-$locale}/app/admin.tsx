@@ -1,6 +1,6 @@
 import {
-  Link,
   createFileRoute,
+  Link,
   notFound,
   Outlet,
   redirect,
@@ -13,6 +13,7 @@ const NAV_ITEMS = [
   { to: "/{-$locale}/app/admin" as const, label: "Dashboard", exact: true },
   { to: "/{-$locale}/app/admin/users" as const, label: "Users", exact: false },
   { to: "/{-$locale}/app/admin/runs" as const, label: "Runs", exact: false },
+  { to: "/{-$locale}/app/admin/beta" as const, label: "Beta", exact: false },
 ] as const;
 
 function AdminNav() {

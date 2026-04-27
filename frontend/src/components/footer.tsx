@@ -74,10 +74,10 @@ export function Footer() {
             Privacy
           </Link>
           <Link
-            to="/{-$locale}/policy/imprint"
+            to="/{-$locale}/policy/impressum"
             className="hover:text-foreground"
           >
-            Imprint
+            Impressum
           </Link>
           <span>© {year}</span>
         </div>

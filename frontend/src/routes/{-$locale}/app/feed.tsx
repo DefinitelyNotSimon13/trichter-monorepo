@@ -4,6 +4,7 @@ import {
   type ErrorComponentProps,
 } from "@tanstack/react-router";
 import { useCallback, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import {
   getRunsInfiniteOptions,
@@ -38,9 +39,10 @@ export const Route = createFileRoute("/{-$locale}/app/feed")({
 });
 
 function FeedError({ error, reset }: ErrorComponentProps) {
+  const { t } = useTranslation("app");
   return (
     <StatePanel tone="destructive" onRetry={reset}>
-      Failed to load feed. {error instanceof Error ? error.message : null}
+      {t("feed.loadError")} {error instanceof Error ? error.message : null}
     </StatePanel>
   );
 }
@@ -72,6 +74,7 @@ function FeedSkeleton() {
 function FeedPage() {
   const queryClient = useQueryClient();
   const [pendingCount, setPendingCount] = useState(0);
+  const { t } = useTranslation("app");
 
   useWsEvent("run.created", () => setPendingCount((c) => c + 1));
 
@@ -110,7 +113,7 @@ function FeedPage() {
   if (query.isError) {
     return (
       <StatePanel tone="destructive" onRetry={() => void query.refetch()}>
-        Failed to load runs.
+        {t("feed.loadRunsError")}
       </StatePanel>
     );
   }
@@ -127,8 +130,7 @@ function FeedPage() {
           onClick={handleRefresh}
           className="sticky top-2 z-10 flex w-full max-w-100 items-center justify-center gap-1.5 rounded-full border bg-background/95 px-4 py-2 text-sm font-medium shadow-sm backdrop-blur transition-opacity hover:opacity-90"
         >
-          ↑ {pendingCount} new run{pendingCount !== 1 ? "s" : ""} – tap to
-          refresh
+          {t("feed.newRuns", { count: pendingCount })}
         </button>
       )}
       <RunFeed runs={runs} />
@@ -136,7 +138,7 @@ function FeedPage() {
         <StatePanel>
           <div className="flex gap-2">
             <Spinner />
-            <span className="line-clamp-1">Loading more runs…</span>
+            <span className="line-clamp-1">{t("feed.loadingMore")}</span>
           </div>
         </StatePanel>
       )}

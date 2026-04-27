@@ -19,10 +19,13 @@ export const Route = createFileRoute("/{-$locale}/_auth/login")({
     newUser: z.optional(z.boolean()),
     mobile: z.optional(z.boolean()),
   }),
-  beforeLoad: async () => {
+  beforeLoad: async ({ params }) => {
     const session = await getSession();
     if (session?.user) {
-      throw redirect({ to: "/{-$locale}/app/feed" });
+      throw redirect({
+        to: "/{-$locale}/app/feed",
+        params: { locale: params.locale },
+      });
     }
   },
   component: LoginPage,

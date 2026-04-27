@@ -10,10 +10,13 @@ export const Route = createFileRoute("/{-$locale}/_auth/forgot-password")({
       { name: "robots", content: "noindex,nofollow" },
     ],
   }),
-  beforeLoad: async () => {
+  beforeLoad: async ({ params }) => {
     const session = await getSession();
     if (session?.user) {
-      throw redirect({ to: "/{-$locale}/app/feed" });
+      throw redirect({
+        to: "/{-$locale}/app/feed",
+        params: { locale: params.locale },
+      });
     }
   },
   component: ForgotPasswordPage,

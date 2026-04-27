@@ -1,11 +1,11 @@
-import { useSearch } from "@tanstack/react-router";
+import { Link, useSearch } from "@tanstack/react-router";
+import { useTranslation } from "react-i18next";
 import { Field, FieldDescription, FieldGroup } from "#/components/ui/field";
 import { useAppForm } from "#/hooks/form";
 import { useFormMessages } from "#/hooks/use-form-error";
 import { authClient } from "#/lib/auth-client";
 import { passwordValidator } from "#/lib/validators";
 import { AuthCard } from "./auth-card";
-import { Link } from "@tanstack/react-router";
 
 type ResetPasswordFormValues = {
   password: string;
@@ -24,6 +24,7 @@ export function ResetPasswordForm({
   ...props
 }: ResetPasswordFormProps) {
   const search = useSearch({ strict: false }) as ResetPasswordSearch;
+  const { t } = useTranslation("app");
 
   const token = typeof search.token === "string" ? search.token : undefined;
   const initialError =
@@ -31,7 +32,7 @@ export function ResetPasswordForm({
 
   const initialFormError =
     initialError === "INVALID_TOKEN"
-      ? "This reset link is invalid or has expired."
+      ? t("auth.resetPassword.invalidToken")
       : null;
 
   const {
@@ -53,7 +54,7 @@ export function ResetPasswordForm({
       clear();
 
       if (!token) {
-        setError("Missing reset token.");
+        setError(t("auth.resetPassword.missingToken"));
         return;
       }
 
@@ -63,24 +64,24 @@ export function ResetPasswordForm({
       });
 
       if (result.error) {
-        setError(result.error.message ?? "Could not reset password");
+        setError(result.error.message ?? t("auth.resetPassword.failed"));
         return;
       }
 
-      setSuccess("Your password has been reset successfully.");
+      setSuccess(t("auth.resetPassword.success"));
     },
   });
 
   return (
     <AuthCard
       className={className}
-      title="Set a new password"
-      description="Choose a new password for your account."
+      title={t("auth.resetPassword.title")}
+      description={t("auth.resetPassword.description")}
       footer={
         <>
-          Back to{" "}
+          {t("auth.resetPassword.backTo")}{" "}
           <Link to="/{-$locale}/login" className="underline underline-offset-4">
-            login
+            {t("auth.resetPassword.login")}
           </Link>
         </>
       }
@@ -90,18 +91,16 @@ export function ResetPasswordForm({
         onSubmit={(e) => {
           e.preventDefault();
           e.stopPropagation();
-          if (canSubmit) {
-            void form.handleSubmit();
-          }
+          if (canSubmit) void form.handleSubmit();
         }}
       >
         <FieldGroup>
           <form.AppField name="password" validators={passwordValidator}>
             {(field) => (
               <field.FormPasswordInput
-                label="New password"
+                label={t("auth.resetPassword.newPassword")}
                 autoComplete="new-password"
-                description="Must be at least 8 characters long."
+                description={t("auth.resetPassword.passwordHint")}
               />
             )}
           </form.AppField>
@@ -111,18 +110,19 @@ export function ResetPasswordForm({
             validators={{
               onChangeListenTo: ["password"] as const,
               onChange: ({ value, fieldApi }) => {
-                if (!value) return "Please confirm your password";
+                if (!value) return t("auth.resetPassword.confirmRequired");
                 const password = fieldApi.form.getFieldValue(
                   "password",
                 ) as string;
-                if (value !== password) return "Passwords do not match";
+                if (value !== password)
+                  return t("auth.resetPassword.passwordsMismatch");
                 return undefined;
               },
             }}
           >
             {(field) => (
               <field.FormPasswordInput
-                label="Confirm new password"
+                label={t("auth.resetPassword.confirmPassword")}
                 autoComplete="new-password"
               />
             )}
@@ -145,7 +145,7 @@ export function ResetPasswordForm({
                   to="/{-$locale}/login"
                   className="underline underline-offset-4"
                 >
-                  Go to login
+                  {t("auth.resetPassword.goToLogin")}
                 </Link>
                 .
               </FieldDescription>
@@ -154,7 +154,7 @@ export function ResetPasswordForm({
 
           <Field>
             <form.AppForm>
-              <form.FormSubmitButton label="Reset password" />
+              <form.FormSubmitButton label={t("auth.resetPassword.submit")} />
             </form.AppForm>
           </Field>
         </FieldGroup>

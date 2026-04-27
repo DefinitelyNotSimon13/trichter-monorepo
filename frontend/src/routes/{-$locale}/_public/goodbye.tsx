@@ -1,4 +1,5 @@
-import { Link, createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { useTranslation } from "react-i18next";
 
 export const Route = createFileRoute("/{-$locale}/_public/goodbye")({
   head: () => ({
@@ -11,13 +12,14 @@ export const Route = createFileRoute("/{-$locale}/_public/goodbye")({
 });
 
 function RouteComponent() {
+  const { t } = useTranslation("app");
   return (
     <main className="flex-1 w-full h-full items-center flex justify-center flex-col">
       <h1 className="text-center text-4xl font-black text-highlight">
-        Account deleted
+        {t("goodbye.title")}
       </h1>
       <Link to="/{-$locale}" className="underline">
-        Homepage
+        {t("goodbye.homepage")}
       </Link>
     </main>
   );

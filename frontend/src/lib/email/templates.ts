@@ -288,6 +288,20 @@ export function deleteAccountEmailHtml(url: string): string {
   });
 }
 
+export function betaAcceptanceEmailHtml(playStoreUrl: string): string {
+  return emailBase({
+    preheader: "You're in! Download the Trichter app on Android.",
+    eyebrow: "Android Beta",
+    title: "You're in!",
+    intro: `Great news, you've been accepted into the <strong>${escapeHtml(APP_NAME)}</strong> closed beta on Android. Tap the button below to download the app from the Google Play Store.`,
+    body: `
+      ${ctaButton("Download on Google Play", playStoreUrl)}
+      ${fallbackLink(playStoreUrl)}
+      ${finePrint(`If you did not sign up for the ${escapeHtml(APP_NAME)} beta, you can safely ignore this email.`)}
+    `,
+  });
+}
+
 export function passwordResetEmailHtml(url: string): string {
   return emailBase({
     preheader: "Reset your Trichter password. This link expires in 1 hour.",

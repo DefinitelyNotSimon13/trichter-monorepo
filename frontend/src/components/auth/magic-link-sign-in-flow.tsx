@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Button } from "#/components/ui/button";
 import { Field, FieldDescription, FieldGroup } from "#/components/ui/field";
 import { useFormMessages } from "#/hooks/use-form-error";
@@ -23,12 +24,13 @@ export function MagicLinkSignInFlow({
   const [sent, setSent] = useState(false);
   const [sentEmail, setSentEmail] = useState("");
   const { error, setError, clear } = useFormMessages();
+  const { t } = useTranslation("app");
 
   const handleSend = async () => {
     clear();
 
     if (!email) {
-      setError("Enter a valid email in the login field above");
+      setError(t("auth.magicLink.errorEnterEmail"));
       return;
     }
 
@@ -39,7 +41,7 @@ export function MagicLinkSignInFlow({
     });
 
     if (result.error) {
-      setError(result.error.message ?? "Failed to send link");
+      setError(result.error.message ?? t("auth.magicLink.errorSend"));
       return;
     }
 
@@ -59,17 +61,14 @@ export function MagicLinkSignInFlow({
     return (
       <div className="space-y-2">
         <p className="text-sm text-muted-foreground">
-          Magic link sent to{" "}
-          <span className="font-medium text-foreground">{sentEmail}</span>.
-          Check your inbox and click the link to sign in.
+          {t("auth.magicLink.sent", { email: sentEmail })}
         </p>
-
         <button
           type="button"
           className="text-xs text-muted-foreground underline underline-offset-2 hover:text-foreground"
           onClick={handleClear}
         >
-          Clear
+          {t("auth.magicLink.clear")}
         </button>
       </div>
     );
@@ -79,14 +78,9 @@ export function MagicLinkSignInFlow({
     <FieldGroup>
       <Field>
         <FieldDescription>
-          {email ? (
-            <>
-              Send a magic link to{" "}
-              <span className="font-medium text-foreground">{email}</span>.
-            </>
-          ) : (
-            "Enter a valid email in the login field above to use magic link sign-in."
-          )}
+          {email
+            ? t("auth.magicLink.sendTo", { email })
+            : t("auth.magicLink.enterEmail")}
         </FieldDescription>
       </Field>
 
@@ -105,7 +99,7 @@ export function MagicLinkSignInFlow({
           disabled={!email}
           onClick={() => void handleSend()}
         >
-          Send magic link
+          {t("auth.magicLink.send")}
         </Button>
       </Field>
     </FieldGroup>

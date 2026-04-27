@@ -1,4 +1,5 @@
 import { useRouter } from "@tanstack/react-router";
+import { useTranslation } from "react-i18next";
 import { Field, FieldDescription, FieldGroup } from "#/components/ui/field";
 import { useAppForm } from "#/hooks/form";
 import { useFormError } from "#/hooks/use-form-error";
@@ -23,6 +24,7 @@ export function CompleteProfileForm({
     clearError,
   } = useFormError();
   const router = useRouter();
+  const { t } = useTranslation("app");
 
   const form = useAppForm({
     defaultValues: {
@@ -38,7 +40,7 @@ export function CompleteProfileForm({
       const result = await authClient.updateUser({ username, displayUsername });
 
       if (result.error) {
-        setFormError(result.error.message ?? "Failed to save profile");
+        setFormError(result.error.message ?? t("auth.completeProfile.failed"));
         return;
       }
 
@@ -52,8 +54,8 @@ export function CompleteProfileForm({
 
   return (
     <AuthCard
-      title="Complete your profile"
-      description="Choose a username to finish setting up your account"
+      title={t("auth.completeProfile.title")}
+      description={t("auth.completeProfile.description")}
     >
       <form
         onSubmit={(e) => {
@@ -68,18 +70,18 @@ export function CompleteProfileForm({
             validators={{
               onChange: ({ value }) => {
                 const trimmed = value.trim();
-                if (!trimmed) return "Username is required";
+                if (!trimmed) return t("auth.completeProfile.usernameRequired");
                 if (trimmed.length < 3)
-                  return "Username must be at least 3 characters";
+                  return t("auth.completeProfile.usernameTooShort");
                 if (!/^[a-zA-Z0-9_]+$/.test(trimmed))
-                  return "Username may only contain letters, numbers, and underscores";
+                  return t("auth.completeProfile.usernameInvalid");
                 return undefined;
               },
             }}
           >
             {(field) => (
               <field.FormTextInput
-                label="Username"
+                label={t("auth.completeProfile.username")}
                 type="text"
                 placeholder="yourname"
                 autoComplete="username"
@@ -89,13 +91,11 @@ export function CompleteProfileForm({
 
           <form.AppField
             name="displayUsername"
-            validators={{
-              onChange: () => undefined,
-            }}
+            validators={{ onChange: () => undefined }}
           >
             {(field) => (
               <field.FormTextInput
-                label="Display name"
+                label={t("auth.completeProfile.displayName")}
                 type="text"
                 placeholder="Your Name"
                 autoComplete="nickname"
@@ -113,7 +113,7 @@ export function CompleteProfileForm({
 
           <Field>
             <form.AppForm>
-              <form.FormSubmitButton label="Save and continue" />
+              <form.FormSubmitButton label={t("auth.completeProfile.submit")} />
             </form.AppForm>
           </Field>
         </FieldGroup>

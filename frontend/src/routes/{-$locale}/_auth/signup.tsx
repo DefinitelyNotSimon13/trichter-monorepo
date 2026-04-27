@@ -15,10 +15,13 @@ export const Route = createFileRoute("/{-$locale}/_auth/signup")({
     redirectTo: z.optional(z.string()),
     initialLogin: z.optional(z.string()),
   }),
-  beforeLoad: async () => {
+  beforeLoad: async ({ params }) => {
     const session = await getSession();
     if (session?.user) {
-      throw redirect({ to: "/{-$locale}/app/feed" });
+      throw redirect({
+        to: "/{-$locale}/app/feed",
+        params: { locale: params.locale },
+      });
     }
   },
   component: SignupPage,

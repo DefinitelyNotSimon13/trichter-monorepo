@@ -1,22 +1,24 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
-import { Separator } from "#/components/ui/separator";
+import { useTranslation } from "react-i18next";
 import { ActiveSessionsSection } from "#/components/settings/active-sessions-section";
 import { ApiKeysSection } from "#/components/settings/api-keys-section";
 import { ChangeEmailSection } from "#/components/settings/change-email-section";
 import { ChangePasswordSection } from "#/components/settings/change-password-section";
 import { ConnectedAccountsSection } from "#/components/settings/connected-accounts-section";
+import { DeleteAccountSection } from "#/components/settings/delete-account-section";
 import { DisplayNameSection } from "#/components/settings/display-name-section";
 import { PasskeysSection } from "#/components/settings/passkeys-section";
-import { DeleteAccountSection } from "#/components/settings/delete-account-section";
+import { Separator } from "#/components/ui/separator";
 
 export const Route = createFileRoute("/{-$locale}/app/settings")({
   staticData: {
     breadcrumb: "Settings",
   },
-  beforeLoad: ({ context, location }) => {
+  beforeLoad: ({ params, context, location }) => {
     if (!context.session?.user) {
       throw redirect({
         to: "/{-$locale}/login",
+        params: { locale: params.locale },
         search: { redirectTo: location.href },
       });
     }
@@ -49,23 +51,24 @@ function SettingSection({
 
 function SettingsPage() {
   const { user } = Route.useRouteContext();
+  const { t } = useTranslation("app");
 
   return (
     <div className="space-y-10 max-w-3xl">
       <div>
         <h1 className="text-2xl font-semibold tracking-tight">
-          Account Settings
+          {t("settings.title")}
         </h1>
         <p className="mt-1 text-sm text-muted-foreground">
-          Manage your profile, security, and integrations.
+          {t("settings.subtitle")}
         </p>
       </div>
 
       <Separator />
 
       <SettingSection
-        title="Display name"
-        description="How your name appears to other users."
+        title={t("settings.sections.displayName.title")}
+        description={t("settings.sections.displayName.description")}
       >
         <DisplayNameSection user={user} />
       </SettingSection>
@@ -73,8 +76,8 @@ function SettingsPage() {
       <Separator />
 
       <SettingSection
-        title="Email address"
-        description="Change the email used to sign in and receive notifications."
+        title={t("settings.sections.email.title")}
+        description={t("settings.sections.email.description")}
       >
         <ChangeEmailSection user={user} />
       </SettingSection>
@@ -82,8 +85,8 @@ function SettingsPage() {
       <Separator />
 
       <SettingSection
-        title="Password"
-        description="Update your password. Existing sessions will remain active."
+        title={t("settings.sections.password.title")}
+        description={t("settings.sections.password.description")}
       >
         <ChangePasswordSection />
       </SettingSection>
@@ -91,8 +94,8 @@ function SettingsPage() {
       <Separator />
 
       <SettingSection
-        title="Connected accounts"
-        description="Link or unlink social sign-in providers."
+        title={t("settings.sections.connectedAccounts.title")}
+        description={t("settings.sections.connectedAccounts.description")}
       >
         <ConnectedAccountsSection />
       </SettingSection>
@@ -100,8 +103,8 @@ function SettingsPage() {
       <Separator />
 
       <SettingSection
-        title="Passkeys"
-        description="Sign in without a password using a passkey stored on your device."
+        title={t("settings.sections.passkeys.title")}
+        description={t("settings.sections.passkeys.description")}
       >
         <PasskeysSection />
       </SettingSection>
@@ -109,8 +112,8 @@ function SettingsPage() {
       <Separator />
 
       <SettingSection
-        title="API keys"
-        description="Create keys to authenticate programmatic access to your account."
+        title={t("settings.sections.apiKeys.title")}
+        description={t("settings.sections.apiKeys.description")}
       >
         <ApiKeysSection />
       </SettingSection>
@@ -118,8 +121,8 @@ function SettingsPage() {
       <Separator />
 
       <SettingSection
-        title="Active sessions"
-        description="View and revoke sessions signed in to your account."
+        title={t("settings.sections.activeSessions.title")}
+        description={t("settings.sections.activeSessions.description")}
       >
         <ActiveSessionsSection />
       </SettingSection>
@@ -127,8 +130,8 @@ function SettingsPage() {
       <Separator />
 
       <SettingSection
-        title="Delete account"
-        description="This action is permament and can not be reversed!"
+        title={t("settings.sections.deleteAccount.title")}
+        description={t("settings.sections.deleteAccount.description")}
       >
         <DeleteAccountSection />
       </SettingSection>

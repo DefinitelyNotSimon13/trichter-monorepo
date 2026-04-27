@@ -2,6 +2,7 @@ import interLatinFont from "@fontsource-variable/inter/files/inter-latin-wght-no
 import { TanStackDevtools } from "@tanstack/react-devtools";
 import type { QueryClient } from "@tanstack/react-query";
 import {
+  ClientOnly,
   createRootRouteWithContext,
   HeadContent,
   Outlet,

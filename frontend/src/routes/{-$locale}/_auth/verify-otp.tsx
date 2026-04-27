@@ -4,16 +4,17 @@ import {
   redirect,
   useRouter,
 } from "@tanstack/react-router";
-import { Field, FieldDescription, FieldGroup } from "#/components/ui/field";
+import { useTranslation } from "react-i18next";
+import { z } from "zod/mini";
 import { AuthCard } from "#/components/auth/auth-card";
+import { AuthCardWrapper } from "#/components/auth/auth-card-wrapper";
+import { TurnstileWidget } from "#/components/auth/turnstile-widget";
+import { Field, FieldDescription, FieldGroup } from "#/components/ui/field";
 import { useAppForm } from "#/hooks/form";
 import { useFormError } from "#/hooks/use-form-error";
 import { useTurnstile } from "#/hooks/use-turnstile";
-import { authClient } from "#/lib/auth-client";
-import { TurnstileWidget } from "#/components/auth/turnstile-widget";
-import { AuthCardWrapper } from "#/components/auth/auth-card-wrapper";
-import { z } from "zod/mini";
 import { getSession } from "#/lib/auth.functions";
+import { authClient } from "#/lib/auth-client";
 
 export const Route = createFileRoute("/{-$locale}/_auth/verify-otp")({
   head: () => ({
@@ -26,10 +27,13 @@ export const Route = createFileRoute("/{-$locale}/_auth/verify-otp")({
     email: z.prefault(z.string(), ""),
     redirectTo: z.prefault(z.string(), "/app/feed"),
   }),
-  beforeLoad: async () => {
+  beforeLoad: async ({ params }) => {
     const session = await getSession();
     if (session?.user) {
-      throw redirect({ to: "/{-$locale}/app/feed" });
+      throw redirect({
+        to: "/{-$locale}/app/feed",
+        params: { locale: params.locale },
+      });
     }
   },
   component: VerifyOtpPage,
@@ -40,16 +44,15 @@ function VerifyOtpPage() {
   const { ref: turnstileRef, getFetchOptions } = useTurnstile();
   const router = useRouter();
   const { error, setError, clearError } = useFormError();
+  const { t } = useTranslation("app");
 
   const form = useAppForm({
-    defaultValues: {
-      otp: "",
-    },
+    defaultValues: { otp: "" },
     onSubmit: async ({ value }) => {
       clearError();
 
       if (!email) {
-        setError("Missing email address for OTP verification");
+        setError(t("auth.verifyOtp.missingEmail"));
         return;
       }
 
@@ -60,7 +63,7 @@ function VerifyOtpPage() {
       });
 
       if (result.error) {
-        setError(result.error.message ?? "Invalid code");
+        setError(result.error.message ?? t("auth.verifyOtp.invalid"));
         return;
       }
 
@@ -70,7 +73,7 @@ function VerifyOtpPage() {
 
   return (
     <AuthCardWrapper>
-      <AuthCard title="Verify OTP" description="">
+      <AuthCard title={t("auth.verifyOtp.title")} description="">
         <form
           onSubmit={(e) => {
             e.preventDefault();
@@ -83,7 +86,7 @@ function VerifyOtpPage() {
               name="otp"
               validators={{
                 onChange: ({ value }) =>
-                  !value.trim() ? "Code is required" : undefined,
+                  !value.trim() ? t("auth.verifyOtp.codeRequired") : undefined,
               }}
             >
               {(field) => (
@@ -92,8 +95,8 @@ function VerifyOtpPage() {
                   autoComplete="one-time-code"
                   description={
                     email
-                      ? `Enter the code sent to ${email}`
-                      : "Enter the code from your email"
+                      ? t("auth.verifyOtp.codeDescription_withEmail", { email })
+                      : t("auth.verifyOtp.codeDescription_generic")
                   }
                 />
               )}
@@ -113,20 +116,18 @@ function VerifyOtpPage() {
             ) : null}
 
             <form.AppForm>
-              <form.FormSubmitButton label="Verify code" />
+              <form.FormSubmitButton label={t("auth.verifyOtp.submit")} />
             </form.AppForm>
 
             <Field>
               <FieldDescription className="text-center">
-                Wrong email?{" "}
+                {t("auth.verifyOtp.wrongEmail")}{" "}
                 <Link
                   to="/{-$locale}/login"
-                  search={{
-                    initialLogin: email,
-                  }}
+                  search={{ initialLogin: email }}
                   className="underline underline-offset-4"
                 >
-                  Go back
+                  {t("auth.verifyOtp.goBack")}
                 </Link>
               </FieldDescription>
             </Field>

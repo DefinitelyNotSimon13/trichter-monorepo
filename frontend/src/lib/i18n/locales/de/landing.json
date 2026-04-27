@@ -19,5 +19,15 @@
       "title": "Demnächst",
       "description": "Handy-App und Bild-Uploads sind unterwegs."
     }
+  },
+  "betaSignup": {
+    "badge": "Android-App Geschlossene Beta",
+    "title": "Frühzeitig Zugang erhalten",
+    "description": "Die Trichter Android-App befindet sich im geschlossenen Beta-Test. Gib deine Google-Play-Konto-E-Mail ein und wir lassen dich rein, sobald ein Platz frei ist.",
+    "placeholder": "deine@gmail.com",
+    "submit": "Zugang anfragen",
+    "submitting": "Wird gesendet…",
+    "success": "Du bist auf der Liste! Wir melden uns, wenn du akzeptiert wirst.",
+    "error": "Etwas ist schiefgelaufen. Bitte versuche es erneut."
   }
 }

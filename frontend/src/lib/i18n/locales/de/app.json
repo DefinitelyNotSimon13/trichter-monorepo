@@ -1,1 +1,184 @@
-{}
+{
+  "auth": {
+    "login": {
+      "title": "Willkommen zurück",
+      "description": "Melde dich bei deinem Konto an",
+      "emailOrUsername": "E-Mail oder Benutzername",
+      "password": "Passwort",
+      "forgotPassword": "Passwort vergessen?",
+      "submit": "Anmelden",
+      "noAccount": "Noch kein Konto?",
+      "signUp": "Registrieren",
+      "continueWithGoogle": "Mit Google fortfahren",
+      "loginWithGoogle": "Mit Google anmelden",
+      "emailRequired": "E-Mail oder Benutzername ist erforderlich",
+      "passwordRequired": "Passwort ist erforderlich",
+      "failed": "Anmeldung fehlgeschlagen",
+      "otherOptions": "Weitere Optionen",
+      "passkey": "Passkey",
+      "emailOtp": "E-Mail-Code",
+      "magicLink": "Magic Link",
+      "magicLinkSent": "Magic Link an {{email}} gesendet. Prüfe dein Postfach und klicke den Link.",
+      "sendOtpFailed": "Code konnte nicht gesendet werden",
+      "sendMagicLinkFailed": "Magic Link konnte nicht gesendet werden",
+      "passkeyFailed": "Passkey-Anmeldung fehlgeschlagen",
+      "enterValidEmail": "Gib oben eine gültige E-Mail ein"
+    },
+    "signup": {
+      "title": "Konto erstellen",
+      "description": "Registriere dich mit Google oder erstelle ein Konto mit E-Mail und Benutzername",
+      "signUpWithGoogle": "Mit Google registrieren",
+      "fullName": "Vollständiger Name",
+      "username": "Benutzername",
+      "email": "E-Mail",
+      "password": "Passwort",
+      "confirmPassword": "Passwort bestätigen",
+      "passwordHint": "Muss mindestens 8 Zeichen lang sein.",
+      "submit": "Konto erstellen",
+      "alreadyHaveAccount": "Bereits ein Konto?",
+      "signIn": "Anmelden",
+      "nameRequired": "Vollständiger Name ist erforderlich",
+      "usernameRequired": "Benutzername ist erforderlich",
+      "usernameTooShort": "Benutzername muss mindestens 3 Zeichen haben",
+      "usernameInvalid": "Benutzername darf nur Buchstaben, Zahlen und Unterstriche enthalten",
+      "failed": "Registrierung fehlgeschlagen"
+    },
+    "forgotPassword": {
+      "title": "Passwort vergessen?",
+      "description": "Gib deine E-Mail-Adresse ein und wir senden dir einen Reset-Link.",
+      "email": "E-Mail",
+      "submit": "Reset-Link senden",
+      "success": "Falls ein Konto mit dieser E-Mail existiert, wurde ein Reset-Link gesendet.",
+      "failed": "Reset-E-Mail konnte nicht gesendet werden",
+      "rememberedIt": "Doch wieder erinnert?",
+      "backToLogin": "Zurück zum Login"
+    },
+    "resetPassword": {
+      "title": "Neues Passwort festlegen",
+      "description": "Wähle ein neues Passwort für dein Konto.",
+      "newPassword": "Neues Passwort",
+      "confirmPassword": "Neues Passwort bestätigen",
+      "passwordHint": "Muss mindestens 8 Zeichen lang sein.",
+      "submit": "Passwort zurücksetzen",
+      "success": "Dein Passwort wurde erfolgreich zurückgesetzt.",
+      "failed": "Passwort konnte nicht zurückgesetzt werden",
+      "invalidToken": "Dieser Reset-Link ist ungültig oder abgelaufen.",
+      "missingToken": "Reset-Token fehlt.",
+      "confirmRequired": "Bitte bestätige dein Passwort",
+      "passwordsMismatch": "Passwörter stimmen nicht überein",
+      "backTo": "Zurück zum",
+      "login": "Login",
+      "goToLogin": "Zum Login"
+    },
+    "completeProfile": {
+      "title": "Profil vervollständigen",
+      "description": "Wähle einen Benutzernamen, um dein Konto einzurichten",
+      "username": "Benutzername",
+      "displayName": "Anzeigename",
+      "submit": "Speichern und weiter",
+      "usernameRequired": "Benutzername ist erforderlich",
+      "usernameTooShort": "Benutzername muss mindestens 3 Zeichen haben",
+      "usernameInvalid": "Benutzername darf nur Buchstaben, Zahlen und Unterstriche enthalten",
+      "failed": "Profil konnte nicht gespeichert werden"
+    },
+    "verifyOtp": {
+      "title": "Code eingeben",
+      "codeDescription_withEmail": "Gib den Code ein, der an {{email}} gesendet wurde",
+      "codeDescription_generic": "Gib den Code aus deiner E-Mail ein",
+      "codeRequired": "Code ist erforderlich",
+      "submit": "Code bestätigen",
+      "wrongEmail": "Falsche E-Mail?",
+      "goBack": "Zurück",
+      "missingEmail": "E-Mail-Adresse für Code-Verifizierung fehlt",
+      "invalid": "Ungültiger Code"
+    },
+    "passkey": {
+      "title": "Passkey hinzufügen",
+      "description": "Passkeys ermöglichen die Anmeldung mit Face ID, Touch ID oder deiner Geräte-PIN – kein Passwort nötig. Schneller und sicherer als ein Passwort.",
+      "addButton": "Passkey hinzufügen",
+      "maybeLater": "Vielleicht später",
+      "added": "Passkey hinzugefügt – du kannst dich jetzt ohne Passwort anmelden.",
+      "failed": "Passkey konnte nicht hinzugefügt werden"
+    },
+    "magicLink": {
+      "sendTo": "Magic Link an {{email}} senden.",
+      "enterEmail": "Gib oben eine gültige E-Mail ein, um Magic Link zu nutzen.",
+      "send": "Magic Link senden",
+      "sent": "Magic Link an {{email}} gesendet. Prüfe dein Postfach und klicke den Link.",
+      "clear": "Zurücksetzen",
+      "errorEnterEmail": "Gib oben eine gültige E-Mail ein",
+      "errorSend": "Link konnte nicht gesendet werden"
+    }
+  },
+  "feed": {
+    "loadError": "Feed konnte nicht geladen werden.",
+    "loadRunsError": "Runs konnten nicht geladen werden.",
+    "loadingMore": "Weitere Runs werden geladen…",
+    "newRuns_one": "↑ {{count}} neuer Run – tippen zum Aktualisieren",
+    "newRuns_other": "↑ {{count}} neue Runs – tippen zum Aktualisieren"
+  },
+  "leaderboard": {
+    "loadError": "Rangliste konnte nicht geladen werden."
+  },
+  "profile": {
+    "recentRuns": "Letzte Runs",
+    "loadError": "Profil konnte nicht geladen werden."
+  },
+  "settings": {
+    "title": "Kontoeinstellungen",
+    "subtitle": "Verwalte dein Profil, Sicherheit und Integrationen.",
+    "sections": {
+      "displayName": {
+        "title": "Anzeigename",
+        "description": "Wie dein Name für andere Nutzer angezeigt wird."
+      },
+      "email": {
+        "title": "E-Mail-Adresse",
+        "description": "Ändere die E-Mail für die Anmeldung und Benachrichtigungen."
+      },
+      "password": {
+        "title": "Passwort",
+        "description": "Ändere dein Passwort. Bestehende Sitzungen bleiben aktiv."
+      },
+      "connectedAccounts": {
+        "title": "Verknüpfte Konten",
+        "description": "Verknüpfe oder trenne Social-Login-Anbieter."
+      },
+      "passkeys": {
+        "title": "Passkeys",
+        "description": "Melde dich ohne Passwort mit einem Passkey auf deinem Gerät an."
+      },
+      "apiKeys": {
+        "title": "API-Schlüssel",
+        "description": "Erstelle Schlüssel für programmatischen Zugriff auf dein Konto."
+      },
+      "activeSessions": {
+        "title": "Aktive Sitzungen",
+        "description": "Zeige und widerrufe angemeldete Sitzungen."
+      },
+      "deleteAccount": {
+        "title": "Konto löschen",
+        "description": "Diese Aktion ist dauerhaft und kann nicht rückgängig gemacht werden!"
+      }
+    }
+  },
+  "goodbye": {
+    "title": "Konto gelöscht",
+    "homepage": "Startseite"
+  },
+  "mobile": {
+    "success": "Erfolgreich angemeldet!",
+    "returnToApp": "Zurück zur App",
+    "restartHint": "Falls du diese Seite siehst, musst du möglicherweise die App neu starten und erneut auf \"Anmelden\" tippen."
+  },
+  "newMobile": {
+    "title": "Konto erstellt",
+    "returnToApp": "Zurück zur App",
+    "restartHint": "Falls du das siehst, musst du möglicherweise die App neu starten und dich erneut anmelden!"
+  },
+  "betaBanner": {
+    "appName": "Trichter für Android",
+    "inBeta": "ist im geschlossenen Beta-Test",
+    "requestAccess": "Zugang anfragen"
+  }
+}

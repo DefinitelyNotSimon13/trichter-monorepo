@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useTranslation } from "react-i18next";
 
 export const Route = createFileRoute("/{-$locale}/_public/mobile")({
   head: () => ({
@@ -11,21 +12,19 @@ export const Route = createFileRoute("/{-$locale}/_public/mobile")({
 });
 
 function RouteComponent() {
+  const { t } = useTranslation("app");
   return (
     <main className="flex-1 w-full h-full items-center flex justify-center flex-col">
       <h1 className="text-center text-4xl font-black text-primary">
-        Successfully logged in!
+        {t("mobile.success")}
       </h1>
       <a
         href="trichter://oauth/callback"
         className="py-5 text-xl bold underline"
       >
-        Return to the app
+        {t("mobile.returnToApp")}
       </a>
-      <p className="text-center max-w-100 italic">
-        If you see this page, you may need to restart the App and click on "Sign
-        In" again.
-      </p>
+      <p className="text-center max-w-100 italic">{t("mobile.restartHint")}</p>
     </main>
   );
 }

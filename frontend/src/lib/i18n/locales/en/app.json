@@ -1,1 +1,184 @@
-{}
+{
+  "auth": {
+    "login": {
+      "title": "Welcome back",
+      "description": "Sign in to your account",
+      "emailOrUsername": "Email or username",
+      "password": "Password",
+      "forgotPassword": "Forgot your password?",
+      "submit": "Login",
+      "noAccount": "Don't have an account?",
+      "signUp": "Sign up",
+      "continueWithGoogle": "Continue with Google",
+      "loginWithGoogle": "Login with Google",
+      "emailRequired": "Email or username is required",
+      "passwordRequired": "Password is required",
+      "failed": "Login failed",
+      "otherOptions": "Other Options",
+      "passkey": "Passkey",
+      "emailOtp": "Email OTP",
+      "magicLink": "Magic Link",
+      "magicLinkSent": "Magic link sent to {{email}}. Check your inbox and click the link to sign in.",
+      "sendOtpFailed": "Failed to send code",
+      "sendMagicLinkFailed": "Failed to send magic link",
+      "passkeyFailed": "Passkey sign-in failed",
+      "enterValidEmail": "Enter a valid email above"
+    },
+    "signup": {
+      "title": "Create your account",
+      "description": "Sign up with Google or create an account with email and username",
+      "signUpWithGoogle": "Sign up with Google",
+      "fullName": "Full name",
+      "username": "Username",
+      "email": "Email",
+      "password": "Password",
+      "confirmPassword": "Confirm password",
+      "passwordHint": "Must be at least 8 characters long.",
+      "submit": "Create account",
+      "alreadyHaveAccount": "Already have an account?",
+      "signIn": "Sign in",
+      "nameRequired": "Full name is required",
+      "usernameRequired": "Username is required",
+      "usernameTooShort": "Username must be at least 3 characters",
+      "usernameInvalid": "Username may only contain letters, numbers, and underscores",
+      "failed": "Sign up failed"
+    },
+    "forgotPassword": {
+      "title": "Forgot your password?",
+      "description": "Enter your email address and we will send you a reset link.",
+      "email": "Email",
+      "submit": "Send reset link",
+      "success": "If an account with that email exists, a password reset link has been sent.",
+      "failed": "Could not send reset email",
+      "rememberedIt": "Remembered it?",
+      "backToLogin": "Back to login"
+    },
+    "resetPassword": {
+      "title": "Set a new password",
+      "description": "Choose a new password for your account.",
+      "newPassword": "New password",
+      "confirmPassword": "Confirm new password",
+      "passwordHint": "Must be at least 8 characters long.",
+      "submit": "Reset password",
+      "success": "Your password has been reset successfully.",
+      "failed": "Could not reset password",
+      "invalidToken": "This reset link is invalid or has expired.",
+      "missingToken": "Missing reset token.",
+      "confirmRequired": "Please confirm your password",
+      "passwordsMismatch": "Passwords do not match",
+      "backTo": "Back to",
+      "login": "login",
+      "goToLogin": "Go to login"
+    },
+    "completeProfile": {
+      "title": "Complete your profile",
+      "description": "Choose a username to finish setting up your account",
+      "username": "Username",
+      "displayName": "Display name",
+      "submit": "Save and continue",
+      "usernameRequired": "Username is required",
+      "usernameTooShort": "Username must be at least 3 characters",
+      "usernameInvalid": "Username may only contain letters, numbers, and underscores",
+      "failed": "Failed to save profile"
+    },
+    "verifyOtp": {
+      "title": "Verify Code",
+      "codeDescription_withEmail": "Enter the code sent to {{email}}",
+      "codeDescription_generic": "Enter the code from your email",
+      "codeRequired": "Code is required",
+      "submit": "Verify code",
+      "wrongEmail": "Wrong email?",
+      "goBack": "Go back",
+      "missingEmail": "Missing email address for OTP verification",
+      "invalid": "Invalid code"
+    },
+    "passkey": {
+      "title": "Add a passkey",
+      "description": "Passkeys let you sign in with Face ID, Touch ID, or your device PIN — no password needed. Faster and more secure than a password.",
+      "addButton": "Add a passkey",
+      "maybeLater": "Maybe later",
+      "added": "Passkey added — you can now sign in without a password.",
+      "failed": "Failed to add passkey"
+    },
+    "magicLink": {
+      "sendTo": "Send a magic link to {{email}}.",
+      "enterEmail": "Enter a valid email in the login field above to use magic link sign-in.",
+      "send": "Send magic link",
+      "sent": "Magic link sent to {{email}}. Check your inbox and click the link to sign in.",
+      "clear": "Clear",
+      "errorEnterEmail": "Enter a valid email in the login field above",
+      "errorSend": "Failed to send link"
+    }
+  },
+  "feed": {
+    "loadError": "Failed to load feed.",
+    "loadRunsError": "Failed to load runs.",
+    "loadingMore": "Loading more runs…",
+    "newRuns_one": "↑ {{count}} new run – tap to refresh",
+    "newRuns_other": "↑ {{count}} new runs – tap to refresh"
+  },
+  "leaderboard": {
+    "loadError": "Failed to load leaderboard."
+  },
+  "profile": {
+    "recentRuns": "Recent runs",
+    "loadError": "Failed to load profile."
+  },
+  "settings": {
+    "title": "Account Settings",
+    "subtitle": "Manage your profile, security, and integrations.",
+    "sections": {
+      "displayName": {
+        "title": "Display name",
+        "description": "How your name appears to other users."
+      },
+      "email": {
+        "title": "Email address",
+        "description": "Change the email used to sign in and receive notifications."
+      },
+      "password": {
+        "title": "Password",
+        "description": "Update your password. Existing sessions will remain active."
+      },
+      "connectedAccounts": {
+        "title": "Connected accounts",
+        "description": "Link or unlink social sign-in providers."
+      },
+      "passkeys": {
+        "title": "Passkeys",
+        "description": "Sign in without a password using a passkey stored on your device."
+      },
+      "apiKeys": {
+        "title": "API keys",
+        "description": "Create keys to authenticate programmatic access to your account."
+      },
+      "activeSessions": {
+        "title": "Active sessions",
+        "description": "View and revoke sessions signed in to your account."
+      },
+      "deleteAccount": {
+        "title": "Delete account",
+        "description": "This action is permanent and cannot be reversed!"
+      }
+    }
+  },
+  "goodbye": {
+    "title": "Account deleted",
+    "homepage": "Homepage"
+  },
+  "mobile": {
+    "success": "Successfully logged in!",
+    "returnToApp": "Return to the app",
+    "restartHint": "If you see this page, you may need to restart the App and click on \"Sign In\" again."
+  },
+  "newMobile": {
+    "title": "Account Created",
+    "returnToApp": "Return to the app",
+    "restartHint": "If you see this you may need to restart the app and login again!"
+  },
+  "betaBanner": {
+    "appName": "Trichter for Android",
+    "inBeta": "is in closed beta",
+    "requestAccess": "request access"
+  }
+}

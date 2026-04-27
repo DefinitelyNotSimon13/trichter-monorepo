@@ -3,6 +3,7 @@ import {
   createFileRoute,
   type ErrorComponentProps,
 } from "@tanstack/react-router";
+import { useTranslation } from "react-i18next";
 
 import { getRunsOptions } from "#/client/@tanstack/react-query.gen";
 import type { RunDto } from "#/client/types.gen";
@@ -31,9 +32,10 @@ export const Route = createFileRoute("/{-$locale}/app/leaderboard")({
 });
 
 function LeaderboardError({ error, reset }: ErrorComponentProps) {
+  const { t } = useTranslation("app");
   return (
     <StatePanel tone="destructive" onRetry={reset}>
-      Failed to load leaderboard.{" "}
+      {t("leaderboard.loadError")}{" "}
       {error instanceof Error ? error.message : null}
     </StatePanel>
   );

@@ -1,3 +1,5 @@
+import { Link } from "@tanstack/react-router";
+import { useTranslation } from "react-i18next";
 import { Field, FieldDescription, FieldGroup } from "#/components/ui/field";
 import { useAppForm } from "#/hooks/form";
 import { useFormMessages } from "#/hooks/use-form-error";
@@ -6,7 +8,6 @@ import { authClient } from "#/lib/auth-client";
 import { emailValidator } from "#/lib/validators";
 import { AuthCard } from "./auth-card";
 import { TurnstileWidget } from "./turnstile-widget";
-import { Link } from "@tanstack/react-router";
 
 type ForgotPasswordFormValues = {
   email: string;
@@ -26,14 +27,12 @@ export function ForgotPasswordForm({
     clear,
   } = useFormMessages();
   const { ref: turnstileRef, getFetchOptions } = useTurnstile();
+  const { t } = useTranslation("app");
 
   const form = useAppForm({
-    defaultValues: {
-      email: "",
-    } satisfies ForgotPasswordFormValues,
+    defaultValues: { email: "" } satisfies ForgotPasswordFormValues,
     onSubmit: async ({ value }) => {
       clear();
-
       const fetchOptions = getFetchOptions();
 
       const result = await authClient.requestPasswordReset({
@@ -43,26 +42,24 @@ export function ForgotPasswordForm({
       });
 
       if (result.error) {
-        setError(result.error.message ?? "Could not send reset email");
+        setError(result.error.message ?? t("auth.forgotPassword.failed"));
         return;
       }
 
-      setSuccess(
-        "If an account with that email exists, a password reset link has been sent.",
-      );
+      setSuccess(t("auth.forgotPassword.success"));
     },
   });
 
   return (
     <AuthCard
       className={className}
-      title="Forgot your password?"
-      description="Enter your email address and we will send you a reset link."
+      title={t("auth.forgotPassword.title")}
+      description={t("auth.forgotPassword.description")}
       footer={
         <>
-          Remembered it?{" "}
+          {t("auth.forgotPassword.rememberedIt")}{" "}
           <Link to="/{-$locale}/login" className="underline underline-offset-4">
-            Back to login
+            {t("auth.forgotPassword.backToLogin")}
           </Link>
         </>
       }
@@ -79,7 +76,7 @@ export function ForgotPasswordForm({
           <form.AppField name="email" validators={emailValidator}>
             {(field) => (
               <field.FormTextInput
-                label="Email"
+                label={t("auth.forgotPassword.email")}
                 type="email"
                 placeholder="m@example.com"
                 autoComplete="email"
@@ -110,7 +107,7 @@ export function ForgotPasswordForm({
 
           <Field>
             <form.AppForm>
-              <form.FormSubmitButton label="Send reset link" />
+              <form.FormSubmitButton label={t("auth.forgotPassword.submit")} />
             </form.AppForm>
           </Field>
         </FieldGroup>

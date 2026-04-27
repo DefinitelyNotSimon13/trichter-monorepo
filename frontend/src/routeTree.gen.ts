@@ -38,8 +38,9 @@ import { Route as Char123LocaleChar125AppAdminIndexRouteImport } from './routes/
 import { Route as Char123LocaleChar125AppProfileChar123UserIdChar125RouteImport } from './routes/{-$locale}/app/profile.{-$userId}'
 import { Route as Char123LocaleChar125AppAdminUsersRouteImport } from './routes/{-$locale}/app/admin/users'
 import { Route as Char123LocaleChar125AppAdminRunsRouteImport } from './routes/{-$locale}/app/admin/runs'
+import { Route as Char123LocaleChar125AppAdminBetaRouteImport } from './routes/{-$locale}/app/admin/beta'
 import { Route as Char123LocaleChar125PublicPolicyPrivacyRouteImport } from './routes/{-$locale}/_public/policy/privacy'
-import { Route as Char123LocaleChar125PublicPolicyImprintRouteImport } from './routes/{-$locale}/_public/policy/imprint'
+import { Route as Char123LocaleChar125PublicPolicyImpressumRouteImport } from './routes/{-$locale}/_public/policy/impressum'
 import { Route as DotwellKnownOauthAuthorizationServerApiAuthRouteImport } from './routes/[.]well-known/oauth-authorization-server.api.auth'
 
 const Char123LocaleChar125RouteRoute =
@@ -214,16 +215,22 @@ const Char123LocaleChar125AppAdminRunsRoute =
     path: '/runs',
     getParentRoute: () => Char123LocaleChar125AppAdminRoute,
   } as any)
+const Char123LocaleChar125AppAdminBetaRoute =
+  Char123LocaleChar125AppAdminBetaRouteImport.update({
+    id: '/beta',
+    path: '/beta',
+    getParentRoute: () => Char123LocaleChar125AppAdminRoute,
+  } as any)
 const Char123LocaleChar125PublicPolicyPrivacyRoute =
   Char123LocaleChar125PublicPolicyPrivacyRouteImport.update({
     id: '/policy/privacy',
     path: '/policy/privacy',
     getParentRoute: () => Char123LocaleChar125PublicRouteRoute,
   } as any)
-const Char123LocaleChar125PublicPolicyImprintRoute =
-  Char123LocaleChar125PublicPolicyImprintRouteImport.update({
-    id: '/policy/imprint',
-    path: '/policy/imprint',
+const Char123LocaleChar125PublicPolicyImpressumRoute =
+  Char123LocaleChar125PublicPolicyImpressumRouteImport.update({
+    id: '/policy/impressum',
+    path: '/policy/impressum',
     getParentRoute: () => Char123LocaleChar125PublicRouteRoute,
   } as any)
 const DotwellKnownOauthAuthorizationServerApiAuthRoute =
@@ -259,8 +266,9 @@ export interface FileRoutesByFullPath {
   '/{-$locale}/': typeof Char123LocaleChar125PublicIndexRoute
   '/{-$locale}/app/': typeof Char123LocaleChar125AppIndexRoute
   '/.well-known/oauth-authorization-server/api/auth': typeof DotwellKnownOauthAuthorizationServerApiAuthRoute
-  '/{-$locale}/policy/imprint': typeof Char123LocaleChar125PublicPolicyImprintRoute
+  '/{-$locale}/policy/impressum': typeof Char123LocaleChar125PublicPolicyImpressumRoute
   '/{-$locale}/policy/privacy': typeof Char123LocaleChar125PublicPolicyPrivacyRoute
+  '/{-$locale}/app/admin/beta': typeof Char123LocaleChar125AppAdminBetaRoute
   '/{-$locale}/app/admin/runs': typeof Char123LocaleChar125AppAdminRunsRoute
   '/{-$locale}/app/admin/users': typeof Char123LocaleChar125AppAdminUsersRoute
   '/{-$locale}/app/profile/{-$userId}': typeof Char123LocaleChar125AppProfileChar123UserIdChar125Route
@@ -289,8 +297,9 @@ export interface FileRoutesByTo {
   '/{-$locale}/oauth/login': typeof Char123LocaleChar125OauthLoginRoute
   '/{-$locale}/app': typeof Char123LocaleChar125AppIndexRoute
   '/.well-known/oauth-authorization-server/api/auth': typeof DotwellKnownOauthAuthorizationServerApiAuthRoute
-  '/{-$locale}/policy/imprint': typeof Char123LocaleChar125PublicPolicyImprintRoute
+  '/{-$locale}/policy/impressum': typeof Char123LocaleChar125PublicPolicyImpressumRoute
   '/{-$locale}/policy/privacy': typeof Char123LocaleChar125PublicPolicyPrivacyRoute
+  '/{-$locale}/app/admin/beta': typeof Char123LocaleChar125AppAdminBetaRoute
   '/{-$locale}/app/admin/runs': typeof Char123LocaleChar125AppAdminRunsRoute
   '/{-$locale}/app/admin/users': typeof Char123LocaleChar125AppAdminUsersRoute
   '/{-$locale}/app/profile/{-$userId}': typeof Char123LocaleChar125AppProfileChar123UserIdChar125Route
@@ -324,8 +333,9 @@ export interface FileRoutesById {
   '/{-$locale}/_public/': typeof Char123LocaleChar125PublicIndexRoute
   '/{-$locale}/app/': typeof Char123LocaleChar125AppIndexRoute
   '/.well-known/oauth-authorization-server/api/auth': typeof DotwellKnownOauthAuthorizationServerApiAuthRoute
-  '/{-$locale}/_public/policy/imprint': typeof Char123LocaleChar125PublicPolicyImprintRoute
+  '/{-$locale}/_public/policy/impressum': typeof Char123LocaleChar125PublicPolicyImpressumRoute
   '/{-$locale}/_public/policy/privacy': typeof Char123LocaleChar125PublicPolicyPrivacyRoute
+  '/{-$locale}/app/admin/beta': typeof Char123LocaleChar125AppAdminBetaRoute
   '/{-$locale}/app/admin/runs': typeof Char123LocaleChar125AppAdminRunsRoute
   '/{-$locale}/app/admin/users': typeof Char123LocaleChar125AppAdminUsersRoute
   '/{-$locale}/app/profile/{-$userId}': typeof Char123LocaleChar125AppProfileChar123UserIdChar125Route
@@ -359,8 +369,9 @@ export interface FileRouteTypes {
     | '/{-$locale}/'
     | '/{-$locale}/app/'
     | '/.well-known/oauth-authorization-server/api/auth'
-    | '/{-$locale}/policy/imprint'
+    | '/{-$locale}/policy/impressum'
     | '/{-$locale}/policy/privacy'
+    | '/{-$locale}/app/admin/beta'
     | '/{-$locale}/app/admin/runs'
     | '/{-$locale}/app/admin/users'
     | '/{-$locale}/app/profile/{-$userId}'
@@ -389,8 +400,9 @@ export interface FileRouteTypes {
     | '/{-$locale}/oauth/login'
     | '/{-$locale}/app'
     | '/.well-known/oauth-authorization-server/api/auth'
-    | '/{-$locale}/policy/imprint'
+    | '/{-$locale}/policy/impressum'
     | '/{-$locale}/policy/privacy'
+    | '/{-$locale}/app/admin/beta'
     | '/{-$locale}/app/admin/runs'
     | '/{-$locale}/app/admin/users'
     | '/{-$locale}/app/profile/{-$userId}'
@@ -423,8 +435,9 @@ export interface FileRouteTypes {
     | '/{-$locale}/_public/'
     | '/{-$locale}/app/'
     | '/.well-known/oauth-authorization-server/api/auth'
-    | '/{-$locale}/_public/policy/imprint'
+    | '/{-$locale}/_public/policy/impressum'
     | '/{-$locale}/_public/policy/privacy'
+    | '/{-$locale}/app/admin/beta'
     | '/{-$locale}/app/admin/runs'
     | '/{-$locale}/app/admin/users'
     | '/{-$locale}/app/profile/{-$userId}'
@@ -645,6 +658,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof Char123LocaleChar125AppAdminRunsRouteImport
       parentRoute: typeof Char123LocaleChar125AppAdminRoute
     }
+    '/{-$locale}/app/admin/beta': {
+      id: '/{-$locale}/app/admin/beta'
+      path: '/beta'
+      fullPath: '/{-$locale}/app/admin/beta'
+      preLoaderRoute: typeof Char123LocaleChar125AppAdminBetaRouteImport
+      parentRoute: typeof Char123LocaleChar125AppAdminRoute
+    }
     '/{-$locale}/_public/policy/privacy': {
       id: '/{-$locale}/_public/policy/privacy'
       path: '/policy/privacy'
@@ -652,11 +672,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof Char123LocaleChar125PublicPolicyPrivacyRouteImport
       parentRoute: typeof Char123LocaleChar125PublicRouteRoute
     }
-    '/{-$locale}/_public/policy/imprint': {
-      id: '/{-$locale}/_public/policy/imprint'
-      path: '/policy/imprint'
-      fullPath: '/{-$locale}/policy/imprint'
-      preLoaderRoute: typeof Char123LocaleChar125PublicPolicyImprintRouteImport
+    '/{-$locale}/_public/policy/impressum': {
+      id: '/{-$locale}/_public/policy/impressum'
+      path: '/policy/impressum'
+      fullPath: '/{-$locale}/policy/impressum'
+      preLoaderRoute: typeof Char123LocaleChar125PublicPolicyImpressumRouteImport
       parentRoute: typeof Char123LocaleChar125PublicRouteRoute
     }
     '/.well-known/oauth-authorization-server/api/auth': {
@@ -675,7 +695,7 @@ interface Char123LocaleChar125PublicRouteRouteChildren {
   Char123LocaleChar125PublicMobileRoute: typeof Char123LocaleChar125PublicMobileRoute
   Char123LocaleChar125PublicNewMobileRoute: typeof Char123LocaleChar125PublicNewMobileRoute
   Char123LocaleChar125PublicIndexRoute: typeof Char123LocaleChar125PublicIndexRoute
-  Char123LocaleChar125PublicPolicyImprintRoute: typeof Char123LocaleChar125PublicPolicyImprintRoute
+  Char123LocaleChar125PublicPolicyImpressumRoute: typeof Char123LocaleChar125PublicPolicyImpressumRoute
   Char123LocaleChar125PublicPolicyPrivacyRoute: typeof Char123LocaleChar125PublicPolicyPrivacyRoute
 }
 
@@ -689,8 +709,8 @@ const Char123LocaleChar125PublicRouteRouteChildren: Char123LocaleChar125PublicRo
     Char123LocaleChar125PublicNewMobileRoute:
       Char123LocaleChar125PublicNewMobileRoute,
     Char123LocaleChar125PublicIndexRoute: Char123LocaleChar125PublicIndexRoute,
-    Char123LocaleChar125PublicPolicyImprintRoute:
-      Char123LocaleChar125PublicPolicyImprintRoute,
+    Char123LocaleChar125PublicPolicyImpressumRoute:
+      Char123LocaleChar125PublicPolicyImpressumRoute,
     Char123LocaleChar125PublicPolicyPrivacyRoute:
       Char123LocaleChar125PublicPolicyPrivacyRoute,
   }
@@ -701,6 +721,7 @@ const Char123LocaleChar125PublicRouteRouteWithChildren =
   )
 
 interface Char123LocaleChar125AppAdminRouteChildren {
+  Char123LocaleChar125AppAdminBetaRoute: typeof Char123LocaleChar125AppAdminBetaRoute
   Char123LocaleChar125AppAdminRunsRoute: typeof Char123LocaleChar125AppAdminRunsRoute
   Char123LocaleChar125AppAdminUsersRoute: typeof Char123LocaleChar125AppAdminUsersRoute
   Char123LocaleChar125AppAdminIndexRoute: typeof Char123LocaleChar125AppAdminIndexRoute
@@ -708,6 +729,8 @@ interface Char123LocaleChar125AppAdminRouteChildren {
 
 const Char123LocaleChar125AppAdminRouteChildren: Char123LocaleChar125AppAdminRouteChildren =
   {
+    Char123LocaleChar125AppAdminBetaRoute:
+      Char123LocaleChar125AppAdminBetaRoute,
     Char123LocaleChar125AppAdminRunsRoute:
       Char123LocaleChar125AppAdminRunsRoute,
     Char123LocaleChar125AppAdminUsersRoute:

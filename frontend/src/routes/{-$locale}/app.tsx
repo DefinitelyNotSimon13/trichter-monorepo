@@ -6,10 +6,13 @@ export const Route = createFileRoute("/{-$locale}/app")({
   head: () => ({
     meta: [{ name: "robots", content: "noindex,nofollow" }],
   }),
-  beforeLoad: async () => {
+  beforeLoad: async ({ params }) => {
     const session = await getSession();
     if (session?.user && !session.user.username) {
-      throw redirect({ to: "/{-$locale}/complete-profile" });
+      throw redirect({
+        to: "/{-$locale}/complete-profile",
+        params: { locale: params.locale },
+      });
     }
     return { session };
   },

@@ -1,8 +1,12 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/{-$locale}/oauth/login")({
-  beforeLoad: () => {
-    throw redirect({ to: "/{-$locale}/login", search: { mobile: true } });
+  beforeLoad: ({ params }) => {
+    throw redirect({
+      to: "/{-$locale}/login",
+      params: { locale: params.locale },
+      search: { mobile: true },
+    });
   },
   component: () => null,
 });

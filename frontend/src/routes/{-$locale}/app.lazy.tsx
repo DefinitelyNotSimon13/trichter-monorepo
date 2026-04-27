@@ -5,8 +5,17 @@ import {
   useNavigate,
   useRouterState,
 } from "@tanstack/react-router";
-import { CircleUser, LogOut, Rss, Settings2, Trophy } from "lucide-react";
+import {
+  CircleUser,
+  LogOut,
+  Rss,
+  Settings2,
+  Smartphone,
+  Trophy,
+  X,
+} from "lucide-react";
 import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { AppSidebar } from "#/components/app-sidebar";
 import { PasskeyPromptDialog } from "#/components/auth/passkey-prompt-dialog";
 import { PageWrapper } from "#/components/page-wrapper";
@@ -131,9 +140,9 @@ function MobileNavLink({
   label,
 }: {
   to:
-    | "/{-$locale}/app/feed"
-    | "/{-$locale}/app/leaderboard"
-    | "/{-$locale}/app/profile";
+  | "/{-$locale}/app/feed"
+  | "/{-$locale}/app/leaderboard"
+  | "/{-$locale}/app/profile";
   activePath: string;
   icon: React.ReactNode;
   label: string;
@@ -183,6 +192,48 @@ function MobileBottomNav() {
   );
 }
 
+const BETA_BANNER_KEY = "beta-banner-dismissed";
+
+function BetaBanner() {
+  const [visible, setVisible] = useState(() => {
+    if (typeof window === "undefined") return false;
+    return !localStorage.getItem(BETA_BANNER_KEY);
+  });
+  const { t } = useTranslation("app");
+
+  const dismiss = () => {
+    localStorage.setItem(BETA_BANNER_KEY, "1");
+    setVisible(false);
+  };
+
+  if (!visible) return null;
+
+  return (
+    <div className="flex items-center gap-3 border-b bg-primary/10 px-4 py-2.5 text-sm">
+      <Smartphone className="size-4 shrink-0 text-primary" />
+      <span className="flex-1 text-foreground">
+        <strong className="font-semibold">{t("betaBanner.appName")}</strong>{" "}
+        {t("betaBanner.inBeta")}{" "}
+        <Link
+          to="/{-$locale}"
+          hash="android-beta"
+          className="font-medium underline underline-offset-2 hover:text-primary"
+        >
+          {t("betaBanner.requestAccess")}
+        </Link>
+      </span>
+      <button
+        type="button"
+        onClick={dismiss}
+        className="text-muted-foreground hover:text-foreground transition-colors"
+        aria-label="Dismiss"
+      >
+        <X className="size-4" />
+      </button>
+    </div>
+  );
+}
+
 function AppLayout() {
   const { newUser } = Route.useSearch();
   const [showPasskeyDialog, setShowPasskeyDialog] = useState(false);
@@ -204,6 +255,7 @@ function AppLayout() {
         <AppSidebar />
         <SidebarInset>
           <AppHeader />
+          <BetaBanner />
           <main className="mx-auto w-full max-w-4xl px-4 py-8 pb-24 sm:px-6 md:pb-8">
             <PageWrapper>
               <Outlet />

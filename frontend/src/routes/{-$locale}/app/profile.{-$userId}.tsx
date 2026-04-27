@@ -1,9 +1,10 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 import {
   createFileRoute,
-  redirect,
   type ErrorComponentProps,
+  redirect,
 } from "@tanstack/react-router";
+import { useTranslation } from "react-i18next";
 import { getRunsByUserOptions } from "#/client/@tanstack/react-query.gen";
 import { ProfileRunsPreview } from "#/components/profile/profile-runs-preview";
 import { ProfileStats } from "#/components/profile/profile-stats";
@@ -60,9 +61,10 @@ export const Route = createFileRoute("/{-$locale}/app/profile/{-$userId}")({
 });
 
 function ProfileError({ error, reset }: ErrorComponentProps) {
+  const { t } = useTranslation("app");
   return (
     <StatePanel tone="destructive" onRetry={reset}>
-      Failed to load profile. {error instanceof Error ? error.message : null}
+      {t("profile.loadError")} {error instanceof Error ? error.message : null}
     </StatePanel>
   );
 }
@@ -89,6 +91,7 @@ function ProfileSkeleton() {
 
 function PublicProfilePage() {
   const { userId } = Route.useRouteContext();
+  const { t } = useTranslation("app");
 
   const { data } = useSuspenseQuery(
     getRunsByUserOptions({
@@ -125,7 +128,7 @@ function PublicProfilePage() {
       <ProfileStats runs={runs} />
       <div>
         <h2 className="mb-4 text-lg font-semibold tracking-tight">
-          Recent runs
+          {t("profile.recentRuns")}
         </h2>
         <ProfileRunsPreview runs={runs} count={5} />
       </div>

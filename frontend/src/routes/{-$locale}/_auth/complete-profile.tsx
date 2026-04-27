@@ -14,11 +14,14 @@ export const Route = createFileRoute("/{-$locale}/_auth/complete-profile")({
   validateSearch: z.object({
     callbackUrl: z.optional(z.string()),
   }),
-  beforeLoad: async () => {
+  beforeLoad: async ({ params }) => {
     const session = await getSession();
 
     if (!session?.user) {
-      throw redirect({ to: "/{-$locale}/login" });
+      throw redirect({
+        to: "/{-$locale}/login",
+        params: { locale: params.locale },
+      });
     }
 
     return { session };

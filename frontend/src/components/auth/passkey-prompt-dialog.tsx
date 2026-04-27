@@ -1,5 +1,6 @@
 import { KeyRound } from "lucide-react";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { Button } from "#/components/ui/button";
 import {
@@ -19,6 +20,7 @@ type Props = {
 
 export function PasskeyPromptDialog({ open, onOpenChange }: Props) {
   const [isPending, setIsPending] = useState(false);
+  const { t } = useTranslation("app");
 
   const handleDismiss = () => {
     localStorage.setItem("passkey-prompt-dismissed", "1");
@@ -30,12 +32,12 @@ export function PasskeyPromptDialog({ open, onOpenChange }: Props) {
     const result = await authClient.passkey.addPasskey();
     setIsPending(false);
     if (result?.error) {
-      toast.error("Failed to add passkey", {
+      toast.error(t("auth.passkey.failed"), {
         description: result.error.message,
       });
       return;
     }
-    toast("Passkey added — you can now sign in without a password.");
+    toast(t("auth.passkey.added"));
     localStorage.setItem("passkey-prompt-dismissed", "1");
     onOpenChange(false);
   };
@@ -48,12 +50,9 @@ export function PasskeyPromptDialog({ open, onOpenChange }: Props) {
             <div className="flex size-10 items-center justify-center rounded-full bg-primary/15">
               <KeyRound className="size-5 text-primary" />
             </div>
-            <DialogTitle>Add a passkey</DialogTitle>
+            <DialogTitle>{t("auth.passkey.title")}</DialogTitle>
           </div>
-          <DialogDescription>
-            Passkeys let you sign in with Face ID, Touch ID, or your device PIN
-            — no password needed. Faster and more secure than a password.
-          </DialogDescription>
+          <DialogDescription>{t("auth.passkey.description")}</DialogDescription>
         </DialogHeader>
 
         <DialogFooter className="flex-col gap-2 sm:flex-col">
@@ -64,7 +63,7 @@ export function PasskeyPromptDialog({ open, onOpenChange }: Props) {
             className="w-full"
           >
             <KeyRound className="size-4" />
-            Add a passkey
+            {t("auth.passkey.addButton")}
           </Button>
           <Button
             type="button"
@@ -73,7 +72,7 @@ export function PasskeyPromptDialog({ open, onOpenChange }: Props) {
             disabled={isPending}
             className="w-full text-muted-foreground"
           >
-            Maybe later
+            {t("auth.passkey.maybeLater")}
           </Button>
         </DialogFooter>
       </DialogContent>
