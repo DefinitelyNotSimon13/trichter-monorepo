@@ -44,11 +44,13 @@ export function CompleteProfileForm({
         return;
       }
 
-      if (callbackUrl) {
-        await router.navigate({ to: decodeURI(callbackUrl), search: {} });
-      } else {
-        await router.navigate({ to: "/{-$locale}/app/feed", search: {} });
-      }
+      const isInternalPath =
+        callbackUrl?.startsWith("/") &&
+        !callbackUrl.startsWith("//");
+      const destination = isInternalPath
+        ? decodeURI(callbackUrl)
+        : "/{-$locale}/app/feed";
+      await router.navigate({ to: destination, search: {} });
     },
   });
 

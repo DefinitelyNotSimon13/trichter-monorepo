@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { clientEnv } from "#/env/client";
 
 export const Route = createFileRoute("/{-$locale}/_public/policy/privacy")({
@@ -42,276 +42,221 @@ function RouteComponent() {
         </header>
 
         <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert prose-headings:scroll-mt-24 prose-headings:font-semibold prose-h2:mt-10 prose-h2:border-b prose-h2:pb-2 prose-h3:mt-8 prose-p:leading-7 prose-li:leading-7">
-          <p>
-            This Privacy Policy describes Our policies and procedures on the
-            collection, use and disclosure of Your information when You use the
-            Service and tells You about Your privacy rights and how the law
-            protects You.
-          </p>
-
-          <p>
-            We use Your Personal Data to provide and improve the Service. By
-            using the Service, You agree to the collection and use of
-            information in accordance with this Privacy Policy.
-          </p>
-
-          <h2>Interpretation and Definitions</h2>
-
-          <h3>Interpretation</h3>
-          <p>
-            The words whose initial letters are capitalized have meanings
-            defined under the following conditions. The following definitions
-            shall have the same meaning regardless of whether they appear in
-            singular or in plural.
-          </p>
-
-          <h3>Definitions</h3>
-          <p>For the purposes of this Privacy Policy:</p>
-
-          <dl className="not-prose mt-6 space-y-4">
-            {[
-              [
-                "Account",
-                "A unique account created for You to access our Service or parts of our Service.",
-              ],
-              [
-                "Company",
-                'Trichter, referred to as either "the Company", "We", "Us" or "Our".',
-              ],
-              ["Country", "Baden-Württemberg, Germany."],
-              [
-                "Device",
-                "Any device that can access the Service, such as a computer, cell phone or tablet.",
-              ],
-              [
-                "Personal Data",
-                "Any information that relates to an identified or identifiable individual.",
-              ],
-              ["Service", "The Website."],
-              [
-                "Website",
-                "Trichter, accessible from https://trichter.hauptspeicher.com.",
-              ],
-              ["You", "The individual accessing or using the Service."],
-            ].map(([term, description]) => (
-              <div key={term} className="rounded-lg border p-4">
-                <dt className="font-medium">{term}</dt>
-                <dd className="mt-1 text-sm leading-6 text-muted-foreground">
-                  {description}
-                </dd>
-              </div>
-            ))}
-          </dl>
-
-          <h2>Collecting and Using Your Personal Data</h2>
-
-          <h3>Types of Data Collected</h3>
-
-          <h4>Personal Data</h4>
-          <p>
-            While using Our Service, We may ask You to provide Us with certain
-            personally identifiable information that can be used to contact or
-            identify You.
-          </p>
-
-          <ul>
-            <li>Email address</li>
-            <li>Usage Data</li>
-          </ul>
-
-          <h4>Usage Data</h4>
-          <p>
-            Usage Data is collected automatically when using the Service. Usage
-            Data may include information such as Your Device&apos;s IP address,
-            browser type, browser version, pages visited, time and date of Your
-            visit, time spent on those pages, unique device identifiers and
-            other diagnostic data.
-          </p>
-
-          <h3>Tracking Technologies and Cookies</h3>
-          <p>
-            We use Cookies and similar tracking technologies to track activity
-            on Our Service and store certain information.
-          </p>
-
-          <ul>
-            <li>
-              <strong>Cookies or Browser Cookies.</strong> A cookie is a small
-              file placed on Your Device.
-            </li>
-            <li>
-              <strong>Web Beacons.</strong> Small electronic files that permit
-              the Company to count users or gather related website statistics.
-            </li>
-          </ul>
-
-          <h4>Necessary / Essential Cookies</h4>
-          <p>
-            These Cookies are essential to provide You with services available
-            through the Website and to enable You to use some of its features.
-          </p>
-
-          <h4>Cookies Policy / Notice Acceptance Cookies</h4>
-          <p>
-            These Cookies identify if users have accepted the use of cookies on
-            the Website.
-          </p>
-
-          <h4>Functionality Cookies</h4>
-          <p>
-            These Cookies allow Us to remember choices You make when You use the
-            Website, such as login details or language preference.
-          </p>
-
-          <h2>Use of Your Personal Data</h2>
-          <p>The Company may use Personal Data for the following purposes:</p>
-
-          <ul>
-            <li>To provide and maintain our Service.</li>
-            <li>To manage Your Account.</li>
-            <li>For the performance of a contract.</li>
-            <li>To contact You.</li>
-            <li>To manage Your requests.</li>
-            <li>For business transfers.</li>
-            <li>For analytics, improvements and other legitimate purposes.</li>
-          </ul>
-
-          <h2>Sharing Your Personal Data</h2>
-          <p>We may share Your Personal Data in the following situations:</p>
-
-          <ul>
-            <li>With Service Providers.</li>
-            <li>For business transfers.</li>
-            <li>With Affiliates.</li>
-            <li>With business partners.</li>
-            <li>With other users in public areas of the Service.</li>
-            <li>With Your consent.</li>
-          </ul>
-
-          <h2>Retention of Your Personal Data</h2>
-          <p>
-            The Company will retain Your Personal Data only for as long as is
-            necessary for the purposes set out in this Privacy Policy.
-          </p>
-
-          <div className="not-prose mt-6 overflow-hidden rounded-xl border">
-            <table className="w-full text-left text-sm">
-              <thead className="bg-muted/50">
-                <tr>
-                  <th className="px-4 py-3 font-medium">Data category</th>
-                  <th className="px-4 py-3 font-medium">Retention period</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y">
-                <tr>
-                  <td className="px-4 py-3">User accounts</td>
-                  <td className="px-4 py-3 text-muted-foreground">
-                    Account duration plus up to 24 months
-                  </td>
-                </tr>
-                <tr>
-                  <td className="px-4 py-3">Support correspondence</td>
-                  <td className="px-4 py-3 text-muted-foreground">
-                    Up to 24 months after ticket closure
-                  </td>
-                </tr>
-                <tr>
-                  <td className="px-4 py-3">Website analytics</td>
-                  <td className="px-4 py-3 text-muted-foreground">
-                    Up to 24 months from collection
-                  </td>
-                </tr>
-                <tr>
-                  <td className="px-4 py-3">Server logs</td>
-                  <td className="px-4 py-3 text-muted-foreground">
-                    Up to 24 months
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <h2>Transfer of Your Personal Data</h2>
-          <p>
-            Your information, including Personal Data, may be processed at the
-            Company&apos;s operating offices and in other places where the
-            parties involved in processing are located.
-          </p>
-
-          <h2>Delete Your Personal Data</h2>
-          <p>
-            You have the right to delete or request that We assist in deleting
-            the Personal Data that We have collected about You.
-          </p>
-
-          <h2>Disclosure of Your Personal Data</h2>
-
-          <h3>Business Transactions</h3>
-          <p>
-            If the Company is involved in a merger, acquisition or asset sale,
-            Your Personal Data may be transferred.
-          </p>
-
-          <h3>Law Enforcement</h3>
-          <p>
-            Under certain circumstances, the Company may be required to disclose
-            Your Personal Data if required to do so by law or in response to
-            valid requests by public authorities.
-          </p>
-
-          <h2>Security of Your Personal Data</h2>
-          <p>
-            The security of Your Personal Data is important to Us. However, no
-            method of transmission over the Internet or electronic storage is
-            100% secure.
-          </p>
-
-          <h2>Service Providers</h2>
-
-          <h3>Cloudflare Turnstile</h3>
-          <p>
-            Cloudflare Turnstile may process data in order to provide bot and
-            abuse protection.
-          </p>
-
-          <p>
-            Their Privacy Policy can be viewed at{" "}
-            <a href="https://www.cloudflare.com/turnstile-privacy-policy/">
-              https://www.cloudflare.com/turnstile-privacy-policy/
-            </a>
-          </p>
-
-          <h2>Children&apos;s Privacy</h2>
-          <p>
-            Our Service does not address anyone under the age of 16. We do not
-            knowingly collect personally identifiable information from anyone
-            under the age of 16.
-          </p>
-
-          <h2>Links to Other Websites</h2>
-          <p>
-            Our Service may contain links to other websites that are not
-            operated by Us. We strongly advise You to review the Privacy Policy
-            of every site You visit.
-          </p>
-
-          <h2>Changes to this Privacy Policy</h2>
-          <p>
-            We may update Our Privacy Policy from time to time. Changes are
-            effective when they are posted on this page.
-          </p>
-
-          <h2>Contact Us</h2>
-          <p>
-            If you have any questions about this Privacy Policy, You can contact
-            us by email:
-          </p>
-
-          <p>
-            <a href="mailto:simon21.blum@gmail.com">simon21.blum@gmail.com</a>
-          </p>
+          <PrivacyPolicy />
         </div>
       </article>
     </main>
+  );
+}
+
+function PrivacyPolicy() {
+  return (
+    <div className="prose prose-neutral max-w-none dark:prose-invert prose-headings:font-semibold prose-h2:mt-10 prose-h2:border-b prose-h2:pb-2 prose-h3:mt-8 prose-p:leading-7 prose-li:leading-7">
+      <p>
+        This Privacy Notice for <strong>Trichter</strong> ("we", "us", or "our")
+        describes how and why we might access, collect, store, use, and/or share
+        ("process") your personal information when you use our services.
+      </p>
+
+      <ul>
+        <li>
+          Visit our website at{" "}
+          <a href="https://trichter.hauptspeicher.com">
+            https://trichter.hauptspeicher.com
+          </a>
+        </li>
+        <li>Use our mobile application</li>
+        <li>Use Trichter to experience drinking in a competitive way</li>
+        <li>Engage with us via marketing or events</li>
+      </ul>
+
+      <p>
+        Questions?{" "}
+        <Link to="/{-$locale}/contact">Contact us via our contact form</Link>.
+      </p>
+
+      <h2>Summary of Key Points</h2>
+
+      <ul>
+        <li>
+          <strong>Personal data:</strong> We collect information you provide
+          (e.g. email, username).
+        </li>
+        <li>
+          <strong>Sensitive data:</strong> We do not process sensitive personal
+          data.
+        </li>
+        <li>
+          <strong>Third-party data:</strong> We do not collect data from third
+          parties.
+        </li>
+        <li>
+          <strong>Processing:</strong> To operate, improve, and secure the
+          service.
+        </li>
+        <li>
+          <strong>Sharing:</strong> Only in limited cases (e.g. business
+          transfers).
+        </li>
+        <li>
+          <strong>Security:</strong> We use technical and organisational
+          safeguards.
+        </li>
+        <li>
+          <strong>Rights:</strong> You may have rights under GDPR depending on
+          your location.
+        </li>
+      </ul>
+
+      <h2>1. What Information Do We Collect?</h2>
+
+      <h3>Personal Information</h3>
+      <p>We collect personal information you provide to us, including:</p>
+
+      <ul>
+        <li>Names</li>
+        <li>Email addresses</li>
+        <li>Usernames</li>
+        <li>Passwords</li>
+      </ul>
+
+      <p>We do not process sensitive personal information.</p>
+
+      <h3>Social Login Data</h3>
+      <p>
+        If you log in via a social provider (e.g. Google, Facebook), we may
+        receive profile information such as name and email.
+      </p>
+
+      <h3>Application Data</h3>
+      <ul>
+        <li>
+          <strong>Location:</strong> Used for location-based features
+        </li>
+        <li>
+          <strong>Device access:</strong> Bluetooth and other features
+        </li>
+        <li>
+          <strong>Notifications:</strong> Push notifications
+        </li>
+      </ul>
+
+      <h2>2. How Do We Process Your Information?</h2>
+
+      <ul>
+        <li>Account creation and authentication</li>
+        <li>Service operation and improvement</li>
+        <li>Communication (updates, changes)</li>
+        <li>Security and fraud prevention</li>
+      </ul>
+
+      <h2>3. Legal Bases (GDPR)</h2>
+
+      <ul>
+        <li>
+          <strong>Consent</strong>
+        </li>
+        <li>
+          <strong>Contract performance</strong>
+        </li>
+        <li>
+          <strong>Legal obligations</strong>
+        </li>
+        <li>
+          <strong>Vital interests</strong>
+        </li>
+      </ul>
+
+      <h2>4. Sharing Your Information</h2>
+
+      <p>We may share data in limited situations such as:</p>
+
+      <ul>
+        <li>Business transfers (mergers, acquisitions)</li>
+      </ul>
+
+      <h2>5. Social Logins</h2>
+
+      <p>
+        When using social login providers, we receive limited profile data. We
+        do not control how those providers use your data — review their
+        policies.
+      </p>
+
+      <h2>6. Data Retention</h2>
+
+      <p>
+        We retain personal data only as long as necessary for the purposes
+        described here, or as required by law.
+      </p>
+
+      <h2>7. Security</h2>
+
+      <p>
+        We use reasonable technical and organisational measures to protect your
+        data. However, no system is 100% secure.
+      </p>
+
+      <h2>8. Minors</h2>
+
+      <p>
+        We do not knowingly collect data from users under 18. If discovered, we
+        will delete it.
+      </p>
+
+      <h2>9. Your Rights</h2>
+
+      <ul>
+        <li>Access your data</li>
+        <li>Request correction or deletion</li>
+        <li>Restrict or object to processing</li>
+        <li>Data portability</li>
+      </ul>
+
+      <p>
+        <Link to="/{-$locale}/contact">Contact us</Link> to exercise your
+        rights.
+      </p>
+
+      <h2>10. Do Not Track</h2>
+
+      <p>
+        We do not currently respond to Do-Not-Track signals due to lack of a
+        standard.
+      </p>
+
+      <h2>11. Updates</h2>
+
+      <p>
+        We may update this policy. Changes will be posted here with an updated
+        date.
+      </p>
+
+      <h2>12. Contact</h2>
+
+      <p>
+        Trichter
+        <br />
+        Werastraße 48
+        <br />
+        88045 Friedrichshafen
+        <br />
+        Germany
+      </p>
+
+      <p>
+        <Link to="/{-$locale}/contact">Contact form</Link>
+      </p>
+
+      <h2>13. Your Data Requests</h2>
+
+      <p>
+        You can review, update, or delete your data at:
+        <br />
+        <a href="https://next.trichter.hauptspeicher.com/data-service">
+          https://next.trichter.hauptspeicher.com/data-service
+        </a>
+      </p>
+    </div>
   );
 }

@@ -12,9 +12,11 @@ function readBuildId(data: unknown): string | undefined {
 
 function FooterMetaRow({ label, value }: { label: string; value: string }) {
   return (
-    <div className="flex items-baseline justify-between gap-4">
+    <div className="flex flex-col gap-0.5 sm:flex-row sm:items-baseline sm:justify-between sm:gap-4">
       <span>{label}</span>
-      <span className="font-mono text-xs text-foreground">{value}</span>
+      <span className="break-all font-mono text-xs text-foreground">
+        {value}
+      </span>
     </div>
   );
 }
@@ -40,47 +42,55 @@ export function Footer() {
 
   return (
     <footer className="border-t">
-      <div className="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-8 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between sm:px-6">
-        <div>
+      <div className="mx-auto flex max-w-6xl flex-col gap-8 px-4 py-8 text-sm text-muted-foreground sm:px-6 lg:flex-row lg:items-start lg:justify-between">
+        <div className="min-w-0">
           <p className="font-medium text-foreground">Trichter</p>
-          <div className="py-2">
+
+          <div className="mt-3 w-full max-w-sm space-y-2 p-3 hidden lg:inline">
             <FooterMetaRow
-              label="Frontend Build"
+              label="Frontend build"
               value={clientEnv.VITE_BUILD_ID ?? "dev"}
             />
             <BackendBuildInfo />
           </div>
         </div>
-        <div className="flex flex-wrap items-center gap-4">
-          <Link to="/{-$locale}" className="hover:text-foreground">
-            Home
-          </Link>
-          <Link to="/{-$locale}/about" className="hover:text-foreground">
-            About
-          </Link>
-          <Link to="/{-$locale}/app/feed" className="hover:text-foreground">
-            Feed
-          </Link>
-          <Link
-            to="/{-$locale}/app/leaderboard"
-            className="hover:text-foreground"
-          >
-            Leaderboard
-          </Link>
-          <Link
-            to="/{-$locale}/policy/privacy"
-            className="hover:text-foreground"
-          >
-            Privacy
-          </Link>
-          <Link
-            to="/{-$locale}/policy/impressum"
-            className="hover:text-foreground"
-          >
-            Impressum
-          </Link>
-          <span>© {year}</span>
-        </div>
+
+        <nav className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between lg:gap-10">
+          <div className="grid grid-cols-2 gap-x-6 gap-y-3 sm:flex sm:flex-wrap sm:justify-end">
+            <Link to="/{-$locale}" className="hover:text-foreground">
+              Home
+            </Link>
+            <Link to="/{-$locale}/about" className="hover:text-foreground">
+              About
+            </Link>
+            <Link to="/{-$locale}/contact" className="hover:text-foreground">
+              Contact
+            </Link>
+            <Link to="/{-$locale}/app/feed" className="hover:text-foreground">
+              Feed
+            </Link>
+            <Link
+              to="/{-$locale}/app/leaderboard"
+              className="hover:text-foreground"
+            >
+              Leaderboard
+            </Link>
+            <Link
+              to="/{-$locale}/policy/privacy"
+              className="hover:text-foreground"
+            >
+              Privacy
+            </Link>
+            <Link
+              to="/{-$locale}/policy/impressum"
+              className="hover:text-foreground"
+            >
+              Impressum
+            </Link>
+          </div>
+
+          <span className="text-xs sm:whitespace-nowrap">© {year}</span>
+        </nav>
       </div>
     </footer>
   );

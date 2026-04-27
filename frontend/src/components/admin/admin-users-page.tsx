@@ -165,14 +165,37 @@ export function AdminUsersPage() {
       toast.error("Delete failed", { description: e.message }),
   });
 
+  const anyMutationPending =
+    banMutation.isPending ||
+    unbanMutation.isPending ||
+    setAdminMutation.isPending ||
+    setUserMutation.isPending ||
+    impersonateMutation.isPending ||
+    deleteMutation.isPending;
+
   const actions = {
     onEdit: setEditingUser,
     onSessions: setSessionsUser,
-    onMakeAdmin: (user: AdminUser) => setAdminMutation.mutate(user),
-    onMakeUser: (user: AdminUser) => setUserMutation.mutate(user),
-    onBan: (user: AdminUser) => banMutation.mutate(user),
-    onUnban: (user: AdminUser) => unbanMutation.mutate(user),
-    onImpersonate: (user: AdminUser) => impersonateMutation.mutate(user),
+    onMakeAdmin: (user: AdminUser) => {
+      if (anyMutationPending) return;
+      setAdminMutation.mutate(user);
+    },
+    onMakeUser: (user: AdminUser) => {
+      if (anyMutationPending) return;
+      setUserMutation.mutate(user);
+    },
+    onBan: (user: AdminUser) => {
+      if (anyMutationPending) return;
+      banMutation.mutate(user);
+    },
+    onUnban: (user: AdminUser) => {
+      if (anyMutationPending) return;
+      unbanMutation.mutate(user);
+    },
+    onImpersonate: (user: AdminUser) => {
+      if (anyMutationPending) return;
+      impersonateMutation.mutate(user);
+    },
     onDelete: setUserToDelete,
   };
 

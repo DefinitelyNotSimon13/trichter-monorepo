@@ -14,6 +14,7 @@ export const serverEnv = createEnv({
 
     ACS_CONNECTION_STRING: z.string().min(1),
     EMAIL_FROM: z.string().default("noreply@trichter.hauptspeicher.com"),
+    EMAIL_CONTACT: z.string().email().default("simon21.blum@gmail.com"),
   },
   runtimeEnv: process.env,
   emptyStringAsUndefined: true,

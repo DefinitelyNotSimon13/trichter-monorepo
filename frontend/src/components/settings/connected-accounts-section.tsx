@@ -4,6 +4,14 @@ import { Button } from "#/components/ui/button";
 import { Skeleton } from "#/components/ui/skeleton";
 import { authClient } from "#/lib/auth-client";
 
+type Account = {
+  id: string;
+  providerId: string;
+  accountId: string;
+  createdAt: Date | string;
+  updatedAt?: Date | string | null;
+};
+
 const GoogleIcon = () => (
   <svg viewBox="0 0 24 24" className="size-4" aria-hidden="true">
     <path
@@ -46,10 +54,9 @@ export function ConnectedAccountsSection() {
     error,
   } = useQuery({
     queryKey: ["accounts"],
-    //TODO: ANYYY
-    queryFn: async (): Promise<any[]> => {
+    queryFn: async (): Promise<Account[]> => {
       const result = await authClient.listAccounts();
-      return (result?.data ?? []) as any[];
+      return (result?.data ?? []) as Account[];
     },
   });
 

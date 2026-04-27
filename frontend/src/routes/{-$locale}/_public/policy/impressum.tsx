@@ -1,10 +1,10 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { clientEnv } from "#/env/client";
 
 export const Route = createFileRoute("/{-$locale}/_public/policy/impressum")({
   head: ({ params }) => {
     const locale = params.locale;
-    const title = "Imprint | Trichter";
+    const title = "Impressum | Trichter";
     const siteUrl = clientEnv.VITE_PUBLIC_URL;
     const pageUrl = locale
       ? `${siteUrl}/${locale}/policy/impressum`
@@ -81,6 +81,14 @@ function RouteComponent() {
                 >
                   simon21.blum@gmail.com
                 </a>
+              </li>
+              <li>
+                <Link
+                  to="/{-$locale}/contact"
+                  className="font-medium text-primary underline-offset-4 hover:underline"
+                >
+                  Contact form
+                </Link>
               </li>
             </ul>
           </section>

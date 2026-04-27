@@ -34,12 +34,6 @@ const navItems = [
     icon: Trophy,
     label: "Leaderboard",
   },
-  // {
-  //   to: "/{-$locale}/app/admin" as const,
-  //   activePath: "/app/admin",
-  //   icon: ShieldCogCorner,
-  //   label: "Admin",
-  // },
 ];
 
 function SidebarLogo() {
@@ -171,6 +165,8 @@ function SidebarUserSection() {
 
 export function AppSidebar() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const { data: session } = authClient.useSession();
+  const isAdmin = session?.user?.role === "admin";
 
   return (
     <Sidebar collapsible="icon">
@@ -194,6 +190,22 @@ export function AppSidebar() {
               </SidebarMenuButton>
             </SidebarMenuItem>
           ))}
+          {isAdmin && (
+            <SidebarMenuItem>
+              <SidebarMenuButton
+                asChild
+                isActive={pathname.startsWith("/app/admin")}
+                tooltip="Admin"
+              >
+                <Link to="/{-$locale}/app/admin" viewTransition>
+                  <ShieldCogCorner />
+                  <span className="truncate group-data-[collapsible=icon]:hidden">
+                    Admin
+                  </span>
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          )}
         </SidebarMenu>
       </SidebarContent>
 

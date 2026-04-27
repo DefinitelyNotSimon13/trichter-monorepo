@@ -68,10 +68,8 @@ export const auth = betterAuth({
         html: passwordResetEmailHtml(url),
       });
     },
-    onExistingUserSignUp: async ({ user }, request) => {
-      //TODO: Notify user about it?
-      console.log(`Someone tried to sign up with ${user.email}`);
-      console.debug(request);
+    onExistingUserSignUp: async () => {
+      // silently no-op: returning early prevents creating a duplicate account
     },
   },
   socialProviders: {

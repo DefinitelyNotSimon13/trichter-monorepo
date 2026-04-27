@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Copy, Plus, Trash2 } from "lucide-react";
-import { useMemo, useState } from "react";
+import { Copy, Eye, EyeOff, Plus, Trash2 } from "lucide-react";
+import { useState } from "react";
 import { toast } from "sonner";
 import { Button } from "#/components/ui/button";
 import { Input } from "#/components/ui/input";
@@ -49,6 +49,7 @@ export function ApiKeysSection() {
   const queryClient = useQueryClient();
   const [newKeyName, setNewKeyName] = useState("");
   const [justCreated, setJustCreated] = useState<string | null>(null);
+  const [keyVisible, setKeyVisible] = useState(false);
 
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["api-keys"],
@@ -84,6 +85,7 @@ export function ApiKeysSection() {
     onSuccess: async (data) => {
       if (data?.key) {
         setJustCreated(data.key);
+        setKeyVisible(false);
       }
 
       setNewKeyName("");
@@ -157,9 +159,29 @@ export function ApiKeysSection() {
           </p>
 
           <div className="flex items-center gap-2">
-            <code className="flex-1 break-all rounded border bg-background px-3 py-2 font-mono text-xs">
+            <code
+              className={
+                "flex-1 break-all rounded border bg-background px-3 py-2 font-mono text-xs transition-all select-none" +
+                (keyVisible ? "" : " blur-sm")
+              }
+            >
               {justCreated}
             </code>
+
+            <Button
+              type="button"
+              variant="outline"
+              size="icon"
+              onClick={() => setKeyVisible((v) => !v)}
+              title={keyVisible ? "Hide key" : "Reveal key"}
+            >
+              {keyVisible ? (
+                <EyeOff className="size-4" />
+              ) : (
+                <Eye className="size-4" />
+              )}
+              <span className="sr-only">{keyVisible ? "Hide" : "Reveal"}</span>
+            </Button>
 
             <Button
               type="button"

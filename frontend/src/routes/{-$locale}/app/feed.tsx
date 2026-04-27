@@ -11,6 +11,7 @@ import {
   getRunsInfiniteQueryKey,
 } from "#/client/@tanstack/react-query.gen";
 import type { RunDto } from "#/client/types.gen";
+import { useWebSocketContext } from "#/components/websocket-provider";
 import { InfiniteScrollSentinel } from "#/components/runs/feed/infinite-scroll-sentinel";
 import { RunFeed } from "#/components/runs/feed/run-feed";
 import { Skeleton } from "#/components/ui/skeleton";
@@ -24,15 +25,6 @@ export const Route = createFileRoute("/{-$locale}/app/feed")({
   staticData: {
     breadcrumb: "Feed",
   },
-  // loader: ({ context: { queryClient, session } }) => {
-  //   if (!session?.user) return;
-  //   return queryClient.ensureInfiniteQueryData({
-  //     ...getRunsInfiniteOptions({
-  //       query: { size: PAGE_SIZE, sort: ["createdAt,desc"] },
-  //     }),
-  //     initialPageParam: 0,
-  //   });
-  // },
   pendingComponent: FeedSkeleton,
   errorComponent: FeedError,
   component: FeedPage,
@@ -75,6 +67,7 @@ function FeedPage() {
   const queryClient = useQueryClient();
   const [pendingCount, setPendingCount] = useState(0);
   const { t } = useTranslation("app");
+  const { status: wsStatus } = useWebSocketContext();
 
   useWsEvent("run.created", () => setPendingCount((c) => c + 1));
 
@@ -124,6 +117,12 @@ function FeedPage() {
 
   return (
     <div className="flex flex-col items-center gap-6 lg:items-start">
+      {/*wsStatus === "reconnecting" && (
+        <div className="sticky top-2 z-10 flex w-full max-w-100 items-center justify-center gap-2 rounded-full border border-yellow-300 bg-yellow-50/95 px-4 py-2 text-sm font-medium text-yellow-800 shadow-sm backdrop-blur dark:border-yellow-700 dark:bg-yellow-950/95 dark:text-yellow-300">
+          <span className="size-2 shrink-0 animate-pulse rounded-full bg-yellow-500" />
+          Reconnecting…
+        </div>
+      )*/}
       {pendingCount > 0 && (
         <button
           type="button"

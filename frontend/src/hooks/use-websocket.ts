@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { WsServerEvent } from "#/lib/websocket-types";
 
 const PING_INTERVAL_MS = 25_000;
@@ -21,10 +21,12 @@ function parseMessage(raw: string): WsServerEvent | null {
 
 type Options = { enabled?: boolean };
 
+export type WsConnectionStatus = "connecting" | "connected" | "reconnecting";
+
 export function useWebSocketConnection(
   onEvent: (msg: WsServerEvent) => void,
   options: Options = {},
-): void {
+): { status: WsConnectionStatus } {
   const { enabled = true } = options;
 
   const onEventRef = useRef(onEvent);
@@ -32,6 +34,8 @@ export function useWebSocketConnection(
 
   const enabledRef = useRef(enabled);
   enabledRef.current = enabled;
+
+  const [status, setStatus] = useState<WsConnectionStatus>("connecting");
 
   useEffect(() => {
     if (typeof window === "undefined" || !enabledRef.current) return;
@@ -69,6 +73,7 @@ export function useWebSocketConnection(
           Math.min(reconnectAttempt, RECONNECT_DELAYS_MS.length - 1)
         ];
       reconnectAttempt++;
+      setStatus("reconnecting");
       reconnectTimer = setTimeout(connect, delay);
     }
 
@@ -78,6 +83,7 @@ export function useWebSocketConnection(
 
       ws.onopen = () => {
         reconnectAttempt = 0;
+        setStatus("connected");
         schedulePing();
       };
 
@@ -112,4 +118,6 @@ export function useWebSocketConnection(
       ws = null;
     };
   }, []);
+
+  return { status };
 }

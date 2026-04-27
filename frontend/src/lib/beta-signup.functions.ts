@@ -1,6 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { getRequestHeaders } from "@tanstack/react-start/server";
 import { z } from "zod";
+import { serverEnv } from "#/env/server";
 import { auth } from "#/lib/auth";
 import { sendEmail } from "#/lib/email/index.server";
 import { betaAcceptanceEmailHtml } from "#/lib/email/templates";
@@ -15,7 +16,7 @@ export const registerForBeta = createServerFn({ method: "POST" })
   .inputValidator(emailSchema)
   .handler(async ({ data }) => {
     await sendEmail({
-      to: "simon21.blum@gmail.com",
+      to: serverEnv.EMAIL_CONTACT,
       subject: `Trichter Beta Signup: ${data.email}`,
       text: `New beta signup request\n\nGoogle Play email: ${data.email}`,
     });

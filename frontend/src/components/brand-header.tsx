@@ -1,6 +1,5 @@
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
-import { LocalePicker } from "#/components/locale-picker";
 import { Button } from "#/components/ui/button";
 import { useTheme } from "#/hooks/use-theme";
 import { authClient } from "#/lib/auth-client";
@@ -62,7 +61,6 @@ export function BrandHeader() {
         </Link>
 
         <div className="flex items-center gap-3">
-          {/*<LocalePicker />*/}
           <IconThemeToggle />
           {isPending ? (
             <Button size="sm" disabled>

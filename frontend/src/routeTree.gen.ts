@@ -11,7 +11,6 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as Char123LocaleChar125RouteRouteImport } from './routes/{-$locale}/route'
 import { Route as Char123LocaleChar125AppRouteImport } from './routes/{-$locale}/app'
-import { Route as DePrivacyRouteImport } from './routes/de.privacy'
 import { Route as DotwellKnownOpenidConfigurationRouteImport } from './routes/[.]well-known/openid-configuration'
 import { Route as DotwellKnownAssetlinksDotjsonRouteImport } from './routes/[.]well-known/assetlinks[.]json'
 import { Route as Char123LocaleChar125PublicRouteRouteImport } from './routes/{-$locale}/_public/route'
@@ -25,6 +24,7 @@ import { Route as Char123LocaleChar125AppAdminRouteImport } from './routes/{-$lo
 import { Route as Char123LocaleChar125PublicNewMobileRouteImport } from './routes/{-$locale}/_public/new-mobile'
 import { Route as Char123LocaleChar125PublicMobileRouteImport } from './routes/{-$locale}/_public/mobile'
 import { Route as Char123LocaleChar125PublicGoodbyeRouteImport } from './routes/{-$locale}/_public/goodbye'
+import { Route as Char123LocaleChar125PublicContactRouteImport } from './routes/{-$locale}/_public/contact'
 import { Route as Char123LocaleChar125PublicAboutRouteImport } from './routes/{-$locale}/_public/about'
 import { Route as Char123LocaleChar125AuthVerifyOtpRouteImport } from './routes/{-$locale}/_auth/verify-otp'
 import { Route as Char123LocaleChar125AuthSignupRouteImport } from './routes/{-$locale}/_auth/signup'
@@ -39,6 +39,7 @@ import { Route as Char123LocaleChar125AppProfileChar123UserIdChar125RouteImport 
 import { Route as Char123LocaleChar125AppAdminUsersRouteImport } from './routes/{-$locale}/app/admin/users'
 import { Route as Char123LocaleChar125AppAdminRunsRouteImport } from './routes/{-$locale}/app/admin/runs'
 import { Route as Char123LocaleChar125AppAdminBetaRouteImport } from './routes/{-$locale}/app/admin/beta'
+import { Route as Char123LocaleChar125PublicPolicyTermsRouteImport } from './routes/{-$locale}/_public/policy/terms'
 import { Route as Char123LocaleChar125PublicPolicyPrivacyRouteImport } from './routes/{-$locale}/_public/policy/privacy'
 import { Route as Char123LocaleChar125PublicPolicyImpressumRouteImport } from './routes/{-$locale}/_public/policy/impressum'
 import { Route as DotwellKnownOauthAuthorizationServerApiAuthRouteImport } from './routes/[.]well-known/oauth-authorization-server.api.auth'
@@ -56,11 +57,6 @@ const Char123LocaleChar125AppRoute = Char123LocaleChar125AppRouteImport.update({
 } as any).lazy(() =>
   import('./routes/{-$locale}/app.lazy').then((d) => d.Route),
 )
-const DePrivacyRoute = DePrivacyRouteImport.update({
-  id: '/de/privacy',
-  path: '/de/privacy',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const DotwellKnownOpenidConfigurationRoute =
   DotwellKnownOpenidConfigurationRouteImport.update({
     id: '/.well-known/openid-configuration',
@@ -136,6 +132,12 @@ const Char123LocaleChar125PublicGoodbyeRoute =
   Char123LocaleChar125PublicGoodbyeRouteImport.update({
     id: '/goodbye',
     path: '/goodbye',
+    getParentRoute: () => Char123LocaleChar125PublicRouteRoute,
+  } as any)
+const Char123LocaleChar125PublicContactRoute =
+  Char123LocaleChar125PublicContactRouteImport.update({
+    id: '/contact',
+    path: '/contact',
     getParentRoute: () => Char123LocaleChar125PublicRouteRoute,
   } as any)
 const Char123LocaleChar125PublicAboutRoute =
@@ -221,6 +223,12 @@ const Char123LocaleChar125AppAdminBetaRoute =
     path: '/beta',
     getParentRoute: () => Char123LocaleChar125AppAdminRoute,
   } as any)
+const Char123LocaleChar125PublicPolicyTermsRoute =
+  Char123LocaleChar125PublicPolicyTermsRouteImport.update({
+    id: '/policy/terms',
+    path: '/policy/terms',
+    getParentRoute: () => Char123LocaleChar125PublicRouteRoute,
+  } as any)
 const Char123LocaleChar125PublicPolicyPrivacyRoute =
   Char123LocaleChar125PublicPolicyPrivacyRouteImport.update({
     id: '/policy/privacy',
@@ -244,7 +252,6 @@ export interface FileRoutesByFullPath {
   '/{-$locale}': typeof Char123LocaleChar125PublicRouteRouteWithChildren
   '/.well-known/assetlinks.json': typeof DotwellKnownAssetlinksDotjsonRoute
   '/.well-known/openid-configuration': typeof DotwellKnownOpenidConfigurationRoute
-  '/de/privacy': typeof DePrivacyRoute
   '/{-$locale}/app': typeof Char123LocaleChar125AppRouteWithChildren
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/{-$locale}/complete-profile': typeof Char123LocaleChar125AuthCompleteProfileRoute
@@ -255,6 +262,7 @@ export interface FileRoutesByFullPath {
   '/{-$locale}/signup': typeof Char123LocaleChar125AuthSignupRoute
   '/{-$locale}/verify-otp': typeof Char123LocaleChar125AuthVerifyOtpRoute
   '/{-$locale}/about': typeof Char123LocaleChar125PublicAboutRoute
+  '/{-$locale}/contact': typeof Char123LocaleChar125PublicContactRoute
   '/{-$locale}/goodbye': typeof Char123LocaleChar125PublicGoodbyeRoute
   '/{-$locale}/mobile': typeof Char123LocaleChar125PublicMobileRoute
   '/{-$locale}/new-mobile': typeof Char123LocaleChar125PublicNewMobileRoute
@@ -268,6 +276,7 @@ export interface FileRoutesByFullPath {
   '/.well-known/oauth-authorization-server/api/auth': typeof DotwellKnownOauthAuthorizationServerApiAuthRoute
   '/{-$locale}/policy/impressum': typeof Char123LocaleChar125PublicPolicyImpressumRoute
   '/{-$locale}/policy/privacy': typeof Char123LocaleChar125PublicPolicyPrivacyRoute
+  '/{-$locale}/policy/terms': typeof Char123LocaleChar125PublicPolicyTermsRoute
   '/{-$locale}/app/admin/beta': typeof Char123LocaleChar125AppAdminBetaRoute
   '/{-$locale}/app/admin/runs': typeof Char123LocaleChar125AppAdminRunsRoute
   '/{-$locale}/app/admin/users': typeof Char123LocaleChar125AppAdminUsersRoute
@@ -278,7 +287,6 @@ export interface FileRoutesByTo {
   '/{-$locale}': typeof Char123LocaleChar125PublicIndexRoute
   '/.well-known/assetlinks.json': typeof DotwellKnownAssetlinksDotjsonRoute
   '/.well-known/openid-configuration': typeof DotwellKnownOpenidConfigurationRoute
-  '/de/privacy': typeof DePrivacyRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/{-$locale}/complete-profile': typeof Char123LocaleChar125AuthCompleteProfileRoute
   '/{-$locale}/consent': typeof Char123LocaleChar125AuthConsentRoute
@@ -288,6 +296,7 @@ export interface FileRoutesByTo {
   '/{-$locale}/signup': typeof Char123LocaleChar125AuthSignupRoute
   '/{-$locale}/verify-otp': typeof Char123LocaleChar125AuthVerifyOtpRoute
   '/{-$locale}/about': typeof Char123LocaleChar125PublicAboutRoute
+  '/{-$locale}/contact': typeof Char123LocaleChar125PublicContactRoute
   '/{-$locale}/goodbye': typeof Char123LocaleChar125PublicGoodbyeRoute
   '/{-$locale}/mobile': typeof Char123LocaleChar125PublicMobileRoute
   '/{-$locale}/new-mobile': typeof Char123LocaleChar125PublicNewMobileRoute
@@ -299,6 +308,7 @@ export interface FileRoutesByTo {
   '/.well-known/oauth-authorization-server/api/auth': typeof DotwellKnownOauthAuthorizationServerApiAuthRoute
   '/{-$locale}/policy/impressum': typeof Char123LocaleChar125PublicPolicyImpressumRoute
   '/{-$locale}/policy/privacy': typeof Char123LocaleChar125PublicPolicyPrivacyRoute
+  '/{-$locale}/policy/terms': typeof Char123LocaleChar125PublicPolicyTermsRoute
   '/{-$locale}/app/admin/beta': typeof Char123LocaleChar125AppAdminBetaRoute
   '/{-$locale}/app/admin/runs': typeof Char123LocaleChar125AppAdminRunsRoute
   '/{-$locale}/app/admin/users': typeof Char123LocaleChar125AppAdminUsersRoute
@@ -311,7 +321,6 @@ export interface FileRoutesById {
   '/{-$locale}/_public': typeof Char123LocaleChar125PublicRouteRouteWithChildren
   '/.well-known/assetlinks.json': typeof DotwellKnownAssetlinksDotjsonRoute
   '/.well-known/openid-configuration': typeof DotwellKnownOpenidConfigurationRoute
-  '/de/privacy': typeof DePrivacyRoute
   '/{-$locale}/app': typeof Char123LocaleChar125AppRouteWithChildren
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/{-$locale}/_auth/complete-profile': typeof Char123LocaleChar125AuthCompleteProfileRoute
@@ -322,6 +331,7 @@ export interface FileRoutesById {
   '/{-$locale}/_auth/signup': typeof Char123LocaleChar125AuthSignupRoute
   '/{-$locale}/_auth/verify-otp': typeof Char123LocaleChar125AuthVerifyOtpRoute
   '/{-$locale}/_public/about': typeof Char123LocaleChar125PublicAboutRoute
+  '/{-$locale}/_public/contact': typeof Char123LocaleChar125PublicContactRoute
   '/{-$locale}/_public/goodbye': typeof Char123LocaleChar125PublicGoodbyeRoute
   '/{-$locale}/_public/mobile': typeof Char123LocaleChar125PublicMobileRoute
   '/{-$locale}/_public/new-mobile': typeof Char123LocaleChar125PublicNewMobileRoute
@@ -335,6 +345,7 @@ export interface FileRoutesById {
   '/.well-known/oauth-authorization-server/api/auth': typeof DotwellKnownOauthAuthorizationServerApiAuthRoute
   '/{-$locale}/_public/policy/impressum': typeof Char123LocaleChar125PublicPolicyImpressumRoute
   '/{-$locale}/_public/policy/privacy': typeof Char123LocaleChar125PublicPolicyPrivacyRoute
+  '/{-$locale}/_public/policy/terms': typeof Char123LocaleChar125PublicPolicyTermsRoute
   '/{-$locale}/app/admin/beta': typeof Char123LocaleChar125AppAdminBetaRoute
   '/{-$locale}/app/admin/runs': typeof Char123LocaleChar125AppAdminRunsRoute
   '/{-$locale}/app/admin/users': typeof Char123LocaleChar125AppAdminUsersRoute
@@ -347,7 +358,6 @@ export interface FileRouteTypes {
     | '/{-$locale}'
     | '/.well-known/assetlinks.json'
     | '/.well-known/openid-configuration'
-    | '/de/privacy'
     | '/{-$locale}/app'
     | '/api/auth/$'
     | '/{-$locale}/complete-profile'
@@ -358,6 +368,7 @@ export interface FileRouteTypes {
     | '/{-$locale}/signup'
     | '/{-$locale}/verify-otp'
     | '/{-$locale}/about'
+    | '/{-$locale}/contact'
     | '/{-$locale}/goodbye'
     | '/{-$locale}/mobile'
     | '/{-$locale}/new-mobile'
@@ -371,6 +382,7 @@ export interface FileRouteTypes {
     | '/.well-known/oauth-authorization-server/api/auth'
     | '/{-$locale}/policy/impressum'
     | '/{-$locale}/policy/privacy'
+    | '/{-$locale}/policy/terms'
     | '/{-$locale}/app/admin/beta'
     | '/{-$locale}/app/admin/runs'
     | '/{-$locale}/app/admin/users'
@@ -381,7 +393,6 @@ export interface FileRouteTypes {
     | '/{-$locale}'
     | '/.well-known/assetlinks.json'
     | '/.well-known/openid-configuration'
-    | '/de/privacy'
     | '/api/auth/$'
     | '/{-$locale}/complete-profile'
     | '/{-$locale}/consent'
@@ -391,6 +402,7 @@ export interface FileRouteTypes {
     | '/{-$locale}/signup'
     | '/{-$locale}/verify-otp'
     | '/{-$locale}/about'
+    | '/{-$locale}/contact'
     | '/{-$locale}/goodbye'
     | '/{-$locale}/mobile'
     | '/{-$locale}/new-mobile'
@@ -402,6 +414,7 @@ export interface FileRouteTypes {
     | '/.well-known/oauth-authorization-server/api/auth'
     | '/{-$locale}/policy/impressum'
     | '/{-$locale}/policy/privacy'
+    | '/{-$locale}/policy/terms'
     | '/{-$locale}/app/admin/beta'
     | '/{-$locale}/app/admin/runs'
     | '/{-$locale}/app/admin/users'
@@ -413,7 +426,6 @@ export interface FileRouteTypes {
     | '/{-$locale}/_public'
     | '/.well-known/assetlinks.json'
     | '/.well-known/openid-configuration'
-    | '/de/privacy'
     | '/{-$locale}/app'
     | '/api/auth/$'
     | '/{-$locale}/_auth/complete-profile'
@@ -424,6 +436,7 @@ export interface FileRouteTypes {
     | '/{-$locale}/_auth/signup'
     | '/{-$locale}/_auth/verify-otp'
     | '/{-$locale}/_public/about'
+    | '/{-$locale}/_public/contact'
     | '/{-$locale}/_public/goodbye'
     | '/{-$locale}/_public/mobile'
     | '/{-$locale}/_public/new-mobile'
@@ -437,6 +450,7 @@ export interface FileRouteTypes {
     | '/.well-known/oauth-authorization-server/api/auth'
     | '/{-$locale}/_public/policy/impressum'
     | '/{-$locale}/_public/policy/privacy'
+    | '/{-$locale}/_public/policy/terms'
     | '/{-$locale}/app/admin/beta'
     | '/{-$locale}/app/admin/runs'
     | '/{-$locale}/app/admin/users'
@@ -448,7 +462,6 @@ export interface RootRouteChildren {
   Char123LocaleChar125RouteRoute: typeof Char123LocaleChar125RouteRouteWithChildren
   DotwellKnownAssetlinksDotjsonRoute: typeof DotwellKnownAssetlinksDotjsonRoute
   DotwellKnownOpenidConfigurationRoute: typeof DotwellKnownOpenidConfigurationRoute
-  DePrivacyRoute: typeof DePrivacyRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
   DotwellKnownOauthAuthorizationServerApiAuthRoute: typeof DotwellKnownOauthAuthorizationServerApiAuthRoute
 }
@@ -468,13 +481,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/{-$locale}/app'
       preLoaderRoute: typeof Char123LocaleChar125AppRouteImport
       parentRoute: typeof Char123LocaleChar125RouteRoute
-    }
-    '/de/privacy': {
-      id: '/de/privacy'
-      path: '/de/privacy'
-      fullPath: '/de/privacy'
-      preLoaderRoute: typeof DePrivacyRouteImport
-      parentRoute: typeof rootRouteImport
     }
     '/.well-known/openid-configuration': {
       id: '/.well-known/openid-configuration'
@@ -565,6 +571,13 @@ declare module '@tanstack/react-router' {
       path: '/goodbye'
       fullPath: '/{-$locale}/goodbye'
       preLoaderRoute: typeof Char123LocaleChar125PublicGoodbyeRouteImport
+      parentRoute: typeof Char123LocaleChar125PublicRouteRoute
+    }
+    '/{-$locale}/_public/contact': {
+      id: '/{-$locale}/_public/contact'
+      path: '/contact'
+      fullPath: '/{-$locale}/contact'
+      preLoaderRoute: typeof Char123LocaleChar125PublicContactRouteImport
       parentRoute: typeof Char123LocaleChar125PublicRouteRoute
     }
     '/{-$locale}/_public/about': {
@@ -665,6 +678,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof Char123LocaleChar125AppAdminBetaRouteImport
       parentRoute: typeof Char123LocaleChar125AppAdminRoute
     }
+    '/{-$locale}/_public/policy/terms': {
+      id: '/{-$locale}/_public/policy/terms'
+      path: '/policy/terms'
+      fullPath: '/{-$locale}/policy/terms'
+      preLoaderRoute: typeof Char123LocaleChar125PublicPolicyTermsRouteImport
+      parentRoute: typeof Char123LocaleChar125PublicRouteRoute
+    }
     '/{-$locale}/_public/policy/privacy': {
       id: '/{-$locale}/_public/policy/privacy'
       path: '/policy/privacy'
@@ -691,17 +711,21 @@ declare module '@tanstack/react-router' {
 
 interface Char123LocaleChar125PublicRouteRouteChildren {
   Char123LocaleChar125PublicAboutRoute: typeof Char123LocaleChar125PublicAboutRoute
+  Char123LocaleChar125PublicContactRoute: typeof Char123LocaleChar125PublicContactRoute
   Char123LocaleChar125PublicGoodbyeRoute: typeof Char123LocaleChar125PublicGoodbyeRoute
   Char123LocaleChar125PublicMobileRoute: typeof Char123LocaleChar125PublicMobileRoute
   Char123LocaleChar125PublicNewMobileRoute: typeof Char123LocaleChar125PublicNewMobileRoute
   Char123LocaleChar125PublicIndexRoute: typeof Char123LocaleChar125PublicIndexRoute
   Char123LocaleChar125PublicPolicyImpressumRoute: typeof Char123LocaleChar125PublicPolicyImpressumRoute
   Char123LocaleChar125PublicPolicyPrivacyRoute: typeof Char123LocaleChar125PublicPolicyPrivacyRoute
+  Char123LocaleChar125PublicPolicyTermsRoute: typeof Char123LocaleChar125PublicPolicyTermsRoute
 }
 
 const Char123LocaleChar125PublicRouteRouteChildren: Char123LocaleChar125PublicRouteRouteChildren =
   {
     Char123LocaleChar125PublicAboutRoute: Char123LocaleChar125PublicAboutRoute,
+    Char123LocaleChar125PublicContactRoute:
+      Char123LocaleChar125PublicContactRoute,
     Char123LocaleChar125PublicGoodbyeRoute:
       Char123LocaleChar125PublicGoodbyeRoute,
     Char123LocaleChar125PublicMobileRoute:
@@ -713,6 +737,8 @@ const Char123LocaleChar125PublicRouteRouteChildren: Char123LocaleChar125PublicRo
       Char123LocaleChar125PublicPolicyImpressumRoute,
     Char123LocaleChar125PublicPolicyPrivacyRoute:
       Char123LocaleChar125PublicPolicyPrivacyRoute,
+    Char123LocaleChar125PublicPolicyTermsRoute:
+      Char123LocaleChar125PublicPolicyTermsRoute,
   }
 
 const Char123LocaleChar125PublicRouteRouteWithChildren =
@@ -812,7 +838,6 @@ const rootRouteChildren: RootRouteChildren = {
   Char123LocaleChar125RouteRoute: Char123LocaleChar125RouteRouteWithChildren,
   DotwellKnownAssetlinksDotjsonRoute: DotwellKnownAssetlinksDotjsonRoute,
   DotwellKnownOpenidConfigurationRoute: DotwellKnownOpenidConfigurationRoute,
-  DePrivacyRoute: DePrivacyRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
   DotwellKnownOauthAuthorizationServerApiAuthRoute:
     DotwellKnownOauthAuthorizationServerApiAuthRoute,

@@ -1,11 +1,11 @@
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useSuspenseQueries } from "@tanstack/react-query";
 import {
   createFileRoute,
   type ErrorComponentProps,
   redirect,
 } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
-import { getRunsByUserOptions } from "#/client/@tanstack/react-query.gen";
+import { getRunsByUserOptions, getUserByIdOptions } from "#/client/@tanstack/react-query.gen";
 import { ProfileRunsPreview } from "#/components/profile/profile-runs-preview";
 import { ProfileStats } from "#/components/profile/profile-stats";
 import { Avatar, AvatarFallback } from "#/components/ui/avatar";
@@ -17,15 +17,6 @@ export const Route = createFileRoute("/{-$locale}/app/profile/{-$userId}")({
   staticData: {
     breadcrumb: "Profile",
   },
-  // loader: ({ context: { queryClient, session, userId } }) => {
-  //   if (!session?.user) return;
-  //   return queryClient.ensureQueryData(
-  //     getRunsByUserOptions({
-  //       path: { userId },
-  //       query: { size: 500, sort: ["createdAt,desc"] },
-  //     }),
-  //   );
-  // },
   pendingComponent: ProfileSkeleton,
   errorComponent: ProfileError,
   beforeLoad: async ({ params, location }) => {
@@ -93,17 +84,18 @@ function PublicProfilePage() {
   const { userId } = Route.useRouteContext();
   const { t } = useTranslation("app");
 
-  const { data } = useSuspenseQuery(
-    getRunsByUserOptions({
-      path: { userId },
-      query: { size: 500, sort: ["createdAt,desc"] },
-    }),
-  );
+  const [{ data: userData }, { data: runsData }] = useSuspenseQueries({
+    queries: [
+      getUserByIdOptions({ path: { userId } }),
+      getRunsByUserOptions({
+        path: { userId },
+        query: { size: 500, sort: ["createdAt,desc"] },
+      }),
+    ],
+  });
 
-  const runs = data.content ?? [];
-
-  const userInfo = runs[0]?.user;
-  const displayName = userInfo?.name ?? userInfo?.username ?? userId;
+  const runs = runsData.content ?? [];
+  const displayName = userData.displayUsername ?? userData.username ?? userId;
   const initial = displayName[0]?.toUpperCase() ?? "?";
 
   return (
@@ -118,9 +110,9 @@ function PublicProfilePage() {
           <h1 className="text-2xl font-semibold tracking-tight">
             {displayName}
           </h1>
-          {userInfo?.username ? (
+          {userData.username && userData.displayUsername !== userData.username ? (
             <p className="text-sm text-muted-foreground">
-              @{userInfo.username}
+              @{userData.username}
             </p>
           ) : null}
         </div>

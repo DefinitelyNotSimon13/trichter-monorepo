@@ -5,13 +5,14 @@ import {
   useContext,
   useRef,
 } from "react";
-import { useWebSocketConnection } from "#/hooks/use-websocket";
+import { useWebSocketConnection, type WsConnectionStatus } from "#/hooks/use-websocket";
 import type { WsEventType, WsServerEvent } from "#/lib/websocket-types";
 
 type Listener = (payload: unknown) => void;
 
 type WebSocketContextValue = {
   subscribe: (type: WsEventType, cb: Listener) => () => void;
+  status: WsConnectionStatus;
 };
 
 const WebSocketContext = createContext<WebSocketContextValue | undefined>(
@@ -39,7 +40,7 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  useWebSocketConnection(handleEvent);
+  const { status } = useWebSocketConnection(handleEvent);
 
   const subscribe = useCallback((type: WsEventType, cb: Listener) => {
     if (!subs.current.has(type)) {
@@ -52,7 +53,7 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
   }, []);
 
   return (
-    <WebSocketContext.Provider value={{ subscribe }}>
+    <WebSocketContext.Provider value={{ subscribe, status }}>
       {children}
     </WebSocketContext.Provider>
   );
