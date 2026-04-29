@@ -2,6 +2,7 @@ package org.trichter.app.features.auth.di
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import io.ktor.client.HttpClient
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 import org.publicvalue.multiplatform.oidc.OpenIdConnectClient
@@ -9,6 +10,7 @@ import org.publicvalue.multiplatform.oidc.appsupport.CodeAuthFlowFactory
 import org.publicvalue.multiplatform.oidc.types.CodeChallengeMethod
 import org.trichter.app.appBaseUrl
 import org.trichter.app.features.auth.data.AuthPreferences
+import org.trichter.app.features.auth.data.AuthPreferencesTokenStore
 import org.trichter.app.features.auth.data.OidcAuthRepository
 import org.trichter.app.features.auth.domain.AuthRepository
 import org.trichter.app.features.auth.domain.usecases.InitializeAuth
@@ -35,11 +37,14 @@ fun authModules() = listOf(
             )
         }
 
+        single { AuthPreferencesTokenStore(get()) }
+
         single<AuthRepository> {
             OidcAuthRepository(
                 oidcClient = get<OpenIdConnectClient>(),
                 codeAuthFlowFactory = get<CodeAuthFlowFactory>(),
                 authPreferences = get<AuthPreferences>(),
+                httpClient = get<HttpClient>(),
             )
         }
 

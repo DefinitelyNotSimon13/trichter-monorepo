@@ -59,4 +59,11 @@ class AuthPreferences(
     fun observeAccessToken() = dataStore.data.map { preferences ->
         preferences[AuthPreferenceKeys.accessToken]
     }
+
+    fun observeRefreshToken() = dataStore.data.map { it[AuthPreferenceKeys.refreshToken] }
+    fun observeIdToken() = dataStore.data.map { it[AuthPreferenceKeys.idToken] }
+
+    suspend fun removeAccessToken() { dataStore.edit { it.remove(AuthPreferenceKeys.accessToken) } }
+    suspend fun removeRefreshToken() { dataStore.edit { it.remove(AuthPreferenceKeys.refreshToken) } }
+    suspend fun removeIdToken() { dataStore.edit { it.remove(AuthPreferenceKeys.idToken) } }
 }

@@ -15,7 +15,7 @@ val appVersionMajor = 1
 val appVersionMinor = 0
 val appVersionPatch = 0
 
-val suffixVersion: Int = 2
+val suffixVersion: Int = 3
 
 val appVersionName = "$appVersionMajor.$appVersionMinor.$appVersionPatch"
 val appVersionCode = appVersionMajor * 1000000 + appVersionMinor * 10000 + appVersionPatch * 100 + suffixVersion
@@ -55,6 +55,7 @@ kotlin {
             implementation(libs.ktor.serialization.kotlinx.json)
             implementation(libs.ktor.client.logging)
             implementation(libs.ktor.client.websockets)
+            implementation(libs.ktor.client.auth)
 
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.kotlinx.serialization.json)

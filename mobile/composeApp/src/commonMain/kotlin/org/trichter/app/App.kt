@@ -30,6 +30,7 @@ import org.koin.dsl.module
 import org.publicvalue.multiplatform.oidc.appsupport.CodeAuthFlowFactory
 import org.trichter.app.di.getComposableAppModules
 import org.trichter.app.di.regularAppModules
+import org.trichter.app.features.auth.domain.model.AuthState
 import org.trichter.app.features.auth.presentation.AuthLoadingScreen
 import org.trichter.app.features.auth.presentation.AuthUiState
 import org.trichter.app.features.auth.presentation.AuthViewModel

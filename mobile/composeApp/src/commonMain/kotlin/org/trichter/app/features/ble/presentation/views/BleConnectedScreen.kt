@@ -12,6 +12,7 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
@@ -80,7 +81,7 @@ fun BleConnectedScreen(
                 .padding(inner)
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
-                .padding(16.dp),
+                .padding(16.dp, 0.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
@@ -88,7 +89,7 @@ fun BleConnectedScreen(
                 StatusChip(trichterState.status)
             }
 
-            if (isDevMode) {
+            if (false) {
                 DevPanel(onFakeRun = onFakeRun)
             }
 
@@ -110,11 +111,11 @@ fun BleConnectedScreen(
                             onAck = onAck,
                         )
                     } else {
-                        IdlePanel()
+                        IdlePanel(trichterState, modifier)
                     }
                 }
                 SessionStatus.ERROR -> ErrorPanel(onReset = onReset)
-                SessionStatus.IDLE, SessionStatus.UNKNOWN -> IdlePanel()
+                SessionStatus.IDLE, SessionStatus.UNKNOWN -> IdlePanel(trichterState, modifier)
             }
         }
     }
@@ -149,7 +150,7 @@ private fun DevPanel(onFakeRun: () -> Unit, modifier: Modifier = Modifier) {
 }
 
 @Composable
-private fun IdlePanel(modifier: Modifier = Modifier) {
+private fun IdlePanel(trichterState: TrichterState, modifier: Modifier = Modifier) {
     Card(
         modifier = modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)
@@ -159,19 +160,39 @@ private fun IdlePanel(modifier: Modifier = Modifier) {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            Icon(
-                Icons.Outlined.CheckCircle,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.size(28.dp)
-            )
-            Column {
-                Text("Device ready", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
-                Text(
-                    "Waiting for session to start",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
+            when(trichterState.connection) {
+                Connection.Connected -> {
+                    Icon(
+                        Icons.Outlined.CheckCircle,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.size(28.dp)
+                    )
+                    Column {
+                        Text("Device ready", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
+                        Text(
+                            "Waiting for session to start",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
+                Connection.Disconnected , Connection.Connecting ->  {
+                    Icon(
+                        Icons.Outlined.RemoveCircle,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.error,
+                        modifier = Modifier.size(28.dp)
+                    )
+                    Column {
+                        Text("Device not ready", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
+                        Text(
+                            "Ensure Trichter is connected properly",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
             }
         }
     }
@@ -241,7 +262,7 @@ private fun PulsingRingPanel(
     )
 
     Column(
-        modifier = modifier.fillMaxWidth().padding(vertical = 24.dp),
+        modifier = modifier.fillMaxWidth().padding(top = 48.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
@@ -406,7 +427,8 @@ private fun CompletePanel(
                         Button(
                             onClick = { onSaveRun(meta) },
                             enabled = !transferring && !runSaved && selected != null,
-                            modifier = Modifier.weight(1f)
+                            modifier = Modifier.weight(1f),
+                            shape = RoundedCornerShape(0),
                         ) {
                             if (runSaved) {
                                 Icon(Icons.Outlined.CheckCircle, contentDescription = null)
@@ -421,7 +443,8 @@ private fun CompletePanel(
                                 if (!runSaved) showAckDialog = true else onAck()
                             },
                             enabled = !transferring,
-                            modifier = Modifier.weight(1f)
+                            modifier = Modifier.weight(1f),
+                                    shape = RoundedCornerShape(0),
                         ) {
                             Icon(Icons.Outlined.Send, contentDescription = null)
                             Spacer(Modifier.width(6.dp))
@@ -617,7 +640,7 @@ fun UsersSearchScreen(
                 singleLine = true,
                 leadingIcon = { Icon(Icons.Outlined.Search, null) }
             )
-            FilledTonalButton(onClick = onSelectSelf) {
+            FilledTonalButton(onClick = onSelectSelf, shape = RoundedCornerShape(0), modifier = Modifier.padding(vertical = 0.dp).fillMaxHeight()) {
                 Icon(Icons.Outlined.Person, contentDescription = null)
                 Spacer(Modifier.width(4.dp))
                 Text("Me")

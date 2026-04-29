@@ -14,18 +14,29 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.juul.kable.Identifier
+import com.juul.kable.ManufacturerData
+import com.juul.kable.PlatformAdvertisement
 import dev.icerock.moko.permissions.PermissionState
+import kotlinx.collections.immutable.persistentMapOf
+import org.trichter.app.features.ble.domain.models.Connection
 import org.trichter.app.features.ble.domain.models.ConnectionState
+import org.trichter.app.features.ble.domain.models.DeviceId
+import org.trichter.app.features.ble.domain.models.ImageStatus
+import org.trichter.app.features.ble.domain.models.ImageTransferState
 import org.trichter.app.features.ble.domain.models.ResultMeta
+import org.trichter.app.features.ble.domain.models.SessionStatus
+import org.trichter.app.features.ble.domain.models.TrichterState
 import org.trichter.app.features.ble.presentation.views.BleConnectScreen
 import org.trichter.app.features.ble.presentation.views.BleConnectedScreen
 import org.trichter.app.features.ble.presentation.views.BlePermissionsScreen
+import kotlin.collections.mapOf
 import kotlin.uuid.ExperimentalUuidApi
-
+import kotlin.uuid.Uuid
 
 @Composable
 fun BleScreen(viewModel: BleViewModel) {
-    val uiState by viewModel.state.collectAsStateWithLifecycle()
+   val uiState by viewModel.state.collectAsStateWithLifecycle()
     val searchUserState by viewModel.searchUserState.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
 
@@ -101,14 +112,14 @@ private fun BleConnectingScreen(
     modifier: Modifier = Modifier
 ) {
     Column(
-        modifier = modifier,
+        modifier = modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
         LoadingIndicator(
             modifier = Modifier
-                .size(150.dp)
+                .size(100.dp)
         )
         Text("Connecting", style = MaterialTheme.typography.bodyMediumEmphasized)
     }

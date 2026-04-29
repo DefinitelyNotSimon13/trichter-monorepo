@@ -40,7 +40,7 @@ fun BleConnectScreen(
 ) {
 
     Column(
-        modifier = modifier.fillMaxWidth().padding(50.dp),
+        modifier = modifier.fillMaxSize().padding(50.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {

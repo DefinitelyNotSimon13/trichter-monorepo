@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -25,7 +26,7 @@ fun BlePermissionsScreen(
     modifier: Modifier = Modifier,
 ) {
     when (permissionState) {
-        PermissionState.NotDetermined, PermissionState.Denied ->
+        PermissionState.NotDetermined, PermissionState.Denied, PermissionState.NotGranted ->
             PermissionNotGrantedView(onRequestPermissions, modifier)
         PermissionState.DeniedAlways ->
             PermissionPermanentlyDeniedView(onOpenSettings, modifier)
@@ -51,7 +52,7 @@ private fun PermissionNotGrantedView(
             style = MaterialTheme.typography.titleMedium
         )
         Spacer(Modifier.size(10.dp))
-        Button(onClick = onRequestPermissions) { Text("Grant Permissions") }
+        Button(onClick = onRequestPermissions, shape = RoundedCornerShape(0)) { Text("Grant Permissions") }
     }
 }
 
@@ -77,6 +78,6 @@ private fun PermissionPermanentlyDeniedView(
             style = MaterialTheme.typography.bodyMedium
         )
         Spacer(Modifier.size(10.dp))
-        Button(onClick = onOpenSettings) { Text("Open Settings") }
+        Button(onClick = onOpenSettings, shape = RoundedCornerShape(0)) { Text("Open Settings") }
     }
 }

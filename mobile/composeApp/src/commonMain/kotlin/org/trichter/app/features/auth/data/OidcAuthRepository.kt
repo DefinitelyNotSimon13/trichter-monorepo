@@ -1,11 +1,13 @@
 package org.trichter.app.features.auth.data
 
+import io.ktor.client.HttpClient
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import org.publicvalue.multiplatform.oidc.OpenIdConnectClient
 import org.publicvalue.multiplatform.oidc.appsupport.CodeAuthFlowFactory
 import org.publicvalue.multiplatform.oidc.flows.CodeAuthFlow
+import org.publicvalue.multiplatform.oidc.ktor.clearTokens
 import org.trichter.app.features.auth.domain.AuthRepository
 import org.trichter.app.features.auth.domain.model.AuthSession
 import org.trichter.app.features.auth.domain.model.AuthState
@@ -15,6 +17,7 @@ class OidcAuthRepository(
     private val oidcClient: OpenIdConnectClient,
     private val codeAuthFlowFactory: CodeAuthFlowFactory,
     private val authPreferences: AuthPreferences,
+    private val httpClient: HttpClient,
 ) : AuthRepository {
 
     private val mutableAuthState = MutableStateFlow<AuthState>(AuthState.Initializing)
@@ -79,6 +82,7 @@ class OidcAuthRepository(
 
     override suspend fun logout() {
         authPreferences.clearSession()
+        httpClient.clearTokens()
         mutableAuthState.value = AuthState.Unauthenticated
     }
 
