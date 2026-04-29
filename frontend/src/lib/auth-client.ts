@@ -15,7 +15,11 @@ export const authClient = createAuthClient({
   plugins: [
     passkeyClient(),
     lastLoginMethodClient(),
-    jwtClient(),
+    jwtClient({
+      jwks: {
+        jwksPath: "/.well-known/jwks.json",
+      },
+    }),
     adminClient(),
     dashClient(),
     apiKeyClient(),

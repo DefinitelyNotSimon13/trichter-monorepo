@@ -6,7 +6,7 @@
     "#/*": "./src/*"
   },
   "scripts": {
-    "dev": "VITE_BUILD_ID=dev vite dev --port 3000",
+    "dev": "VITE_BUILD_ID=dev vite dev --port 3000 --host 127.0.0.1",
     "build": "vite build",
     "preview": "vite preview",
     "test": "vitest run",

@@ -165,7 +165,15 @@ export const auth = betterAuth({
     passkey(),
     username(),
     lastLoginMethod(),
-    jwt(),
+    jwt({
+      disableSettingJwtHeader: true,
+      jwks: {
+        jwksPath: "/.well-known/jwks.json",
+        keyPairConfig: {
+          alg: "ES512",
+        },
+      },
+    }),
     apiKey(),
     openAPI(),
     admin(),

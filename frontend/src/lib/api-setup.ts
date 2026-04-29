@@ -14,11 +14,9 @@ if (typeof window !== "undefined") {
   client.setConfig({ baseUrl: "" });
 
   client.interceptors.request.use(async (request) => {
-    if (request.method !== "GET") {
-      const token = await getBearerToken();
-      if (token) {
-        request.headers.set("Authorization", `Bearer ${token}`);
-      }
+    const token = await getBearerToken();
+    if (token) {
+      request.headers.set("Authorization", `Bearer ${token}`);
     }
     return request;
   });

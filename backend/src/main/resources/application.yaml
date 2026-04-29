@@ -7,8 +7,10 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          jwk-set-uri: ${BETTERAUTH_URL}/api/auth/.well-known/jwks.json
           issuer-uri: ${BETTERAUTH_URL}
+          jwk-set-uri: ${BETTERAUTH_URL}/api/auth/.well-known/jwks.json
+          jws-algorithms:
+            - ES512
   jpa:
     hibernate:
       ddl-auto: validate
@@ -33,6 +35,8 @@ app:
     azure:
       container-name: trichter-image
       key-prefix: runs/images
+  cors:
+    allowed-origins: "https://next.trichter.hauptspeicher.com"
 
 springdoc:
   swagger-ui:
