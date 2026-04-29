@@ -8,7 +8,7 @@ spring:
       resourceserver:
         jwt:
           issuer-uri: ${BETTERAUTH_URL}
-          jwk-set-uri: ${BETTERAUTH_URL}/api/auth/.well-known/jwks.json
+          jwk-set-uri: ${BETTERAUTH_URL}/.well-known/jwks.json
           jws-algorithms:
             - ES512
   jpa:
@@ -49,3 +49,7 @@ logging:
   level:
     org.hibernate.SQL: warn
     org.hibernate.orm.jdbc.bind: warn
+    org.springframework.security: warn
+    org.springframework.security.oauth2: warn
+    org.springframework.web.cors: warn
+

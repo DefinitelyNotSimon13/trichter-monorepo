@@ -167,6 +167,10 @@ export const auth = betterAuth({
     lastLoginMethod(),
     jwt({
       disableSettingJwtHeader: true,
+      jwt: {
+        issuer: serverEnv.BETTER_AUTH_URL + "/api/auth",
+        audience: serverEnv.BETTER_AUTH_URL + "/api/auth",
+      },
       jwks: {
         jwksPath: "/.well-known/jwks.json",
         keyPairConfig: {
