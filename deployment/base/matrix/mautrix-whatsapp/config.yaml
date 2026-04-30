@@ -108,6 +108,13 @@ data:
             "*": relay
             "hauptspeicher.com": user
             "@simon:hauptspeicher.com": admin
+        double_puppet_server_map:
+            hauptspeicher.com: http://synapse.matrix.svc.cluster.local:8008
+
+    double_puppet:
+        servers: {}
+        secrets:
+            hauptspeicher.com: "as_token:__DOUBLEPUPPET_AS_TOKEN__"
 
     database:
         type: postgres
@@ -135,7 +142,7 @@ data:
         id: whatsapp
         bot:
             username: whatsappbot
-            displayname: WhatsApp Bot
+            displayname: WhatsApp Bridge
             avatar: mxc://maunium.net/NeXNQarUbrlYBiPCpprYsRqr
         ephemeral_events: true
         async_transactions: false

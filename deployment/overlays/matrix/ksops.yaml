@@ -10,3 +10,4 @@ files:
   - secrets/meta-bridge.secret.yaml
   - secrets/gmessages-bridge.secret.yaml
   - secrets/postmoogle.secret.yaml
+  - secrets/discord-bridge.secret.yaml

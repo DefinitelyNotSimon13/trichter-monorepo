@@ -1,0 +1,84 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mautrix-discord-config-template
+  namespace: matrix
+data:
+  config.template.yaml: |
+    homeserver:
+        address: http://synapse.matrix.svc.cluster.local:8008
+        domain: hauptspeicher.com
+        software: standard
+        async_media: true
+
+    appservice:
+        address: http://mautrix-discord.matrix.svc.cluster.local:29334
+        hostname: 0.0.0.0
+        port: 29334
+        database:
+            type: postgres
+            uri: postgres://synapse:__POSTGRES_PASSWORD__@postgres.matrix.svc.cluster.local/mautrix_discord?sslmode=disable
+            max_open_conns: 5
+            max_idle_conns: 1
+            max_conn_idle_time: null
+            max_conn_lifetime: null
+        id: discord
+        bot:
+            username: discordbot
+            displayname: Discord Bridge
+            avatar: mxc://maunium.net/nIdEykemnwdisvHbpxflpDlC
+        ephemeral_events: true
+        async_transactions: false
+        as_token: __DISCORD_AS_TOKEN__
+        hs_token: __DISCORD_HS_TOKEN__
+
+    bridge:
+        command_prefix: '!dc'
+        username_template: discord_{{.}}
+        displayname_template: '{{if .Webhook}}Webhook{{else}}{{or .GlobalName .Username}}{{if .Bot}} (bot){{end}}{{end}}'
+        channel_name_template: '{{if or (eq .Type 3) (eq .Type 4)}}{{.Name}}{{else}}#{{.Name}}{{end}}'
+        guild_name_template: '{{.Name}}'
+        private_chat_portal_meta: default
+        personal_filtering_spaces: true
+        delivery_receipts: false
+        message_status_events: true
+        message_error_notices: true
+        resend_bridge_info: false
+        sync_direct_chat_list: true
+        mute_channels_on_create: false
+        restricted_rooms: true
+        autojoin_thread_on_open: true
+        embed_fields_as_tables: true
+        relay:
+            enabled: false
+            admin_only: true
+        permissions:
+            "*": relay
+            "hauptspeicher.com": user
+            "@simon:hauptspeicher.com": admin
+        double_puppet_server_map:
+            hauptspeicher.com: http://synapse.matrix.svc.cluster.local:8008
+
+    double_puppet:
+        servers: {}
+        secrets:
+            hauptspeicher.com: "as_token:__DOUBLEPUPPET_AS_TOKEN__"
+
+    matrix:
+        message_status_events: true
+        delivery_receipts: false
+        message_error_notices: true
+        sync_direct_chat_list: true
+        federate_rooms: true
+        upload_file_threshold: 5242880
+
+    backfill:
+        enabled: true
+        max_initial_messages: 50
+        max_catchup_messages: 500
+        unread_hours_threshold: 720
+        queue:
+            enabled: false
+            batch_size: 100
+            batch_delay: 20
+            max_batches: -1

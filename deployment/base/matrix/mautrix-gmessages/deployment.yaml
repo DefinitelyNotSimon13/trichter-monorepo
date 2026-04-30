@@ -60,6 +60,7 @@ spec:
                 -e "s|__POSTGRES_PASSWORD__|${POSTGRES_PASSWORD}|g" \
                 -e "s|__GM_AS_TOKEN__|${GM_AS_TOKEN}|g" \
                 -e "s|__GM_HS_TOKEN__|${GM_HS_TOKEN}|g" \
+                -e "s|__DOUBLEPUPPET_AS_TOKEN__|${DOUBLEPUPPET_AS_TOKEN}|g" \
                 /config-template/config.template.yaml > /data/config.yaml
           volumeMounts:
             - name: data

@@ -32,6 +32,13 @@ data:
             "*": relay
             "hauptspeicher.com": user
             "@simon:hauptspeicher.com": admin
+        double_puppet_server_map:
+            hauptspeicher.com: http://synapse.matrix.svc.cluster.local:8008
+
+    double_puppet:
+        servers: {}
+        secrets:
+            hauptspeicher.com: "as_token:__DOUBLEPUPPET_AS_TOKEN__"
 
     database:
         type: postgres
@@ -54,7 +61,7 @@ data:
         id: instagram
         bot:
             username: instagrambot
-            displayname: Instagram Bot
+            displayname: Instagram Bridge
             avatar: mxc://maunium.net/JxjlbZUlCXnUoTgKToTtbxnG
         ephemeral_events: true
         async_transactions: false

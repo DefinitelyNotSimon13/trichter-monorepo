@@ -10,3 +10,4 @@ resources:
   - mautrix-meta/
   - mautrix-gmessages/
   - postmoogle/
+  - mautrix-discord/
