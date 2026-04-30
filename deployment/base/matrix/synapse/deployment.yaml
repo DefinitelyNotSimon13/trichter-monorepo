@@ -25,6 +25,8 @@ spec:
           envFrom:
             - secretRef:
                 name: matrix-secret
+            - secretRef:
+                name: whatsapp-bridge-secret
           command:
             - sh
             - -c
@@ -36,12 +38,20 @@ spec:
                 -e "s|__GITHUB_OAUTH_SECRET__|${GITHUB_OAUTH_SECRET}|g" \
                 -e "s|__CODEBERG_OAUTH_SECRET__|${CODEBERG_OAUTH_SECRET}|g" \
                 -e "s|__RECAPTCHA_PRIVATE_KEY__|${RECAPTCHA_PRIVATE_KEY}|g" \
+                -e "s|__TURN_SHARED_SECRET__|${TURN_SHARED_SECRET}|g" \
                 /config/homeserver.template.yaml > /data/homeserver.yaml
+              sed \
+                -e "s|__WA_AS_TOKEN__|${WA_AS_TOKEN}|g" \
+                -e "s|__WA_HS_TOKEN__|${WA_HS_TOKEN}|g" \
+                /config-whatsapp/whatsapp-registration.template.yaml > /data/whatsapp-registration.yaml
           volumeMounts:
             - name: data
               mountPath: /data
             - name: synapse-config-template
               mountPath: /config
+              readOnly: true
+            - name: whatsapp-registration-template
+              mountPath: /config-whatsapp
               readOnly: true
       containers:
         - name: synapse
@@ -54,6 +64,8 @@ spec:
               containerPort: 8448
             - name: http
               containerPort: 8008
+            - name: metrics
+              containerPort: 9000
           volumeMounts:
             - name: data
               mountPath: /data
@@ -74,3 +86,6 @@ spec:
         - name: synapse-config-template
           configMap:
             name: synapse-config-template
+        - name: whatsapp-registration-template
+          configMap:
+            name: mautrix-whatsapp-registration-template

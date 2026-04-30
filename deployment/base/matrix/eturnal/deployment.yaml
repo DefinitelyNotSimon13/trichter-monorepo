@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: eturnal
+  namespace: matrix
+  labels:
+    app: eturnal
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: eturnal
+  template:
+    metadata:
+      labels:
+        app: eturnal
+    spec:
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
+      securityContext:
+        runAsUser: 9000
+        runAsGroup: 9000
+        fsGroup: 9000
+      containers:
+        - name: eturnal
+          image: ghcr.io/processone/eturnal:latest
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsUser: 9000
+            runAsGroup: 9000
+            runAsNonRoot: true
+            privileged: false
+            capabilities:
+              drop:
+                - ALL
+          readinessProbe:
+            tcpSocket:
+              port: 3478
+            initialDelaySeconds: 10
+            periodSeconds: 30
+          volumeMounts:
+            - name: eturnal-config
+              mountPath: /etc/eturnal.yml
+              subPath: eturnal.yml
+              readOnly: true
+      volumes:
+        - name: eturnal-config
+          configMap:
+            name: eturnal-config
