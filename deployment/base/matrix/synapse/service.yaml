@@ -13,3 +13,6 @@ spec:
     - name: federation
       port: 8448
       targetPort: federation
+    - name: metrics
+      port: 9000
+      targetPort: metrics

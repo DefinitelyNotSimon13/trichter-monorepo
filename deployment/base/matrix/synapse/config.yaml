@@ -20,8 +20,19 @@ data:
               - client
               - federation
             compress: true
+      - port: 9000
+        type: metrics
+        bind_addresses:
+          - 0.0.0.0
 
     report_stats: false
+
+    room_list_publication_rules:
+      - user_id: "*:hauptspeicher.com"
+        room_id: "*"
+        alias: "*"
+        action: allow
+      - action: deny
 
     url_preview_enabled: true
     url_preview_ip_range_blacklist:
@@ -38,7 +49,7 @@ data:
       - "10.43.0.0/16"
 
     max_upload_size: 100M
-    enable_metrics: false
+    enable_metrics: true
 
     enable_registration: true
     registration_requires_token: true
@@ -46,7 +57,7 @@ data:
     registration_shared_secret: "__REGISTRAION_SHARED_SECRET__"
 
     trusted_key_servers:
-      - server_name: matrix.org
+      - server_name: matrix.hauptspeicher.com
 
     database:
       name: psycopg2
@@ -91,8 +102,9 @@ data:
             subject_claim: "id"
             localpart_template: "{{ user.login }}"
             display_name_template: "{{ user.name }}"
-      - idp_id: forgejo
-        idp_name: Forgejo
+      - idp_id: codeberg
+        idp_name: codeberg
+        idp_icon: "mxc://hauptspeicher.com/iCSELVVRWJVnmNKqacmiVvLu"
         discover: false
         issuer: "https://codeberg.org/"
         client_id: "7f5be7d7-1bd2-4e2e-ad3e-51da2467c4a2"
@@ -109,3 +121,14 @@ data:
             localpart_template: "{{ user.preferred_username }}"
             display_name_template: "{{ user.name }}"
             email_template: "{{ user.email }}"
+
+    turn_uris:
+      - "turn:turn.hauptspeicher.com:3478?transport=udp"
+      - "turn:turn.hauptspeicher.com:3478?transport=tcp"
+
+    turn_shared_secret: "__TURN_SHARED_SECRET__"
+    turn_user_lifetime: "1h"
+    turn_allow_guests: false
+
+    app_service_config_files:
+      - /data/whatsapp-registration.yaml

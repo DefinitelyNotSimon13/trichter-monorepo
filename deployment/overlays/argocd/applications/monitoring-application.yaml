@@ -1,0 +1,47 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: monitoring
+  namespace: argocd
+spec:
+  project: default
+  sources:
+    - repoURL: https://prometheus-community.github.io/helm-charts
+      chart: kube-prometheus-stack
+      targetRevision: "*"
+      helm:
+        releaseName: kube-prometheus-stack
+        valuesObject:
+          grafana:
+            admin:
+              existingSecret: monitoring-secret
+              userKey: admin-user
+              passwordKey: admin-password
+            ingress:
+              enabled: false
+            sidecar:
+              dashboards:
+                enabled: true
+          prometheus:
+            prometheusSpec:
+              additionalScrapeConfigs:
+                - job_name: synapse
+                  scrape_interval: 15s
+                  metrics_path: /_synapse/metrics
+                  static_configs:
+                    - targets:
+                        - synapse.matrix.svc.cluster.local:9000
+    - repoURL: https://github.com/DefinitelyNotSimon13/trichter-monorepo.git
+      targetRevision: HEAD
+      path: deployment/overlays/monitoring
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: monitoring
+  syncPolicy:
+    syncOptions:
+      - ServerSideApply=true
+      - CreateNamespace=true
+    automated:
+      enabled: true
+      prune: true
+      selfHeal: true

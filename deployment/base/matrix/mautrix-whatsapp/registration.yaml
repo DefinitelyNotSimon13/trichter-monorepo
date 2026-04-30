@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mautrix-whatsapp-registration-template
+  namespace: matrix
+data:
+  whatsapp-registration.template.yaml: |
+    id: whatsapp
+    url: http://mautrix-whatsapp.matrix.svc.cluster.local:29318
+    as_token: __WA_AS_TOKEN__
+    hs_token: __WA_HS_TOKEN__
+    sender_localpart: whatsappbot
+    rate_limited: false
+    namespaces:
+      users:
+        - regex: '^@whatsapp_.+:hauptspeicher\.com$'
+          exclusive: true
+        - regex: '^@whatsappbot:hauptspeicher\.com$'
+          exclusive: true
+      aliases: []
+      rooms: []

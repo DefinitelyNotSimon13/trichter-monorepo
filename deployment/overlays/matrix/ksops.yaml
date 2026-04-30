@@ -5,3 +5,5 @@ metadata:
   namespace: matrix
 files:
   - secrets/matrix.secret.yaml
+  - secrets/eturnal-config.secret.yaml
+  - secrets/whatsapp-bridge.secret.yaml
