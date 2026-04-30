@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: synapse-admin
+  namespace: matrix
+  labels:
+    app.kubernetes.io/name: synapse-admin
+    app.kubernetes.io/part-of: matrix
+    app.kubernetes.io/component: admin-ui
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: synapse-admin
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: synapse-admin
+        app.kubernetes.io/part-of: matrix
+        app.kubernetes.io/component: admin-ui
+    spec:
+      containers:
+        - name: synapse-admin
+          image: awesometechnologies/synapse-admin:latest
+          ports:
+            - name: http
+              containerPort: 80
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http

@@ -34,6 +34,7 @@ spec:
                 -e "s|__POSTGRES_PASSWORD__|${POSTGRES_PASSWORD}|g" \
                 -e "s|__REGISTRATION_SHARED_SECRET__|${REGISTRATION_SHARED_SECRET}|g" \
                 -e "s|__GITHUB_OAUTH_SECRET__|${GITHUB_OAUTH_SECRET}|g" \
+                -e "s|__CODEBERG_OAUTH_SECRET__|${CODEBERG_OAUTH_SECRET}|g" \
                 -e "s|__RECAPTCHA_PRIVATE_KEY__|${RECAPTCHA_PRIVATE_KEY}|g" \
                 /config/homeserver.template.yaml > /data/homeserver.yaml
           volumeMounts:

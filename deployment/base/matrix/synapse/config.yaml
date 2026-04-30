@@ -91,3 +91,21 @@ data:
             subject_claim: "id"
             localpart_template: "{{ user.login }}"
             display_name_template: "{{ user.name }}"
+      - idp_id: forgejo
+        idp_name: Forgejo
+        discover: false
+        issuer: "https://codeberg.org/"
+        client_id: "7f5be7d7-1bd2-4e2e-ad3e-51da2467c4a2"
+        client_secret: "__CODEBERG_OAUTH_SECRET__"
+        client_auth_method: client_secret_post
+        scopes: ["openid", "profile", "email", "groups"]
+        authorization_endpoint: "https://codeberg.org/login/oauth/authorize"
+        token_endpoint: "https://codeberg.org/login/oauth/access_token"
+        userinfo_endpoint: "https://codeberg.org/api/v1/user"
+        user_mapping_provider:
+          config:
+            subject_claim: "sub"
+            picture_claim: "picture"
+            localpart_template: "{{ user.preferred_username }}"
+            display_name_template: "{{ user.name }}"
+            email_template: "{{ user.email }}"
