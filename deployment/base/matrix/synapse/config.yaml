@@ -132,3 +132,5 @@ data:
 
     app_service_config_files:
       - /data/whatsapp-registration.yaml
+      - /data/meta-registration.yaml
+      - /data/gmessages-registration.yaml

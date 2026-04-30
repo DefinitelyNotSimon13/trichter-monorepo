@@ -85,7 +85,7 @@ data:
                 shared_no_users: nothing
                 shared_has_users: nothing
         relay:
-            enabled: false
+            enabled: true
             admin_only: true
             prefer_default: true
             allow_bridge: true
@@ -159,7 +159,7 @@ data:
         enable_session_transfers: false
 
     backfill:
-        enabled: true
+        enabled: false
         max_initial_messages: 50
         max_catchup_messages: 500
         unread_hours_threshold: 720

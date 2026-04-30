@@ -7,3 +7,5 @@ files:
   - secrets/matrix.secret.yaml
   - secrets/eturnal-config.secret.yaml
   - secrets/whatsapp-bridge.secret.yaml
+  - secrets/meta-bridge.secret.yaml
+  - secrets/gmessages-bridge.secret.yaml
