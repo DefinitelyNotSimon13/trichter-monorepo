@@ -1,0 +1,75 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: synapse
+  namespace: matrix
+  labels:
+    app.kubernetes.io/name: synapse
+    app.kubernetes.io/part-of: matrix
+    app.kubernetes.io/component: server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: synapse
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: synapse
+        app.kubernetes.io/part-of: matrix
+        app.kubernetes.io/component: server
+    spec:
+      initContainers:
+        - name: render-config
+          image: alpine:3.23.4
+          envFrom:
+            - secretRef:
+                name: matrix-secret
+          command:
+            - sh
+            - -c
+            - |
+              set -eu
+              sed  \
+                -e "s|__POSTGRES_PASSWORD__|${POSTGRES_PASSWORD}|g" \
+                -e "s|__REGISTRATION_SHARED_SECRET__|${REGISTRATION_SHARED_SECRET}|g" \
+                -e "s|__GITHUB_OAUTH_SECRET__|${GITHUB_OAUTH_SECRET}|g" \
+                -e "s|__RECAPTCHA_PRIVATE_KEY__|${RECAPTCHA_PRIVATE_KEY}|g" \
+                /config/homeserver.template.yaml > /data/homeserver.yaml
+          volumeMounts:
+            - name: data
+              mountPath: /data
+            - name: synapse-config-template
+              mountPath: /config
+              readOnly: true
+      containers:
+        - name: synapse
+          image: ghcr.io/element-hq/synapse:latest
+          env:
+            - name: SYNAPSE_CONFIG_PATH
+              value: /data/homeserver.yaml
+          ports:
+            - name: federation
+              containerPort: 8448
+            - name: http
+              containerPort: 8008
+          volumeMounts:
+            - name: data
+              mountPath: /data
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+          startupProbe:
+            httpGet:
+              path: /health
+              port: http
+            periodSeconds: 10
+            failureThreshold: 30
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: synapse
+        - name: synapse-config-template
+          configMap:
+            name: synapse-config-template

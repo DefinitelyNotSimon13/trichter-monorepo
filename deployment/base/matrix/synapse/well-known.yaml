@@ -1,0 +1,78 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: matrix-well-known
+  namespace: matrix
+data:
+  server: | # json
+    {
+      "m.server": "matrix.hauptspeicher.com:443"
+    }
+  client: | # json
+    {
+      "m.homeserver": {
+        "base_url": "https://matrix.hauptspeicher.com"
+      },
+      "m.identity_server": {}
+    }
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: matrix-well-known
+  namespace: matrix
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: matrix-well-known
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: matrix-well-known
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:alpine
+          ports:
+            - name: http
+              containerPort: 80
+          volumeMounts:
+            - name: well-known
+              mountPath: /usr/share/nginx/html/.well-known/matrix
+              readOnly: true
+      volumes:
+        - name: well-known
+          configMap:
+            name: matrix-well-known
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: matrix-well-known
+  namespace: matrix
+spec:
+  selector:
+    app.kubernetes.io/name: matrix-well-known
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: matrix-well-known
+  namespace: matrix
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`hauptspeicher.com`) && PathPrefix(`/.well-known/matrix`)
+      kind: Rule
+      services:
+        - name: matrix-well-known
+          port: 80
+  tls:
+    certResolver: myresolver
+

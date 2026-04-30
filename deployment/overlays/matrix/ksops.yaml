@@ -1,0 +1,7 @@
+apiVersion: viaduct.ai/v1
+kind: ksops
+metadata:
+  name: matrix-secret-generator
+  namespace: matrix
+files:
+  - secrets/matrix.secret.yaml

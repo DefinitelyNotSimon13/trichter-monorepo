@@ -72,7 +72,7 @@ export default defineConfig({
         },
       ],
     }),
-    nitro({ compressPublicAssets: { gzip: true, brotli: true } }),
+    // nitro({ compressPublicAssets: { gzip: true, brotli: true } }),
     viteReact({
       babel: {
         plugins: ["babel-plugin-react-compiler"],
