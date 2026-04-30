@@ -36,10 +36,15 @@ spec:
               drop:
                 - ALL
           readinessProbe:
-            tcpSocket:
-              port: 3478
+            exec:
+              command:
+                - eturnalctl
+                - info
             initialDelaySeconds: 10
             periodSeconds: 30
+          env:
+            - name: STUN_SERVICE
+              value: "false"
           volumeMounts:
             - name: eturnal-config
               mountPath: /etc/eturnal.yml

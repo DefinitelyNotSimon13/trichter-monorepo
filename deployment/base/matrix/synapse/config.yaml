@@ -134,3 +134,19 @@ data:
       - /data/whatsapp-registration.yaml
       - /data/meta-registration.yaml
       - /data/gmessages-registration.yaml
+
+    admin_contact: mailto:simon21.blum@gmail.com
+    mau_stats_only: true
+
+    auto_join_rooms:
+      - '#welcome:hauptspeicher.com'
+
+    email:
+      smtp_host: smtp.azurecomm.net
+      smtp_port: 587
+      smtp_user: "__ACS_SMTP_USERNAME__"
+      smtp_pass: "__ACS_SMTP_PASSWORD__"
+      notif_from: "matrix@hauptspeicher.com"
+      enable_notifs: true
+      notif_for_new_users: false
+      client_base_url: https://matrix.hauptspeicher.com

@@ -9,3 +9,4 @@ resources:
   - mautrix-whatsapp/
   - mautrix-meta/
   - mautrix-gmessages/
+  - postmoogle/

@@ -1,0 +1,75 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postmoogle
+  namespace: matrix
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+  labels:
+    app.kubernetes.io/name: postmoogle
+    app.kubernetes.io/part-of: matrix
+    app.kubernetes.io/component: bridge
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: postmoogle
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: postmoogle
+        app.kubernetes.io/part-of: matrix
+        app.kubernetes.io/component: bridge
+    spec:
+      initContainers:
+        - name: create-database
+          image: docker.io/postgres:18-alpine
+          envFrom:
+            - secretRef:
+                name: matrix-secret
+          command:
+            - sh
+            - -c
+            - |
+              psql -h postgres.matrix.svc.cluster.local -U "$POSTGRES_USER" \
+                -c "CREATE DATABASE postmoogle ENCODING 'UTF8' LC_COLLATE 'C' LC_CTYPE 'C' TEMPLATE template0;" \
+                2>/dev/null || true
+          env:
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: matrix-secret
+                  key: POSTGRES_PASSWORD
+      containers:
+        - name: postmoogle
+          image: ghcr.io/etkecc/postmoogle:latest
+          securityContext:
+            runAsUser: 0
+          envFrom:
+            - secretRef:
+                name: postmoogle-secret
+          env:
+            - name: POSTMOOGLE_HOMESERVER
+              value: http://synapse.matrix.svc.cluster.local:8008
+            - name: POSTMOOGLE_DB_DIALECT
+              value: postgres
+            - name: POSTMOOGLE_ADMINS
+              value: "@simon:hauptspeicher.com"
+            - name: POSTMOOGLE_DOMAINS
+              value: hauptspeicher.com
+            - name: POSTMOOGLE_PORT
+              value: "25"
+            - name: POSTMOOGLE_RELAY_HOST
+              value: smtp.azurecomm.net
+            - name: POSTMOOGLE_RELAY_PORT
+              value: "587"
+          ports:
+            - name: smtp
+              containerPort: 25
+          volumeMounts:
+            - name: data
+              mountPath: /data
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: postmoogle

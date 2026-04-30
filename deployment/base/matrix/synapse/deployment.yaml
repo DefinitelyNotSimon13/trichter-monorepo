@@ -28,6 +28,8 @@ spec:
             - secretRef:
                 name: matrix-secret
             - secretRef:
+                name: postmoogle-secret
+            - secretRef:
                 name: whatsapp-bridge-secret
             - secretRef:
                 name: meta-bridge-secret
@@ -39,6 +41,8 @@ spec:
             - |
               set -eu
               sed  \
+                -e "s|__ACS_SMTP_USERNAME__|${POSTMOOGLE_RELAY_USERNAME}|g" \
+                -e "s|__ACS_SMTP_PASSWORD__|${POSTMOOGLE_RELAY_PASSWORD}|g" \
                 -e "s|__POSTGRES_PASSWORD__|${POSTGRES_PASSWORD}|g" \
                 -e "s|__REGISTRATION_SHARED_SECRET__|${REGISTRATION_SHARED_SECRET}|g" \
                 -e "s|__GITHUB_OAUTH_SECRET__|${GITHUB_OAUTH_SECRET}|g" \
