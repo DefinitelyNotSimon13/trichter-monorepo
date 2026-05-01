@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mautrix-discord-registration-template
+  namespace: matrix
+data:
+  discord-registration.template.yaml: |
+    id: discord
+    url: http://mautrix-discord.matrix.svc.cluster.local:29334
+    as_token: __DISCORD_AS_TOKEN__
+    hs_token: __DISCORD_HS_TOKEN__
+    sender_localpart: discordbot
+    rate_limited: false
+    namespaces:
+      users:
+        - regex: '^@discord_.+:hauptspeicher\.com$'
+          exclusive: true
+        - regex: '^@discordbot:hauptspeicher\.com$'
+          exclusive: true
+      aliases: []
+      rooms: []

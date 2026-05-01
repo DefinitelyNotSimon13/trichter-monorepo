@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: doublepuppet-registration-template
+  namespace: matrix
+data:
+  doublepuppet-registration.template.yaml: |
+    id: doublepuppet
+    url:
+    as_token: __DOUBLEPUPPET_AS_TOKEN__
+    hs_token: 64585e3f57c0c5c4813901392d179b1721f2ea0b6d516322f6a6f6a3c58254dd
+    sender_localpart: ca771c78b31b55b74befeda19e994b82
+    rate_limited: false
+    namespaces:
+      users:
+        - regex: '@.*:hauptspeicher\.com'
+          exclusive: false

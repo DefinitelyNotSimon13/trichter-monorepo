@@ -7,3 +7,7 @@ resources:
   - eturnal/
   - synapse-admin/
   - mautrix-whatsapp/
+  - mautrix-meta/
+  - mautrix-gmessages/
+  - postmoogle/
+  - mautrix-discord/

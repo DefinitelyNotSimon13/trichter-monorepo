@@ -3,6 +3,8 @@ kind: Deployment
 metadata:
   name: synapse
   namespace: matrix
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
   labels:
     app.kubernetes.io/name: synapse
     app.kubernetes.io/part-of: matrix
@@ -26,13 +28,23 @@ spec:
             - secretRef:
                 name: matrix-secret
             - secretRef:
+                name: postmoogle-secret
+            - secretRef:
                 name: whatsapp-bridge-secret
+            - secretRef:
+                name: meta-bridge-secret
+            - secretRef:
+                name: gmessages-bridge-secret
+            - secretRef:
+                name: discord-bridge-secret
           command:
             - sh
             - -c
             - |
               set -eu
               sed  \
+                -e "s|__ACS_SMTP_USERNAME__|${POSTMOOGLE_RELAY_USERNAME}|g" \
+                -e "s|__ACS_SMTP_PASSWORD__|${POSTMOOGLE_RELAY_PASSWORD}|g" \
                 -e "s|__POSTGRES_PASSWORD__|${POSTGRES_PASSWORD}|g" \
                 -e "s|__REGISTRATION_SHARED_SECRET__|${REGISTRATION_SHARED_SECRET}|g" \
                 -e "s|__GITHUB_OAUTH_SECRET__|${GITHUB_OAUTH_SECRET}|g" \
@@ -44,6 +56,21 @@ spec:
                 -e "s|__WA_AS_TOKEN__|${WA_AS_TOKEN}|g" \
                 -e "s|__WA_HS_TOKEN__|${WA_HS_TOKEN}|g" \
                 /config-whatsapp/whatsapp-registration.template.yaml > /data/whatsapp-registration.yaml
+              sed \
+                -e "s|__META_AS_TOKEN__|${META_AS_TOKEN}|g" \
+                -e "s|__META_HS_TOKEN__|${META_HS_TOKEN}|g" \
+                /config-meta/meta-registration.template.yaml > /data/meta-registration.yaml
+              sed \
+                -e "s|__GM_AS_TOKEN__|${GM_AS_TOKEN}|g" \
+                -e "s|__GM_HS_TOKEN__|${GM_HS_TOKEN}|g" \
+                /config-gmessages/gmessages-registration.template.yaml > /data/gmessages-registration.yaml
+              sed \
+                -e "s|__DISCORD_AS_TOKEN__|${DISCORD_AS_TOKEN}|g" \
+                -e "s|__DISCORD_HS_TOKEN__|${DISCORD_HS_TOKEN}|g" \
+                /config-discord/discord-registration.template.yaml > /data/discord-registration.yaml
+              sed \
+                -e "s|__DOUBLEPUPPET_AS_TOKEN__|${DOUBLEPUPPET_AS_TOKEN}|g" \
+                /config-doublepuppet/doublepuppet-registration.template.yaml > /data/doublepuppet-registration.yaml
           volumeMounts:
             - name: data
               mountPath: /data
@@ -52,6 +79,18 @@ spec:
               readOnly: true
             - name: whatsapp-registration-template
               mountPath: /config-whatsapp
+              readOnly: true
+            - name: meta-registration-template
+              mountPath: /config-meta
+              readOnly: true
+            - name: gmessages-registration-template
+              mountPath: /config-gmessages
+              readOnly: true
+            - name: discord-registration-template
+              mountPath: /config-discord
+              readOnly: true
+            - name: doublepuppet-registration-template
+              mountPath: /config-doublepuppet
               readOnly: true
       containers:
         - name: synapse
@@ -89,3 +128,15 @@ spec:
         - name: whatsapp-registration-template
           configMap:
             name: mautrix-whatsapp-registration-template
+        - name: meta-registration-template
+          configMap:
+            name: mautrix-meta-registration-template
+        - name: gmessages-registration-template
+          configMap:
+            name: mautrix-gmessages-registration-template
+        - name: discord-registration-template
+          configMap:
+            name: mautrix-discord-registration-template
+        - name: doublepuppet-registration-template
+          configMap:
+            name: doublepuppet-registration-template

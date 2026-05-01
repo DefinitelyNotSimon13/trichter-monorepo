@@ -1,0 +1,93 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mautrix-meta-config-template
+  namespace: matrix
+data:
+  config.template.yaml: |
+    network:
+        mode: instagram
+        username_template: instagram_{{.}}
+        displayname_template: '{{or .Name .Username "Unknown"}} (IG)'
+        proxy: null
+        get_proxy_url: null
+
+    bridge:
+        command_prefix: '!ig'
+        personal_filtering_spaces: true
+        private_chat_portal_meta: true
+        async_events: false
+        resend_bridge_info: false
+        bridge_status_notices: errors
+        bridge_matrix_leave: false
+        bridge_notices: false
+        tag_only_on_create: true
+        only_bridge_tags: [m.favourite, m.lowpriority]
+        mute_only_on_create: true
+        deduplicate_matrix_messages: false
+        relay:
+            enabled: false
+            admin_only: true
+        permissions:
+            "*": relay
+            "hauptspeicher.com": user
+            "@simon:hauptspeicher.com": admin
+        double_puppet_server_map:
+            hauptspeicher.com: http://synapse.matrix.svc.cluster.local:8008
+
+    double_puppet:
+        servers: {}
+        secrets:
+            hauptspeicher.com: "as_token:__DOUBLEPUPPET_AS_TOKEN__"
+
+    database:
+        type: postgres
+        uri: postgres://synapse:__POSTGRES_PASSWORD__@postgres.matrix.svc.cluster.local/mautrix_meta?sslmode=disable
+        max_open_conns: 5
+        max_idle_conns: 1
+        max_conn_idle_time: null
+        max_conn_lifetime: null
+
+    homeserver:
+        address: http://synapse.matrix.svc.cluster.local:8008
+        domain: hauptspeicher.com
+        software: standard
+        async_media: true
+
+    appservice:
+        address: http://mautrix-meta.matrix.svc.cluster.local:29319
+        hostname: 0.0.0.0
+        port: 29319
+        id: instagram
+        bot:
+            username: instagrambot
+            displayname: Instagram Bridge
+            avatar: mxc://maunium.net/JxjlbZUlCXnUoTgKToTtbxnG
+        ephemeral_events: true
+        async_transactions: false
+        as_token: __META_AS_TOKEN__
+        hs_token: __META_HS_TOKEN__
+        username_template: instagram_{{.}}
+
+    matrix:
+        message_status_events: true
+        delivery_receipts: false
+        message_error_notices: true
+        sync_direct_chat_list: true
+        federate_rooms: true
+        upload_file_threshold: 5242880
+
+    provisioning:
+        shared_secret: disable
+        debug_endpoints: false
+
+    backfill:
+        enabled: true
+        max_initial_messages: 50
+        max_catchup_messages: 500
+        unread_hours_threshold: 720
+        queue:
+            enabled: false
+            batch_size: 100
+            batch_delay: 20
+            max_batches: -1

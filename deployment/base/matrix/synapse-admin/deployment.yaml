@@ -3,6 +3,8 @@ kind: Deployment
 metadata:
   name: synapse-admin
   namespace: matrix
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
   labels:
     app.kubernetes.io/name: synapse-admin
     app.kubernetes.io/part-of: matrix

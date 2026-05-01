@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mautrix-meta-registration-template
+  namespace: matrix
+data:
+  meta-registration.template.yaml: |
+    id: instagram
+    url: http://mautrix-meta.matrix.svc.cluster.local:29319
+    as_token: __META_AS_TOKEN__
+    hs_token: __META_HS_TOKEN__
+    sender_localpart: instagrambot
+    rate_limited: false
+    namespaces:
+      users:
+        - regex: '^@instagram_.+:hauptspeicher\.com$'
+          exclusive: true
+        - regex: '^@instagrambot:hauptspeicher\.com$'
+          exclusive: true
+      aliases: []
+      rooms: []

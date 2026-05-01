@@ -1,23 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: mautrix-whatsapp
+  name: mautrix-discord
   namespace: matrix
   annotations:
     argocd.argoproj.io/sync-wave: "2"
   labels:
-    app.kubernetes.io/name: mautrix-whatsapp
+    app.kubernetes.io/name: mautrix-discord
     app.kubernetes.io/part-of: matrix
     app.kubernetes.io/component: bridge
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app.kubernetes.io/name: mautrix-whatsapp
+      app.kubernetes.io/name: mautrix-discord
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: mautrix-whatsapp
+        app.kubernetes.io/name: mautrix-discord
         app.kubernetes.io/part-of: matrix
         app.kubernetes.io/component: bridge
     spec:
@@ -32,7 +32,7 @@ spec:
             - -c
             - |
               psql -h postgres.matrix.svc.cluster.local -U "$POSTGRES_USER" \
-                -c "CREATE DATABASE mautrix_whatsapp ENCODING 'UTF8' LC_COLLATE 'C' LC_CTYPE 'C' TEMPLATE template0;" \
+                -c "CREATE DATABASE mautrix_discord ENCODING 'UTF8' LC_COLLATE 'C' LC_CTYPE 'C' TEMPLATE template0;" \
                 2>/dev/null || true
           env:
             - name: PGPASSWORD
@@ -46,23 +46,20 @@ spec:
             - secretRef:
                 name: matrix-secret
             - secretRef:
-                name: whatsapp-bridge-secret
+                name: discord-bridge-secret
           command:
             - sh
             - -c
             - |
               set -eu
-              # Always render registration.yaml so the startup script doesn't
-              # regenerate it with different tokens than Synapse knows about.
               sed \
-                -e "s|__WA_AS_TOKEN__|${WA_AS_TOKEN}|g" \
-                -e "s|__WA_HS_TOKEN__|${WA_HS_TOKEN}|g" \
-                /registration-template/whatsapp-registration.template.yaml > /data/registration.yaml
-              # Always render config.yaml from the template.
+                -e "s|__DISCORD_AS_TOKEN__|${DISCORD_AS_TOKEN}|g" \
+                -e "s|__DISCORD_HS_TOKEN__|${DISCORD_HS_TOKEN}|g" \
+                /registration-template/discord-registration.template.yaml > /data/registration.yaml
               sed \
                 -e "s|__POSTGRES_PASSWORD__|${POSTGRES_PASSWORD}|g" \
-                -e "s|__WA_AS_TOKEN__|${WA_AS_TOKEN}|g" \
-                -e "s|__WA_HS_TOKEN__|${WA_HS_TOKEN}|g" \
+                -e "s|__DISCORD_AS_TOKEN__|${DISCORD_AS_TOKEN}|g" \
+                -e "s|__DISCORD_HS_TOKEN__|${DISCORD_HS_TOKEN}|g" \
                 -e "s|__DOUBLEPUPPET_AS_TOKEN__|${DOUBLEPUPPET_AS_TOKEN}|g" \
                 /config-template/config.template.yaml > /data/config.yaml
           volumeMounts:
@@ -75,11 +72,11 @@ spec:
               mountPath: /registration-template
               readOnly: true
       containers:
-        - name: mautrix-whatsapp
-          image: dock.mau.dev/mautrix/whatsapp:latest
+        - name: mautrix-discord
+          image: dock.mau.dev/mautrix/discord:latest
           ports:
             - name: http
-              containerPort: 29318
+              containerPort: 29334
           volumeMounts:
             - name: data
               mountPath: /data
@@ -96,10 +93,10 @@ spec:
       volumes:
         - name: data
           persistentVolumeClaim:
-            claimName: mautrix-whatsapp
+            claimName: mautrix-discord
         - name: config-template
           configMap:
-            name: mautrix-whatsapp-config-template
+            name: mautrix-discord-config-template
         - name: registration-template
           configMap:
-            name: mautrix-whatsapp-registration-template
+            name: mautrix-discord-registration-template

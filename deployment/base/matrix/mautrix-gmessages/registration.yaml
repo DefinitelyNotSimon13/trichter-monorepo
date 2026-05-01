@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mautrix-gmessages-registration-template
+  namespace: matrix
+data:
+  gmessages-registration.template.yaml: |
+    id: gmessages
+    url: http://mautrix-gmessages.matrix.svc.cluster.local:29320
+    as_token: __GM_AS_TOKEN__
+    hs_token: __GM_HS_TOKEN__
+    sender_localpart: gmessagesbot
+    rate_limited: false
+    namespaces:
+      users:
+        - regex: '^@gmessages_.+:hauptspeicher\.com$'
+          exclusive: true
+        - regex: '^@gmessagesbot:hauptspeicher\.com$'
+          exclusive: true
+      aliases: []
+      rooms: []
