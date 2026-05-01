@@ -10,7 +10,7 @@ resources:
   - git-repository.yaml
   - applications/argocd-application.yaml
   - applications/trichter-application.yaml
-  - applications/matrix-application.yaml
+  # - applications/matrix-application.yaml
   - applications/monitoring-application.yaml
 patches:
   - path: config/argocd-cm.yaml
