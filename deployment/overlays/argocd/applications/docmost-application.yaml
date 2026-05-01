@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: docmost
+  namespace: argocd
+spec:
+  project: default
+  sources:
+    - repoURL: https://github.com/DefinitelyNotSimon13/trichter-monorepo.git
+      targetRevision: HEAD
+      path: deployment/overlays/docmost
+  destination:
+    server: https://kubernetes.default.svc
+  syncPolicy:
+    syncOptions:
+      - ServerSideApply=true
+    automated:
+      enabled: true
+      prune: true
+      selfHeal: true

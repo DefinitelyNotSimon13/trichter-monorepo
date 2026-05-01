@@ -1,0 +1,91 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: docmost
+  namespace: docmost
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: docmost
+  template:
+    metadata:
+      labels:
+        app: docmost
+    spec:
+      containers:
+        - name: docmost
+          image: docmost/docmost:latest
+          imagePullPolicy: Always
+          env:
+            - name: APP_URL
+              value: "https://kjg.hauptspeicher.com"
+            - name: APP_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: docmost-secret
+                  key: APP_SECRET
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: docmost-secret
+                  key: DATABASE_URL
+            - name: REDIS_URL
+              value: "redis://docmost-redis:6379"
+            - name: MAIL_DRIVER
+              value: "smtp"
+            - name: SMTP_HOST
+              value: "smtp.azurecomm.net"
+            - name: SMTP_PORT
+              value: "587"
+            - name: SMTP_SECURE
+              value: "false"
+            - name: SMTP_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: docmost-secret
+                  key: SMTP_USERNAME
+            - name: SMTP_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: docmost-secret
+                  key: SMTP_PASSWORD
+            - name: MAIL_FROM_ADDRESS
+              value: "noreply@hauptspeicher.com"
+            - name: MAIL_FROM_NAME
+              value: "Docmost"
+          ports:
+            - name: http
+              containerPort: 3000
+          volumeMounts:
+            - name: docmost-data
+              mountPath: /app/data/storage
+          readinessProbe:
+            httpGet:
+              path: /api/health
+              port: 3000
+            initialDelaySeconds: 20
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /api/health
+              port: 3000
+            initialDelaySeconds: 60
+            periodSeconds: 30
+      volumes:
+        - name: docmost-data
+          persistentVolumeClaim:
+            claimName: docmost-data
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: docmost
+  namespace: docmost
+spec:
+  selector:
+    app: docmost
+  ports:
+    - name: http
+      port: 3000
+      targetPort: 3000

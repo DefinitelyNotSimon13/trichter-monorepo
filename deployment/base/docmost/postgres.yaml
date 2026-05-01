@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: docmost-postgres
+  namespace: docmost
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: docmost-postgres
+  template:
+    metadata:
+      labels:
+        app: docmost-postgres
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:18
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: POSTGRES_DB
+              value: docmost
+            - name: POSTGRES_USER
+              value: docmost
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: docmost-secret
+                  key: POSTGRES_PASSWORD
+          ports:
+            - containerPort: 5432
+          volumeMounts:
+            - name: postgres-data
+              mountPath: /var/lib/postgresql
+      volumes:
+        - name: postgres-data
+          persistentVolumeClaim:
+            claimName: docmost-postgres-data
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: docmost-postgres
+  namespace: docmost
+spec:
+  selector:
+    app: docmost-postgres
+  ports:
+    - name: postgres
+      port: 5432
+      targetPort: 5432

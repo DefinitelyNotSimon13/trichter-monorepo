@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: hetzner-base
+  namespace: argocd
+spec:
+  project: default
+  sources:
+    - repoURL: https://github.com/DefinitelyNotSimon13/trichter-monorepo.git
+      targetRevision: HEAD
+      path: deployment/overlays/hetzner
+  destination:
+    server: https://46.224.19.10:6443
+  syncPolicy:
+    syncOptions:
+      - ServerSideApply=true
+    automated:
+      enabled: true
+      prune: true
+      selfHeal: true

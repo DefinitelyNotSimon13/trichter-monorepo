@@ -11,7 +11,10 @@ resources:
   - applications/argocd-application.yaml
   - applications/trichter-application.yaml
   # - applications/matrix-application.yaml
-  - applications/monitoring-application.yaml
+  # - applications/monitoring-application.yaml
+  - applications/docmost-application.yaml
+  - applications/hetzner-base-application.yaml
+  # - applications/wikijs-application.yaml
 patches:
   - path: config/argocd-cm.yaml
   - path: config/argocd-cmd-params-cm.yaml
