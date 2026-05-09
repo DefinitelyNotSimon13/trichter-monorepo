@@ -1,0 +1,21 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: wordpress
+  namespace: wordpress
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`next.kjg-buedesheim.de`)
+      kind: Rule
+      services:
+        - name: wordpress
+          port: 80
+    - match: Host(`wp.hauptspeicher.com`)
+      kind: Rule
+      services:
+        - name: wordpress
+          port: 80
+  tls:
+    certResolver: myresolver
