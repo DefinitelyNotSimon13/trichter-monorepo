@@ -4,6 +4,7 @@ resources:
   - ../../base/ingress
   - ../../base/outline
   - ../../base/wordpress
+  - ../../base/umami
   - ./helmchartconfig-traefik.yaml
 generators:
   - ksops.yaml

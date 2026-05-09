@@ -7,3 +7,4 @@ files:
   - secrets/traefik.secret.yaml
   - secrets/outline.secret.yaml
   - secrets/mariadb.secret.yaml
+  - secrets/umami.secret.yaml
