@@ -1,13 +1,13 @@
 keys_file := justfile_directory() + "/keys.txt"
 
 test overlay:
-    kubectl kustomize --enable-alpha-plugins overlays/{{overlay}}
+    SOPS_AGE_KEY_FILE="{{keys_file}}" kubectl kustomize --enable-alpha-plugins overlays/{{overlay}}
 
 apply overlay:
-    kubectl kustomize --enable-alpha-plugins overlays/{{overlay}} | kubectl apply --server-side -f -
+    SOPS_AGE_KEY_FILE="{{keys_file}}" kubectl kustomize --enable-alpha-plugins overlays/{{overlay}} | kubectl apply --server-side -f -
 
 delete overlay:
-    kubectl kustomize --enable-alpha-plugins overlays/{{overlay}} | kubectl delete -f -
+    SOPS_AGE_KEY_FILE="{{keys_file}}" kubectl kustomize --enable-alpha-plugins overlays/{{overlay}} | kubectl delete -f -
 
 create-sops-secret keys_file="keys.txt":
     kubectl -n argocd create secret generic sops-age \
@@ -58,4 +58,3 @@ decrypt-all-yaml dir:
       echo "Decrypting $file"; \
       SOPS_AGE_KEY_FILE="{{keys_file}}" sops --decrypt --in-place "$file"; \
     done
-

@@ -3,6 +3,7 @@ kind: Kustomization
 resources:
   - ../../base/ingress
   - ../../base/outline
+  - ../../base/tools
   - ../../base/wordpress
   - ../../base/umami
   - ./helmchartconfig-traefik.yaml

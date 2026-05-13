@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: qrding
+  namespace: tools
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: qrding
+  template:
+    metadata:
+      labels:
+        app: qrding
+    spec:
+      containers:
+        - name: qrding
+          image: ghcr.io/rishikanthc/qrding:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 3000
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 3000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 3000
+            initialDelaySeconds: 30
+            periodSeconds: 30
