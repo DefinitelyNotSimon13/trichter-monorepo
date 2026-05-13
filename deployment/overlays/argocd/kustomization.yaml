@@ -14,6 +14,7 @@ resources:
   # - applications/monitoring-application.yaml
   - applications/docmost-application.yaml
   - applications/hetzner-base-application.yaml
+  - applications/plane-application.yaml
   # - applications/wikijs-application.yaml
 patches:
   - path: config/argocd-cm.yaml
