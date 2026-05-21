@@ -1,16 +1,16 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: docmost
+  name: outline
   namespace: argocd
 spec:
   project: default
   sources:
     - repoURL: https://github.com/DefinitelyNotSimon13/trichter-monorepo.git
       targetRevision: HEAD
-      path: deployment/overlays/apps/docmost
+      path: deployment/overlays/apps/outline
   destination:
-    server: https://kubernetes.default.svc
+    server: https://46.224.19.10:6443
   syncPolicy:
     syncOptions:
       - ServerSideApply=true

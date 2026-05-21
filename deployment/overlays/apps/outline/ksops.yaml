@@ -1,0 +1,7 @@
+apiVersion: viaduct.ai/v1
+kind: ksops
+metadata:
+  name: outline-secret-generator
+  namespace: outline
+files:
+  - secrets/outline.secret.yaml

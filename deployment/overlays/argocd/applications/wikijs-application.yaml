@@ -6,47 +6,50 @@ metadata:
 spec:
   project: default
 
-  source:
-    repoURL: https://charts.js.wiki
-    chart: wiki
-    targetRevision: "*"
-    helm:
-      releaseName: wikijs
-      values: |
-        replicaCount: 1
+  sources:
+    - repoURL: https://charts.js.wiki
+      chart: wiki
+      targetRevision: "*"
+      helm:
+        releaseName: wikijs
+        values: |
+          replicaCount: 1
 
-        service:
-          type: ClusterIP
-          port: 80
+          service:
+            type: ClusterIP
+            port: 80
 
-        ingress:
-          enabled: true
-          className: traefik
-          annotations:
-            traefik.ingress.kubernetes.io/router.entrypoints: websecure
-            traefik.ingress.kubernetes.io/router.tls: "true"
-            traefik.ingress.kubernetes.io/router.tls.certresolver: myresolver
-          hosts:
-            - host: wiki.hauptspeicher.com
-              paths:
-                - path: /
-                  pathType: Prefix
-          tls:
-            - hosts:
-                - wiki.hauptspeicher.com
-
-        postgresql:
-          enabled: true
-          postgresqlDatabase: wiki
-          postgresqlUser: wikijs
-          existingSecret: wikijs-postgresql
-          existingSecretKey: postgresql-password
-          existingSecretUserKey: postgresql-username
-          persistence:
+          ingress:
             enabled: true
-            storageClass: local-path
-            accessMode: ReadWriteOnce
-            size: 8Gi
+            className: traefik
+            annotations:
+              traefik.ingress.kubernetes.io/router.entrypoints: websecure
+              traefik.ingress.kubernetes.io/router.tls: "true"
+              traefik.ingress.kubernetes.io/router.tls.certresolver: myresolver
+            hosts:
+              - host: wiki.hauptspeicher.com
+                paths:
+                  - path: /
+                    pathType: Prefix
+            tls:
+              - hosts:
+                  - wiki.hauptspeicher.com
+
+          postgresql:
+            enabled: true
+            postgresqlDatabase: wiki
+            postgresqlUser: wikijs
+            existingSecret: wikijs-postgresql
+            existingSecretKey: postgresql-password
+            existingSecretUserKey: postgresql-username
+            persistence:
+              enabled: true
+              storageClass: local-path
+              accessMode: ReadWriteOnce
+              size: 8Gi
+    - repoURL: https://github.com/DefinitelyNotSimon13/trichter-monorepo.git
+      targetRevision: HEAD
+      path: deployment/overlays/apps/wikijs
 
   destination:
     server: https://46.224.19.10:6443

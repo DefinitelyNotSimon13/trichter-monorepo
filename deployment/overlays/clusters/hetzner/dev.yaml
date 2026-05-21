@@ -1,0 +1,2021 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: dev
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: dbbpv1-html
+  namespace: dev
+data:
+  DBbPv1: |
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" 
+      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+    <head profile="http://www.w3.org/2006/03/hcard http://dublincore.org/documents/2008/08/04/dc-html/">
+      <meta http-equiv="Content-Type" content="text/html; charset=us-ascii" />
+
+      <title>Distributed Blackboard Protocol (DBbP) Version 1</title>
+
+      <style type="text/css" title="Xml2Rfc (sans serif)">
+      /*<![CDATA[*/
+        a {
+        text-decoration: none;
+        }
+          /* info code from SantaKlauss at http://www.madaboutstyle.com/tooltip2.html */
+          a.info {
+              /* This is the key. */
+              position: relative;
+              z-index: 24;
+              text-decoration: none;
+          }
+          a.info:hover {
+              z-index: 25;
+              color: #FFF; background-color: #900;
+          }
+          a.info span { display: none; }
+          a.info:hover span.info {
+              /* The span will display just on :hover state. */
+              display: block;
+              position: absolute;
+              font-size: smaller;
+              top: 2em; left: -5em; width: 15em;
+              padding: 2px; border: 1px solid #333;
+              color: #900; background-color: #EEE;
+              text-align: left;
+          }
+        a.smpl {
+        color: black;
+        }
+        a:hover {
+        text-decoration: underline;
+        }
+        a:active {
+        text-decoration: underline;
+        }
+        address {
+        margin-top: 1em;
+        margin-left: 2em;
+        font-style: normal;
+        }
+        body {
+        color: black;
+        font-family: verdana, helvetica, arial, sans-serif;
+        font-size: 10pt;
+        max-width: 55em;
+        
+        }
+        cite {
+        font-style: normal;
+        }
+        dd {
+        margin-right: 2em;
+        }
+        dl {
+        margin-left: 2em;
+        }
+      
+        ul.empty {
+        list-style-type: none;
+        }
+        ul.empty li {
+        margin-top: .5em;
+        }
+        dl p {
+        margin-left: 0em;
+        }
+        dt {
+        margin-top: .5em;
+        }
+        h1 {
+        font-size: 14pt;
+        line-height: 21pt;
+        page-break-after: avoid;
+        }
+        h1.np {
+        page-break-before: always;
+        }
+        h1 a {
+        color: #333333;
+        }
+        h2 {
+        font-size: 12pt;
+        line-height: 15pt;
+        page-break-after: avoid;
+        }
+        h3, h4, h5, h6 {
+        font-size: 10pt;
+        page-break-after: avoid;
+        }
+        h2 a, h3 a, h4 a, h5 a, h6 a {
+        color: black;
+        }
+        img {
+        margin-left: 3em;
+        }
+        li {
+        margin-left: 2em;
+        margin-right: 2em;
+        }
+        ol {
+        margin-left: 2em;
+        margin-right: 2em;
+        }
+        ol p {
+        margin-left: 0em;
+        }
+        p {
+        margin-left: 2em;
+        margin-right: 2em;
+        }
+        pre {
+        margin-left: 3em;
+        background-color: lightyellow;
+        padding: .25em;
+        }
+        pre.text2 {
+        border-style: dotted;
+        border-width: 1px;
+        background-color: #f0f0f0;
+        width: 69em;
+        }
+        pre.inline {
+        background-color: white;
+        padding: 0em;
+        }
+        pre.text {
+        border-style: dotted;
+        border-width: 1px;
+        background-color: #f8f8f8;
+        width: 69em;
+        }
+        pre.drawing {
+        border-style: solid;
+        border-width: 1px;
+        background-color: #f8f8f8;
+        padding: 2em;
+        }
+        table {
+        margin-left: 2em;
+        }
+        table.tt {
+        vertical-align: top;
+        }
+        table.full {
+        border-style: outset;
+        border-width: 1px;
+        }
+        table.headers {
+        border-style: outset;
+        border-width: 1px;
+        }
+        table.tt td {
+        vertical-align: top;
+        }
+        table.full td {
+        border-style: inset;
+        border-width: 1px;
+        }
+        table.tt th {
+        vertical-align: top;
+        }
+        table.full th {
+        border-style: inset;
+        border-width: 1px;
+        }
+        table.headers th {
+        border-style: none none inset none;
+        border-width: 1px;
+        }
+        table.left {
+        margin-right: auto;
+        }
+        table.right {
+        margin-left: auto;
+        }
+        table.center {
+        margin-left: auto;
+        margin-right: auto;
+        }
+        caption {
+        caption-side: bottom;
+        font-weight: bold;
+        font-size: 9pt;
+        margin-top: .5em;
+        }
+      
+        table.header {
+        border-spacing: 1px;
+        width: 95%;
+        font-size: 10pt;
+        color: white;
+        }
+        td.top {
+        vertical-align: top;
+        }
+        td.topnowrap {
+        vertical-align: top;
+        white-space: nowrap; 
+        }
+        table.header td {
+        background-color: gray;
+        width: 50%;
+        }
+        table.header a {
+        color: white;
+        }
+        td.reference {
+        vertical-align: top;
+        white-space: nowrap;
+        padding-right: 1em;
+        }
+        thead {
+        display:table-header-group;
+        }
+        ul.toc, ul.toc ul {
+        list-style: none;
+        margin-left: 1.5em;
+        margin-right: 0em;
+        padding-left: 0em;
+        }
+        ul.toc li {
+        line-height: 150%;
+        font-weight: bold;
+        font-size: 10pt;
+        margin-left: 0em;
+        margin-right: 0em;
+        }
+        ul.toc li li {
+        line-height: normal;
+        font-weight: normal;
+        font-size: 9pt;
+        margin-left: 0em;
+        margin-right: 0em;
+        }
+        li.excluded {
+        font-size: 0pt;
+        }
+        ul p {
+        margin-left: 0em;
+        }
+      
+        .comment {
+        background-color: yellow;
+        }
+        .center {
+        text-align: center;
+        }
+        .error {
+        color: red;
+        font-style: italic;
+        font-weight: bold;
+        }
+        .figure {
+        font-weight: bold;
+        text-align: center;
+        font-size: 9pt;
+        }
+        .filename {
+        color: #333333;
+        font-weight: bold;
+        font-size: 12pt;
+        line-height: 21pt;
+        text-align: center;
+        }
+        .fn {
+        font-weight: bold;
+        }
+        .hidden {
+        display: none;
+        }
+        .left {
+        text-align: left;
+        }
+        .right {
+        text-align: right;
+        }
+        .title {
+        color: #990000;
+        font-size: 18pt;
+        line-height: 18pt;
+        font-weight: bold;
+        text-align: center;
+        margin-top: 36pt;
+        }
+        .vcardline {
+        display: block;
+        }
+        .warning {
+        font-size: 14pt;
+        background-color: yellow;
+        }
+      
+      
+        @media print {
+        .noprint {
+        display: none;
+        }
+      
+        a {
+        color: black;
+        text-decoration: none;
+        }
+      
+        table.header {
+        width: 90%;
+        }
+      
+        td.header {
+        width: 50%;
+        color: black;
+        background-color: white;
+        vertical-align: top;
+        font-size: 12pt;
+        }
+      
+        ul.toc a::after {
+        content: leader('.') target-counter(attr(href), page);
+        }
+      
+        ul.ind li li a {
+        content: target-counter(attr(href), page);
+        }
+      
+        .print2col {
+        column-count: 2;
+        -moz-column-count: 2;
+        column-fill: auto;
+        }
+        }
+      
+        @page {
+        @top-left {
+           content: "Internet-Draft"; 
+        } 
+        @top-right {
+           content: "December 2010"; 
+        } 
+        @top-center {
+           content: "Abbreviated Title";
+        } 
+        @bottom-left {
+           content: "Doe"; 
+        } 
+        @bottom-center {
+           content: "Expires June 2011"; 
+        } 
+        @bottom-right {
+           content: "[Page " counter(page) "]"; 
+        } 
+        }
+      
+        @page:first { 
+        @top-left {
+          content: normal;
+        }
+        @top-right {
+          content: normal;
+        }
+        @top-center {
+          content: normal;
+        }
+        }
+      /*]]>*/
+      </style>
+
+      <link href="#rfc.toc" rel="Contents">
+    <link href="#rfc.section.1" rel="Chapter" title="1 Project Status">
+    <link href="#rfc.section.2" rel="Chapter" title="2 Introduction">
+    <link href="#rfc.section.3" rel="Chapter" title="3 Conventions and Terminology">
+    <link href="#rfc.section.4" rel="Chapter" title="4 Data Types">
+    <link href="#rfc.section.5" rel="Chapter" title="5 Requirements">
+    <link href="#rfc.section.5.1" rel="Chapter" title="5.1 Functional Requirements">
+    <link href="#rfc.section.5.2" rel="Chapter" title="5.2 Non-Functional Requirements">
+    <link href="#rfc.section.6" rel="Chapter" title="6 Limits and Encoding">
+    <link href="#rfc.section.7" rel="Chapter" title="7 Blackboard State Model">
+    <link href="#rfc.section.8" rel="Chapter" title="8 Transport">
+    <link href="#rfc.section.9" rel="Chapter" title="9 Packet Format">
+    <link href="#rfc.section.9.1" rel="Chapter" title="9.1 Header">
+    <link href="#rfc.section.9.2" rel="Chapter" title="9.2 Packet Flags Registry">
+    <link href="#rfc.section.9.3" rel="Chapter" title="9.3 Payload Length Limits">
+    <link href="#rfc.section.10" rel="Chapter" title="10 Payload Encoding">
+    <link href="#rfc.section.10.1" rel="Chapter" title="10.1 Field ID Registry">
+    <link href="#rfc.section.11" rel="Chapter" title="11 Operation Code Registry">
+    <link href="#rfc.section.12" rel="Chapter" title="12 Status Code Registry">
+    <link href="#rfc.section.13" rel="Chapter" title="13 Operation Semantics">
+    <link href="#rfc.section.13.1" rel="Chapter" title="13.1 CREATE_BLACKBOARD">
+    <link href="#rfc.section.13.1.1" rel="Chapter" title="13.1.1 Request Fields">
+    <link href="#rfc.section.13.1.2" rel="Chapter" title="13.1.2 Response Fields">
+    <link href="#rfc.section.13.1.3" rel="Chapter" title="13.1.3 Behavior">
+    <link href="#rfc.section.13.1.4" rel="Chapter" title="13.1.4 Possible Status Codes">
+    <link href="#rfc.section.13.2" rel="Chapter" title="13.2 DISPLAY_BLACKBOARD">
+    <link href="#rfc.section.13.2.1" rel="Chapter" title="13.2.1 Request Fields">
+    <link href="#rfc.section.13.2.2" rel="Chapter" title="13.2.2 Response Fields">
+    <link href="#rfc.section.13.2.3" rel="Chapter" title="13.2.3 Behavior">
+    <link href="#rfc.section.13.2.4" rel="Chapter" title="13.2.4 Possible Status Codes">
+    <link href="#rfc.section.13.3" rel="Chapter" title="13.3 CLEAR_BLACKBOARD">
+    <link href="#rfc.section.13.3.1" rel="Chapter" title="13.3.1 Request Fields">
+    <link href="#rfc.section.13.3.2" rel="Chapter" title="13.3.2 Response Fields">
+    <link href="#rfc.section.13.3.3" rel="Chapter" title="13.3.3 Behavior">
+    <link href="#rfc.section.13.3.4" rel="Chapter" title="13.3.4 Possible Status Codes">
+    <link href="#rfc.section.13.4" rel="Chapter" title="13.4 READ_BLACKBOARD">
+    <link href="#rfc.section.13.4.1" rel="Chapter" title="13.4.1 Request Fields">
+    <link href="#rfc.section.13.4.2" rel="Chapter" title="13.4.2 Response Fields">
+    <link href="#rfc.section.13.4.3" rel="Chapter" title="13.4.3 Behavior">
+    <link href="#rfc.section.13.4.4" rel="Chapter" title="13.4.4 Possible Status Codes">
+    <link href="#rfc.section.13.5" rel="Chapter" title="13.5 GET_BLACKBOARD_STATUS">
+    <link href="#rfc.section.13.5.1" rel="Chapter" title="13.5.1 Request Fields">
+    <link href="#rfc.section.13.5.2" rel="Chapter" title="13.5.2 Response Fields">
+    <link href="#rfc.section.13.5.3" rel="Chapter" title="13.5.3 Behavior">
+    <link href="#rfc.section.13.5.4" rel="Chapter" title="13.5.4 Possible Status Codes">
+    <link href="#rfc.section.13.6" rel="Chapter" title="13.6 LIST_BLACKBOARDS">
+    <link href="#rfc.section.13.6.1" rel="Chapter" title="13.6.1 Request Fields">
+    <link href="#rfc.section.13.6.2" rel="Chapter" title="13.6.2 Response Fields">
+    <link href="#rfc.section.13.6.3" rel="Chapter" title="13.6.3 Behavior">
+    <link href="#rfc.section.13.6.4" rel="Chapter" title="13.6.4 Possible Status Codes">
+    <link href="#rfc.section.13.7" rel="Chapter" title="13.7 DELETE_BLACKBOARD">
+    <link href="#rfc.section.13.7.1" rel="Chapter" title="13.7.1 Request Fields">
+    <link href="#rfc.section.13.7.2" rel="Chapter" title="13.7.2 Response Fields">
+    <link href="#rfc.section.13.7.3" rel="Chapter" title="13.7.3 Behavior">
+    <link href="#rfc.section.13.7.4" rel="Chapter" title="13.7.4 Possible Status Codes">
+    <link href="#rfc.section.13.8" rel="Chapter" title="13.8 DELETE_ALL_BLACKBOARDS">
+    <link href="#rfc.section.13.8.1" rel="Chapter" title="13.8.1 Request Fields">
+    <link href="#rfc.section.13.8.2" rel="Chapter" title="13.8.2 Response Fields">
+    <link href="#rfc.section.13.8.3" rel="Chapter" title="13.8.3 Behavior">
+    <link href="#rfc.section.13.8.4" rel="Chapter" title="13.8.4 Possible Status Codes">
+    <link href="#rfc.section.14" rel="Chapter" title="14 Validation and Error Handling">
+    <link href="#rfc.section.14.1" rel="Chapter" title="14.1 Error Precedence">
+    <link href="#rfc.section.14.2" rel="Chapter" title="14.2 Error Response Construction">
+    <link href="#rfc.section.15" rel="Chapter" title="15 Example Packet">
+    <link href="#rfc.section.15.1" rel="Chapter" title="15.1 Request">
+    <link href="#rfc.section.15.2" rel="Chapter" title="15.2 Response">
+    <link href="#rfc.section.16" rel="Chapter" title="16 Interoperability Requirements">
+    <link href="#rfc.section.17" rel="Chapter" title="17 Implementation Considerations">
+    <link href="#rfc.section.18" rel="Chapter" title="18 Security Considerations">
+    <link href="#rfc.section.19" rel="Chapter" title="19 IANA Considerations">
+    <link href="#rfc.references" rel="Chapter" title="20 Normative References">
+    <link href="#rfc.authors" rel="Chapter">
+
+
+      <meta name="generator" content="xml2rfc version 3.31.0 - https://tools.ietf.org/tools/xml2rfc" />
+      <link rel="schema.dct" href="http://purl.org/dc/terms/" />
+
+      <meta name="dct.creator" content="Blum, S." />
+      <meta name="dct.identifier" content="urn:ietf:id:draft-dbbp-v1-00" />
+      <meta name="dct.issued" scheme="ISO8601" content="2026-05-21" />
+      <meta name="dct.abstract" content=" This document specifies version 1 of the Distributed Blackboard Protocol (DBbP), a TCP-based client/server protocol for managing named blackboards. A DBbP server stores multiple blackboards. Each blackboard stores at most one current message. A successful write replaces the previous message. A message can become invalid after a configurable lifetime, but expired messages remain stored until they are overwritten, cleared, or deleted. " />
+      <meta name="description" content=" This document specifies version 1 of the Distributed Blackboard Protocol (DBbP), a TCP-based client/server protocol for managing named blackboards. A DBbP server stores multiple blackboards. Each blackboard stores at most one current message. A successful write replaces the previous message. A message can become invalid after a configurable lifetime, but expired messages remain stored until they are overwritten, cleared, or deleted. " />
+
+    </head>
+
+    <body>
+
+      <table class="header">
+        <tbody>
+        
+          <tr>
+    <td class="left">Independent Submission</td>
+    <td class="right">S. Blum</td>
+    </tr>
+    <tr>
+    <td class="left">Internet-Draft</td>
+    <td class="right">May 21, 2026</td>
+    </tr>
+    <tr>
+    <td class="left">Intended status: Informational</td>
+    <td class="right"></td>
+    </tr>
+    <tr>
+    <td class="left">Expires: November 22, 2026</td>
+    <td class="right"></td>
+    </tr>
+
+          
+        </tbody>
+      </table>
+
+      <p class="title">Distributed Blackboard Protocol (DBbP) Version 1<br />
+      <span class="filename">draft-dbbp-v1-00</span></p>
+      
+      <h1 id="rfc.abstract"><a href="#rfc.abstract">Abstract</a></h1>
+    <p>This document specifies version 1 of the Distributed Blackboard Protocol (DBbP), a TCP-based client/server protocol for managing named blackboards.</p>
+    <p>A DBbP server stores multiple blackboards. Each blackboard stores at most one current message. A successful write replaces the previous message. A message can become invalid after a configurable lifetime, but expired messages remain stored until they are overwritten, cleared, or deleted.</p>
+    <h1 id="rfc.status"><a href="#rfc.status">Status of This Memo</a></h1>
+    <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
+    <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at https://datatracker.ietf.org/drafts/current/.</p>
+    <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
+    <p>This Internet-Draft will expire on November 22, 2026.</p>
+    <h1 id="rfc.copyrightnotice"><a href="#rfc.copyrightnotice">Copyright Notice</a></h1>
+    <p>Copyright (c) 2026 IETF Trust and the persons identified as the document authors.  All rights reserved.</p>
+    <p>This document is subject to BCP 78 and the IETF Trust's Legal Provisions Relating to IETF Documents (https://trustee.ietf.org/license-info) in effect on the date of publication of this document.  Please review these documents carefully, as they describe your rights and restrictions with respect to this document.</p>
+
+      
+      <hr class="noprint" />
+      <h1 class="np" id="rfc.toc"><a href="#rfc.toc">Table of Contents</a></h1>
+      <ul class="toc">
+
+        <li>1.   <a href="#rfc.section.1">Project Status</a>
+    </li>
+    <li>2.   <a href="#rfc.section.2">Introduction</a>
+    </li>
+    <li>3.   <a href="#rfc.section.3">Conventions and Terminology</a>
+    </li>
+    <li>4.   <a href="#rfc.section.4">Data Types</a>
+    </li>
+    <li>5.   <a href="#rfc.section.5">Requirements</a>
+    </li>
+    <ul><li>5.1.   <a href="#rfc.section.5.1">Functional Requirements</a>
+    </li>
+    <li>5.2.   <a href="#rfc.section.5.2">Non-Functional Requirements</a>
+    </li>
+    </ul><li>6.   <a href="#rfc.section.6">Limits and Encoding</a>
+    </li>
+    <li>7.   <a href="#rfc.section.7">Blackboard State Model</a>
+    </li>
+    <li>8.   <a href="#rfc.section.8">Transport</a>
+    </li>
+    <li>9.   <a href="#rfc.section.9">Packet Format</a>
+    </li>
+    <ul><li>9.1.   <a href="#rfc.section.9.1">Header</a>
+    </li>
+    <li>9.2.   <a href="#rfc.section.9.2">Packet Flags Registry</a>
+    </li>
+    <li>9.3.   <a href="#rfc.section.9.3">Payload Length Limits</a>
+    </li>
+    </ul><li>10.   <a href="#rfc.section.10">Payload Encoding</a>
+    </li>
+    <ul><li>10.1.   <a href="#rfc.section.10.1">Field ID Registry</a>
+    </li>
+    </ul><li>11.   <a href="#rfc.section.11">Operation Code Registry</a>
+    </li>
+    <li>12.   <a href="#rfc.section.12">Status Code Registry</a>
+    </li>
+    <li>13.   <a href="#rfc.section.13">Operation Semantics</a>
+    </li>
+    <ul><li>13.1.   <a href="#rfc.section.13.1">CREATE_BLACKBOARD</a>
+    </li>
+    <ul><li>13.1.1.   <a href="#rfc.section.13.1.1">Request Fields</a>
+    </li>
+    <li>13.1.2.   <a href="#rfc.section.13.1.2">Response Fields</a>
+    </li>
+    <li>13.1.3.   <a href="#rfc.section.13.1.3">Behavior</a>
+    </li>
+    <li>13.1.4.   <a href="#rfc.section.13.1.4">Possible Status Codes</a>
+    </li>
+    </ul><li>13.2.   <a href="#rfc.section.13.2">DISPLAY_BLACKBOARD</a>
+    </li>
+    <ul><li>13.2.1.   <a href="#rfc.section.13.2.1">Request Fields</a>
+    </li>
+    <li>13.2.2.   <a href="#rfc.section.13.2.2">Response Fields</a>
+    </li>
+    <li>13.2.3.   <a href="#rfc.section.13.2.3">Behavior</a>
+    </li>
+    <li>13.2.4.   <a href="#rfc.section.13.2.4">Possible Status Codes</a>
+    </li>
+    </ul><li>13.3.   <a href="#rfc.section.13.3">CLEAR_BLACKBOARD</a>
+    </li>
+    <ul><li>13.3.1.   <a href="#rfc.section.13.3.1">Request Fields</a>
+    </li>
+    <li>13.3.2.   <a href="#rfc.section.13.3.2">Response Fields</a>
+    </li>
+    <li>13.3.3.   <a href="#rfc.section.13.3.3">Behavior</a>
+    </li>
+    <li>13.3.4.   <a href="#rfc.section.13.3.4">Possible Status Codes</a>
+    </li>
+    </ul><li>13.4.   <a href="#rfc.section.13.4">READ_BLACKBOARD</a>
+    </li>
+    <ul><li>13.4.1.   <a href="#rfc.section.13.4.1">Request Fields</a>
+    </li>
+    <li>13.4.2.   <a href="#rfc.section.13.4.2">Response Fields</a>
+    </li>
+    <li>13.4.3.   <a href="#rfc.section.13.4.3">Behavior</a>
+    </li>
+    <li>13.4.4.   <a href="#rfc.section.13.4.4">Possible Status Codes</a>
+    </li>
+    </ul><li>13.5.   <a href="#rfc.section.13.5">GET_BLACKBOARD_STATUS</a>
+    </li>
+    <ul><li>13.5.1.   <a href="#rfc.section.13.5.1">Request Fields</a>
+    </li>
+    <li>13.5.2.   <a href="#rfc.section.13.5.2">Response Fields</a>
+    </li>
+    <li>13.5.3.   <a href="#rfc.section.13.5.3">Behavior</a>
+    </li>
+    <li>13.5.4.   <a href="#rfc.section.13.5.4">Possible Status Codes</a>
+    </li>
+    </ul><li>13.6.   <a href="#rfc.section.13.6">LIST_BLACKBOARDS</a>
+    </li>
+    <ul><li>13.6.1.   <a href="#rfc.section.13.6.1">Request Fields</a>
+    </li>
+    <li>13.6.2.   <a href="#rfc.section.13.6.2">Response Fields</a>
+    </li>
+    <li>13.6.3.   <a href="#rfc.section.13.6.3">Behavior</a>
+    </li>
+    <li>13.6.4.   <a href="#rfc.section.13.6.4">Possible Status Codes</a>
+    </li>
+    </ul><li>13.7.   <a href="#rfc.section.13.7">DELETE_BLACKBOARD</a>
+    </li>
+    <ul><li>13.7.1.   <a href="#rfc.section.13.7.1">Request Fields</a>
+    </li>
+    <li>13.7.2.   <a href="#rfc.section.13.7.2">Response Fields</a>
+    </li>
+    <li>13.7.3.   <a href="#rfc.section.13.7.3">Behavior</a>
+    </li>
+    <li>13.7.4.   <a href="#rfc.section.13.7.4">Possible Status Codes</a>
+    </li>
+    </ul><li>13.8.   <a href="#rfc.section.13.8">DELETE_ALL_BLACKBOARDS</a>
+    </li>
+    <ul><li>13.8.1.   <a href="#rfc.section.13.8.1">Request Fields</a>
+    </li>
+    <li>13.8.2.   <a href="#rfc.section.13.8.2">Response Fields</a>
+    </li>
+    <li>13.8.3.   <a href="#rfc.section.13.8.3">Behavior</a>
+    </li>
+    <li>13.8.4.   <a href="#rfc.section.13.8.4">Possible Status Codes</a>
+    </li>
+    </ul></ul><li>14.   <a href="#rfc.section.14">Validation and Error Handling</a>
+    </li>
+    <ul><li>14.1.   <a href="#rfc.section.14.1">Error Precedence</a>
+    </li>
+    <li>14.2.   <a href="#rfc.section.14.2">Error Response Construction</a>
+    </li>
+    </ul><li>15.   <a href="#rfc.section.15">Example Packet</a>
+    </li>
+    <ul><li>15.1.   <a href="#rfc.section.15.1">Request</a>
+    </li>
+    <li>15.2.   <a href="#rfc.section.15.2">Response</a>
+    </li>
+    </ul><li>16.   <a href="#rfc.section.16">Interoperability Requirements</a>
+    </li>
+    <li>17.   <a href="#rfc.section.17">Implementation Considerations</a>
+    </li>
+    <li>18.   <a href="#rfc.section.18">Security Considerations</a>
+    </li>
+    <li>19.   <a href="#rfc.section.19">IANA Considerations</a>
+    </li>
+    <li>20.   <a href="#rfc.references">Normative References</a>
+    </li>
+    <li><a href="#rfc.authors">Author's Address</a>
+    </li>
+
+
+      </ul>
+
+      <h1 id="rfc.section.1">
+    <a href="#rfc.section.1">1.</a> <a href="#project-status" id="project-status">Project Status</a>
+    </h1>
+    <p id="rfc.section.1.p.1">This document is a project specification. It is not an Internet Standards Track specification.</p>
+    <p id="rfc.section.1.p.2">DBbP v1 is intentionally minimal. It defines a fixed-size packet header, a binary TLV payload, one request per TCP connection, no authentication, no encryption, and no persistence requirement after server restart.</p>
+    <h1 id="rfc.section.2">
+    <a href="#rfc.section.2">2.</a> <a href="#introduction" id="introduction">Introduction</a>
+    </h1>
+    <p id="rfc.section.2.p.1">The server manages multiple blackboards. Each blackboard is identified by a unique printable ASCII name. Clients can create blackboards, write messages, read messages, clear messages, query status, list blackboards, and delete blackboards.</p>
+    <p id="rfc.section.2.p.2">DBbP is designed for simple interoperability between independent client and server implementations. The wire format is binary and all multi-byte integer fields use network byte order.</p>
+    <h1 id="rfc.section.3">
+    <a href="#rfc.section.3">3.</a> <a href="#conventions-and-terminology" id="conventions-and-terminology">Conventions and Terminology</a>
+    </h1>
+    <p id="rfc.section.3.p.1">The key words <samp>MUST</samp>, <samp>MUST NOT</samp>, <samp>REQUIRED</samp>, <samp>SHALL</samp>, <samp>SHALL NOT</samp>, <samp>SHOULD</samp>, <samp>SHOULD NOT</samp>, <samp>RECOMMENDED</samp>, <samp>NOT RECOMMENDED</samp>, <samp>MAY</samp>, and <samp>OPTIONAL</samp> in this document are to be interpreted as described in <a href="#RFC2119" class="xref">[RFC2119]</a> and <a href="#RFC8174" class="xref">[RFC8174]</a> when, and only when, they appear in all capitals.</p>
+    <p id="rfc.section.3.p.2">The following terms are used throughout this document:</p>
+    <p></p>
+
+    <ul>
+    <li>
+    <samp>Client</samp>: The endpoint that opens a TCP connection and sends one DBbP request.</li>
+    <li>
+    <samp>Server</samp>: The endpoint that accepts TCP connections, processes DBbP requests, and sends DBbP responses.</li>
+    <li>
+    <samp>Blackboard</samp>: A named server-side object that stores at most one message and associated metadata.</li>
+    <li>
+    <samp>Message</samp>: The byte string stored in a blackboard.</li>
+    <li>
+    <samp>Packet</samp>: A DBbP header followed by a DBbP payload.</li>
+    <li>
+    <samp>Header</samp>: The fixed-size 18-byte packet prefix.</li>
+    <li>
+    <samp>Payload</samp>: The variable-size byte sequence following the header.</li>
+    <li>
+    <samp>TLV field</samp>: A typed payload field encoded as field type, length, and value.</li>
+    <li>
+    <samp>Request</samp>: A packet with packet type <samp>1</samp>.</li>
+    <li>
+    <samp>Response</samp>: A packet with packet type <samp>2</samp>.</li>
+    </ul>
+    <h1 id="rfc.section.4">
+    <a href="#rfc.section.4">4.</a> <a href="#data-types" id="data-types">Data Types</a>
+    </h1>
+    <p id="rfc.section.4.p.1">All integer fields are unsigned and encoded in network byte order (big-endian).</p>
+    <table cellpadding="3" cellspacing="0" class="tt full center">
+    <thead><tr>
+    <th class="left">Type</th>
+    <th class="right">Size</th>
+    <th class="left">Description</th>
+    </tr></thead>
+    <tbody>
+    <tr>
+    <td class="left"><samp>uint8</samp></td>
+    <td class="right">1</td>
+    <td class="left">Unsigned 8-bit integer</td>
+    </tr>
+    <tr>
+    <td class="left"><samp>uint16</samp></td>
+    <td class="right">2</td>
+    <td class="left">Unsigned 16-bit integer</td>
+    </tr>
+    <tr>
+    <td class="left"><samp>uint32</samp></td>
+    <td class="right">4</td>
+    <td class="left">Unsigned 32-bit integer</td>
+    </tr>
+    <tr>
+    <td class="left"><samp>uint64</samp></td>
+    <td class="right">8</td>
+    <td class="left">Unsigned 64-bit integer</td>
+    </tr>
+    <tr>
+    <td class="left">Byte</td>
+    <td class="right">1</td>
+    <td class="left">8-bit octet</td>
+    </tr>
+    <tr>
+    <td class="left">Byte string</td>
+    <td class="right">Variable</td>
+    <td class="left">Sequence of zero or more bytes</td>
+    </tr>
+    </tbody>
+    </table>
+    <p id="rfc.section.4.p.2">A printable ASCII string is a byte string containing only bytes <samp>0x20</samp> through <samp>0x7E</samp>.</p>
+    <p id="rfc.section.4.p.3">A UTF-8 string is a byte string that is valid UTF-8 as defined by <a href="#RFC3629" class="xref">[RFC3629]</a>.</p>
+    <p id="rfc.section.4.p.4">A Unix timestamp is a <samp>uint64</samp> count of seconds since <samp>1970-01-01T00:00:00Z</samp>, excluding leap seconds. If the system clock moves backward, an implementation SHOULD NOT make an already valid message expire earlier than it would have expired under a monotonic clock.</p>
+    <h1 id="rfc.section.5">
+    <a href="#rfc.section.5">5.</a> <a href="#requirements" id="requirements">Requirements</a>
+    </h1>
+    <h1 id="rfc.section.5.1">
+    <a href="#rfc.section.5.1">5.1.</a> <a href="#functional-requirements" id="functional-requirements">Functional Requirements</a>
+    </h1>
+    <p id="rfc.section.5.1.p.1">A compliant server MUST support the following operations:</p>
+    <p></p>
+
+    <ul>
+    <li>Create a blackboard</li>
+    <li>Write or update blackboard contents</li>
+    <li>Read blackboard contents</li>
+    <li>Clear blackboard contents</li>
+    <li>Read blackboard status</li>
+    <li>List all blackboards</li>
+    <li>Delete one blackboard</li>
+    <li>Delete all blackboards</li>
+    </ul>
+    <h1 id="rfc.section.5.2">
+    <a href="#rfc.section.5.2">5.2.</a> <a href="#non-functional-requirements" id="non-functional-requirements">Non-Functional Requirements</a>
+    </h1>
+    <p id="rfc.section.5.2.p.1">A compliant server MUST support multiple parallel clients and MUST validate packet structure and operation parameters.</p>
+    <p id="rfc.section.5.2.p.2">Access to blackboard state MUST be thread-safe. Authentication, authorization, encryption, and persistence after server restart are not required by DBbP v1.</p>
+    <h1 id="rfc.section.6">
+    <a href="#rfc.section.6">6.</a> <a href="#limits-and-encoding" id="limits-and-encoding">Limits and Encoding</a>
+    </h1>
+    <p id="rfc.section.6.p.1">All length limits are byte limits.</p>
+    <table cellpadding="3" cellspacing="0" class="tt full center">
+    <thead><tr>
+    <th class="left">Item</th>
+    <th class="left">Limit</th>
+    </tr></thead>
+    <tbody>
+    <tr>
+    <td class="left">Blackboard name</td>
+    <td class="left">Printable ASCII, 1-64 bytes</td>
+    </tr>
+    <tr>
+    <td class="left">Message data</td>
+    <td class="left">Printable ASCII or UTF-8, 0-4096 bytes</td>
+    </tr>
+    <tr>
+    <td class="left">Number of blackboards</td>
+    <td class="left">At least 32, default limit 1024</td>
+    </tr>
+    <tr>
+    <td class="left">Request payload</td>
+    <td class="left">Maximum 8192 bytes</td>
+    </tr>
+    <tr>
+    <td class="left">Response payload</td>
+    <td class="left">Maximum 71698 bytes</td>
+    </tr>
+    <tr>
+    <td class="left">Timestamp precision</td>
+    <td class="left">Seconds</td>
+    </tr>
+    </tbody>
+    </table>
+    <p id="rfc.section.6.p.2">Blackboard names MUST be printable ASCII. Names are compared byte-for-byte and are case-sensitive.</p>
+    <p id="rfc.section.6.p.3">Messages are printable ASCII by default. If the UTF-8 message flag is set, message fields MAY contain UTF-8. Servers MAY choose not to support UTF-8 messages. A server that does not support UTF-8 messages MUST reject a request with the UTF-8 message flag set by returning status code <samp>11 UNSUPPORTED_ENCODING</samp>.</p>
+    <p id="rfc.section.6.p.4">UTF-8 support applies only to message fields. Blackboard names remain printable ASCII even when the UTF-8 message flag is set.</p>
+    <h1 id="rfc.section.7">
+    <a href="#rfc.section.7">7.</a> <a href="#blackboard-state-model" id="blackboard-state-model">Blackboard State Model</a>
+    </h1>
+    <p id="rfc.section.7.p.1">Each blackboard has the following state:</p>
+    <pre>
+    Blackboard {
+        name: printable ASCII string
+        message: byte string | empty
+        ttl_seconds: uint32
+        last_update_timestamp: uint64
+        is_filled: bool
+    }
+    </pre>
+    <p id="rfc.section.7.p.2">Validity is derived from the state as follows:</p>
+    <p></p>
+
+    <ul>
+    <li>If <samp>is_filled = false</samp>, the blackboard is empty and invalid.</li>
+    <li>If <samp>ttl_seconds = 0</samp> and <samp>is_filled = true</samp>, the message is valid.</li>
+    <li>If <samp>ttl_seconds &gt; 0</samp>, <samp>is_filled = true</samp>, and <samp>now - last_update_timestamp &lt;= ttl_seconds</samp>, the message is valid.</li>
+    <li>Otherwise, the message is expired and invalid.</li>
+    </ul>
+    <p><samp>last_update_timestamp</samp> MUST be <samp>0</samp> until the first successful write to the blackboard.</p>
+    <p id="rfc.section.7.p.5">A successful write MUST replace the previous message, set <samp>is_filled = true</samp>, set <samp>last_update_timestamp</samp> to the current Unix timestamp, and make the new message valid.</p>
+    <p id="rfc.section.7.p.6">A successful clear MUST remove the stored message, set <samp>is_filled = false</samp>, and preserve <samp>last_update_timestamp</samp>.</p>
+    <p id="rfc.section.7.p.7">A successful delete MUST remove the blackboard and all associated state.</p>
+    <h1 id="rfc.section.8">
+    <a href="#rfc.section.8">8.</a> <a href="#transport" id="transport">Transport</a>
+    </h1>
+    <p id="rfc.section.8.p.1">DBbP runs over TCP. TCP provides a reliable byte stream, but not message boundaries. Therefore, each DBbP packet includes an explicit payload length.</p>
+    <p id="rfc.section.8.p.2">DBbP v1 uses one request per TCP connection. The client sends one request packet, the server sends one response packet, and the server then closes the connection.</p>
+    <p id="rfc.section.8.p.3">A client MUST treat EOF before a complete response header or complete response payload as an incomplete response. A server MUST treat EOF before a complete request header or complete request payload as an incomplete request.</p>
+    <p id="rfc.section.8.p.4">An incomplete request MUST NOT modify blackboard state. Server timeout values are implementation-defined.</p>
+    <h1 id="rfc.section.9">
+    <a href="#rfc.section.9">9.</a> <a href="#packet-format" id="packet-format">Packet Format</a>
+    </h1>
+    <p id="rfc.section.9.p.1">Each DBbP packet consists of a fixed-size 18-byte header followed by a TLV payload. DBbP v1 does not define a footer.</p>
+    <pre>
+    0                   1                   2                   3
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    |                           Magic "DBbP"                        |
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    |    Version    |  Packet type  |          Operation            |
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    |                          Request ID                           |
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    |                         Payload Length                        |
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    |             Flags             |
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    |                                                               |
+    ~                  Payload, Payload Length bytes                ~
+    |                                                               |
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    </pre>
+    <p id="rfc.section.9.p.2">The payload follows the 18-byte header and has exactly <samp>Payload Length</samp> bytes.</p>
+    <h1 id="rfc.section.9.1">
+    <a href="#rfc.section.9.1">9.1.</a> <a href="#header" id="header">Header</a>
+    </h1>
+    <table cellpadding="3" cellspacing="0" class="tt full center">
+    <thead><tr>
+    <th class="center">Offset</th>
+    <th class="center">Size</th>
+    <th class="left">Field</th>
+    <th class="left">Type</th>
+    <th class="left">Description</th>
+    </tr></thead>
+    <tbody>
+    <tr>
+    <td class="center">0</td>
+    <td class="center">4</td>
+    <td class="left">Magic</td>
+    <td class="left"><samp>char[4]</samp></td>
+    <td class="left">Always <samp>DBbP</samp> (<samp>0x44 0x42 0x62 0x50</samp>)</td>
+    </tr>
+    <tr>
+    <td class="center">4</td>
+    <td class="center">1</td>
+    <td class="left">Version</td>
+    <td class="left"><samp>uint8</samp></td>
+    <td class="left">Protocol version, currently <samp>1</samp>
+    </td>
+    </tr>
+    <tr>
+    <td class="center">5</td>
+    <td class="center">1</td>
+    <td class="left">Packet type</td>
+    <td class="left"><samp>uint8</samp></td>
+    <td class="left">
+    <samp>1 = request</samp>, <samp>2 = response</samp>
+    </td>
+    </tr>
+    <tr>
+    <td class="center">6</td>
+    <td class="center">2</td>
+    <td class="left">Operation</td>
+    <td class="left"><samp>uint16</samp></td>
+    <td class="left">Operation code</td>
+    </tr>
+    <tr>
+    <td class="center">8</td>
+    <td class="center">4</td>
+    <td class="left">Request ID</td>
+    <td class="left"><samp>uint32</samp></td>
+    <td class="left">Client-generated request identifier</td>
+    </tr>
+    <tr>
+    <td class="center">12</td>
+    <td class="center">4</td>
+    <td class="left">Payload length</td>
+    <td class="left"><samp>uint32</samp></td>
+    <td class="left">Payload length in bytes</td>
+    </tr>
+    <tr>
+    <td class="center">16</td>
+    <td class="center">2</td>
+    <td class="left">Flags</td>
+    <td class="left"><samp>uint16</samp></td>
+    <td class="left">Packet flags</td>
+    </tr>
+    </tbody>
+    </table>
+    <p id="rfc.section.9.1.p.1">The client SHOULD generate any <samp>uint32</samp> request ID. The server MUST echo the request ID unchanged in the response if the request ID was readable. The request ID does not need to be globally unique.</p>
+    <h1 id="rfc.section.9.2">
+    <a href="#rfc.section.9.2">9.2.</a> <a href="#packet-flags-registry" id="packet-flags-registry">Packet Flags Registry</a>
+    </h1>
+    <table cellpadding="3" cellspacing="0" class="tt full center">
+    <thead><tr>
+    <th class="left">Bit mask</th>
+    <th class="left">Name</th>
+    <th class="left">Meaning</th>
+    </tr></thead>
+    <tbody>
+    <tr>
+    <td class="left"><samp>0x0000</samp></td>
+    <td class="left">ASCII</td>
+    <td class="left">Message fields are printable ASCII</td>
+    </tr>
+    <tr>
+    <td class="left"><samp>0x0001</samp></td>
+    <td class="left">UTF8_MESSAGE</td>
+    <td class="left">Message fields MAY contain UTF-8</td>
+    </tr>
+    </tbody>
+    </table>
+    <p id="rfc.section.9.2.p.1">All other flag bits are reserved for future protocol versions. A DBbP v1 receiver MUST reject packets with unknown flag bits using status code <samp>4 INVALID_PARAMETERS</samp>.</p>
+    <p id="rfc.section.9.2.p.2">The server MUST copy accepted request flags into the response. If request flags are invalid or unsupported, the server MUST send response flags <samp>0x0000</samp> if it sends a response.</p>
+    <h1 id="rfc.section.9.3">
+    <a href="#rfc.section.9.3">9.3.</a> <a href="#payload-length-limits" id="payload-length-limits">Payload Length Limits</a>
+    </h1>
+    <p id="rfc.section.9.3.p.1">A request payload MUST NOT exceed 8192 bytes. A response payload MUST NOT exceed 71698 bytes.</p>
+    <p id="rfc.section.9.3.p.2">The response limit supports a full list response for 1024 blackboards with 64-byte names:</p>
+    <pre>
+    status field + count field + 1024 repeated name fields
+    = 8 + 10 + 1024 * (6 + 64)
+    = 71698 bytes
+    </pre>
+    <p id="rfc.section.9.3.p.3">An implementation that uses the default maximum of 1024 blackboards SHOULD accept response payloads up to at least 71698 bytes. An implementation MAY use a larger response payload limit if it supports more blackboards.</p>
+    <p id="rfc.section.9.3.p.4">Packets with payload lengths above the receiver&#8217;s configured limit MUST be rejected with status code <samp>1 INVALID_PACKET</samp>.</p>
+    <h1 id="rfc.section.10">
+    <a href="#rfc.section.10">10.</a> <a href="#payload-encoding" id="payload-encoding">Payload Encoding</a>
+    </h1>
+    <p id="rfc.section.10.p.1">The payload is encoded as zero or more binary TLV fields:</p>
+    <pre>
+    +------------+------------+---------------+
+    | Field type | Length     | Value         |
+    +------------+------------+---------------+
+    | uint16     | uint32     | byte[length]  |
+    +------------+------------+---------------+
+    </pre>
+    <p id="rfc.section.10.p.2">TLV fields MAY appear in any order unless an operation explicitly defines an order. Response examples in this document use the RECOMMENDED field order for readability and tests.</p>
+    <p id="rfc.section.10.p.3">The receiver MUST parse the complete payload. Trailing bytes that do not form a complete TLV field MUST be rejected with status code <samp>1 INVALID_PACKET</samp>.</p>
+    <p id="rfc.section.10.p.4">The receiver MUST reject the following payload errors with status code <samp>4 INVALID_PARAMETERS</samp>:</p>
+    <p></p>
+
+    <ul>
+    <li>Unknown field ID</li>
+    <li>Missing required field</li>
+    <li>Duplicate singleton field</li>
+    <li>Wrong length for a fixed-size field</li>
+    <li>Field value outside the allowed range</li>
+    <li>Invalid character encoding for a string field</li>
+    </ul>
+    <p id="rfc.section.10.p.6">Field <samp>1</samp> MAY appear more than once only in <samp>LIST_BLACKBOARDS</samp> responses. All other fields are singleton fields unless an operation explicitly states otherwise.</p>
+    <h1 id="rfc.section.10.1">
+    <a href="#rfc.section.10.1">10.1.</a> <a href="#field-id-registry" id="field-id-registry">Field ID Registry</a>
+    </h1>
+    <table cellpadding="3" cellspacing="0" class="tt full center">
+    <thead><tr>
+    <th class="right">Field ID</th>
+    <th class="left">Name</th>
+    <th class="left">Type</th>
+    <th class="right">Fixed length</th>
+    </tr></thead>
+    <tbody>
+    <tr>
+    <td class="right"><samp>1</samp></td>
+    <td class="left">Blackboard name</td>
+    <td class="left">Printable ASCII string</td>
+    <td class="right">No</td>
+    </tr>
+    <tr>
+    <td class="right"><samp>2</samp></td>
+    <td class="left">Message data</td>
+    <td class="left">ASCII or UTF-8 byte string</td>
+    <td class="right">No</td>
+    </tr>
+    <tr>
+    <td class="right"><samp>3</samp></td>
+    <td class="left">TTL seconds</td>
+    <td class="left"><samp>uint32</samp></td>
+    <td class="right">4</td>
+    </tr>
+    <tr>
+    <td class="right"><samp>4</samp></td>
+    <td class="left">Status code</td>
+    <td class="left"><samp>uint16</samp></td>
+    <td class="right">2</td>
+    </tr>
+    <tr>
+    <td class="right"><samp>5</samp></td>
+    <td class="left">Valid flag</td>
+    <td class="left"><samp>uint8</samp></td>
+    <td class="right">1</td>
+    </tr>
+    <tr>
+    <td class="right"><samp>6</samp></td>
+    <td class="left">Filled flag</td>
+    <td class="left"><samp>uint8</samp></td>
+    <td class="right">1</td>
+    </tr>
+    <tr>
+    <td class="right"><samp>7</samp></td>
+    <td class="left">Last update timestamp</td>
+    <td class="left"><samp>uint64</samp></td>
+    <td class="right">8</td>
+    </tr>
+    <tr>
+    <td class="right"><samp>8</samp></td>
+    <td class="left">Blackboard count</td>
+    <td class="left"><samp>uint32</samp></td>
+    <td class="right">4</td>
+    </tr>
+    <tr>
+    <td class="right"><samp>9-65535</samp></td>
+    <td class="left">Unassigned</td>
+    <td class="left">Reserved for future use</td>
+    <td class="right">-</td>
+    </tr>
+    </tbody>
+    </table>
+    <p id="rfc.section.10.1.p.1">Boolean fields MUST use <samp>0</samp> for false and <samp>1</samp> for true. Other values MUST be rejected with status code <samp>4 INVALID_PARAMETERS</samp>.</p>
+    <h1 id="rfc.section.11">
+    <a href="#rfc.section.11">11.</a> <a href="#operation-code-registry" id="operation-code-registry">Operation Code Registry</a>
+    </h1>
+    <table cellpadding="3" cellspacing="0" class="tt full center">
+    <thead><tr>
+    <th class="right">Code</th>
+    <th class="left">Operation</th>
+    </tr></thead>
+    <tbody>
+    <tr>
+    <td class="right"><samp>0</samp></td>
+    <td class="left">Reserved</td>
+    </tr>
+    <tr>
+    <td class="right"><samp>1</samp></td>
+    <td class="left"><samp>CREATE_BLACKBOARD</samp></td>
+    </tr>
+    <tr>
+    <td class="right"><samp>2</samp></td>
+    <td class="left"><samp>DISPLAY_BLACKBOARD</samp></td>
+    </tr>
+    <tr>
+    <td class="right"><samp>3</samp></td>
+    <td class="left"><samp>CLEAR_BLACKBOARD</samp></td>
+    </tr>
+    <tr>
+    <td class="right"><samp>4</samp></td>
+    <td class="left"><samp>READ_BLACKBOARD</samp></td>
+    </tr>
+    <tr>
+    <td class="right"><samp>5</samp></td>
+    <td class="left"><samp>GET_BLACKBOARD_STATUS</samp></td>
+    </tr>
+    <tr>
+    <td class="right"><samp>6</samp></td>
+    <td class="left"><samp>LIST_BLACKBOARDS</samp></td>
+    </tr>
+    <tr>
+    <td class="right"><samp>7</samp></td>
+    <td class="left"><samp>DELETE_BLACKBOARD</samp></td>
+    </tr>
+    <tr>
+    <td class="right"><samp>8</samp></td>
+    <td class="left"><samp>DELETE_ALL_BLACKBOARDS</samp></td>
+    </tr>
+    <tr>
+    <td class="right"><samp>9-65535</samp></td>
+    <td class="left">Unassigned</td>
+    </tr>
+    </tbody>
+    </table>
+    <p id="rfc.section.11.p.1">Requests with unassigned operation codes MUST be rejected with status code <samp>3 UNKNOWN_OPERATION</samp>.</p>
+    <h1 id="rfc.section.12">
+    <a href="#rfc.section.12">12.</a> <a href="#status-code-registry" id="status-code-registry">Status Code Registry</a>
+    </h1>
+    <table cellpadding="3" cellspacing="0" class="tt full center">
+    <thead><tr>
+    <th class="right">Code</th>
+    <th class="left">Symbol</th>
+    <th class="left">Meaning</th>
+    </tr></thead>
+    <tbody>
+    <tr>
+    <td class="right"><samp>0</samp></td>
+    <td class="left"><samp>OK</samp></td>
+    <td class="left">Operation successful</td>
+    </tr>
+    <tr>
+    <td class="right"><samp>1</samp></td>
+    <td class="left"><samp>INVALID_PACKET</samp></td>
+    <td class="left">Packet structure is invalid</td>
+    </tr>
+    <tr>
+    <td class="right"><samp>2</samp></td>
+    <td class="left"><samp>UNSUPPORTED_VERSION</samp></td>
+    <td class="left">Protocol version is unsupported</td>
+    </tr>
+    <tr>
+    <td class="right"><samp>3</samp></td>
+    <td class="left"><samp>UNKNOWN_OPERATION</samp></td>
+    <td class="left">Operation code is unknown</td>
+    </tr>
+    <tr>
+    <td class="right"><samp>4</samp></td>
+    <td class="left"><samp>INVALID_PARAMETERS</samp></td>
+    <td class="left">Operation parameters are invalid</td>
+    </tr>
+    <tr>
+    <td class="right"><samp>5</samp></td>
+    <td class="left"><samp>BLACKBOARD_ALREADY_EXISTS</samp></td>
+    <td class="left">Blackboard already exists</td>
+    </tr>
+    <tr>
+    <td class="right"><samp>6</samp></td>
+    <td class="left"><samp>BLACKBOARD_DOES_NOT_EXIST</samp></td>
+    <td class="left">Blackboard does not exist</td>
+    </tr>
+    <tr>
+    <td class="right"><samp>7</samp></td>
+    <td class="left"><samp>BLACKBOARD_IS_EMPTY</samp></td>
+    <td class="left">Blackboard is empty</td>
+    </tr>
+    <tr>
+    <td class="right"><samp>8</samp></td>
+    <td class="left"><samp>BLACKBOARD_MESSAGE_EXPIRED</samp></td>
+    <td class="left">Blackboard message expired</td>
+    </tr>
+    <tr>
+    <td class="right"><samp>9</samp></td>
+    <td class="left"><samp>MAX_BLACKBOARD_COUNT_REACHED</samp></td>
+    <td class="left">Maximum blackboard count reached</td>
+    </tr>
+    <tr>
+    <td class="right"><samp>10</samp></td>
+    <td class="left"><samp>INTERNAL_SERVER_ERROR</samp></td>
+    <td class="left">Internal server error</td>
+    </tr>
+    <tr>
+    <td class="right"><samp>11</samp></td>
+    <td class="left"><samp>UNSUPPORTED_ENCODING</samp></td>
+    <td class="left">Requested encoding is unsupported</td>
+    </tr>
+    <tr>
+    <td class="right"><samp>12-65535</samp></td>
+    <td class="left">Unassigned</td>
+    <td class="left">Reserved for future use</td>
+    </tr>
+    </tbody>
+    </table>
+    <h1 id="rfc.section.13">
+    <a href="#rfc.section.13">13.</a> <a href="#operation-semantics" id="operation-semantics">Operation Semantics</a>
+    </h1>
+    <p id="rfc.section.13.p.1">Each successful response MUST include field <samp>4</samp> (<samp>Status code</samp>) with value <samp>0</samp> (<samp>OK</samp>). Error responses MUST include field <samp>4</samp> with the appropriate non-zero status code.</p>
+    <h1 id="rfc.section.13.1">
+    <a href="#rfc.section.13.1">13.1.</a> <a href="#createblackboard" id="createblackboard">CREATE_BLACKBOARD</a>
+    </h1>
+    <p id="rfc.section.13.1.p.1">Creates an empty blackboard.</p>
+    <h1 id="rfc.section.13.1.1">
+    <a href="#rfc.section.13.1.1">13.1.1.</a> <a href="#request-fields" id="request-fields">Request Fields</a>
+    </h1>
+    <table cellpadding="3" cellspacing="0" class="tt full center">
+    <thead><tr>
+    <th class="left">Field</th>
+    <th class="right">Field ID</th>
+    <th class="left">Required</th>
+    </tr></thead>
+    <tbody>
+    <tr>
+    <td class="left">Blackboard name</td>
+    <td class="right"><samp>1</samp></td>
+    <td class="left">Yes</td>
+    </tr>
+    <tr>
+    <td class="left">TTL seconds</td>
+    <td class="right"><samp>3</samp></td>
+    <td class="left">Yes</td>
+    </tr>
+    </tbody>
+    </table>
+    <h1 id="rfc.section.13.1.2">
+    <a href="#rfc.section.13.1.2">13.1.2.</a> <a href="#response-fields" id="response-fields">Response Fields</a>
+    </h1>
+    <table cellpadding="3" cellspacing="0" class="tt full center">
+    <thead><tr>
+    <th class="left">Field</th>
+    <th class="right">Field ID</th>
+    <th class="left">Required</th>
+    </tr></thead>
+    <tbody><tr>
+    <td class="left">Status code</td>
+    <td class="right"><samp>4</samp></td>
+    <td class="left">Yes</td>
+    </tr></tbody>
+    </table>
+    <h1 id="rfc.section.13.1.3">
+    <a href="#rfc.section.13.1.3">13.1.3.</a> <a href="#behavior" id="behavior">Behavior</a>
+    </h1>
+    <p id="rfc.section.13.1.3.p.1">The server MUST reject the request if the name is not printable ASCII, the name length is not 1-64 bytes, the TTL field length is not 4 bytes, the blackboard already exists, or the maximum blackboard count has been reached.</p>
+    <p id="rfc.section.13.1.3.p.2">A successful create MUST create an empty blackboard with <samp>is_filled = false</samp> and <samp>last_update_timestamp = 0</samp>.</p>
+    <h1 id="rfc.section.13.1.4">
+    <a href="#rfc.section.13.1.4">13.1.4.</a> <a href="#possible-status-codes" id="possible-status-codes">Possible Status Codes</a>
+    </h1>
+    <p></p>
+
+    <ul>
+    <li><samp>0 OK</samp></li>
+    <li><samp>4 INVALID_PARAMETERS</samp></li>
+    <li><samp>5 BLACKBOARD_ALREADY_EXISTS</samp></li>
+    <li><samp>9 MAX_BLACKBOARD_COUNT_REACHED</samp></li>
+    <li><samp>10 INTERNAL_SERVER_ERROR</samp></li>
+    <li><samp>11 UNSUPPORTED_ENCODING</samp></li>
+    </ul>
+    <h1 id="rfc.section.13.2">
+    <a href="#rfc.section.13.2">13.2.</a> <a href="#displayblackboard" id="displayblackboard">DISPLAY_BLACKBOARD</a>
+    </h1>
+    <p id="rfc.section.13.2.p.1">Writes or updates the content of a blackboard.</p>
+    <h1 id="rfc.section.13.2.1">
+    <a href="#rfc.section.13.2.1">13.2.1.</a> <a href="#request-fields-1" id="request-fields-1">Request Fields</a>
+    </h1>
+    <table cellpadding="3" cellspacing="0" class="tt full center">
+    <thead><tr>
+    <th class="left">Field</th>
+    <th class="right">Field ID</th>
+    <th class="left">Required</th>
+    </tr></thead>
+    <tbody>
+    <tr>
+    <td class="left">Blackboard name</td>
+    <td class="right"><samp>1</samp></td>
+    <td class="left">Yes</td>
+    </tr>
+    <tr>
+    <td class="left">Message data</td>
+    <td class="right"><samp>2</samp></td>
+    <td class="left">Yes</td>
+    </tr>
+    </tbody>
+    </table>
+    <h1 id="rfc.section.13.2.2">
+    <a href="#rfc.section.13.2.2">13.2.2.</a> <a href="#response-fields-1" id="response-fields-1">Response Fields</a>
+    </h1>
+    <table cellpadding="3" cellspacing="0" class="tt full center">
+    <thead><tr>
+    <th class="left">Field</th>
+    <th class="right">Field ID</th>
+    <th class="left">Required</th>
+    </tr></thead>
+    <tbody><tr>
+    <td class="left">Status code</td>
+    <td class="right"><samp>4</samp></td>
+    <td class="left">Yes</td>
+    </tr></tbody>
+    </table>
+    <h1 id="rfc.section.13.2.3">
+    <a href="#rfc.section.13.2.3">13.2.3.</a> <a href="#behavior-1" id="behavior-1">Behavior</a>
+    </h1>
+    <p id="rfc.section.13.2.3.p.1">The server MUST reject the request if the blackboard does not exist, the message length is greater than 4096 bytes, or the message does not match the selected encoding.</p>
+    <p id="rfc.section.13.2.3.p.2">If the UTF8_MESSAGE flag is not set, the message MUST contain only printable ASCII bytes. If the UTF8_MESSAGE flag is set, the message MUST be valid UTF-8 unless the server rejects the request with <samp>11 UNSUPPORTED_ENCODING</samp>.</p>
+    <p id="rfc.section.13.2.3.p.3">A successful write MUST replace the previous message, set <samp>is_filled = true</samp>, update <samp>last_update_timestamp</samp>, and make the message valid.</p>
+    <h1 id="rfc.section.13.2.4">
+    <a href="#rfc.section.13.2.4">13.2.4.</a> <a href="#possible-status-codes-1" id="possible-status-codes-1">Possible Status Codes</a>
+    </h1>
+    <p></p>
+
+    <ul>
+    <li><samp>0 OK</samp></li>
+    <li><samp>4 INVALID_PARAMETERS</samp></li>
+    <li><samp>6 BLACKBOARD_DOES_NOT_EXIST</samp></li>
+    <li><samp>10 INTERNAL_SERVER_ERROR</samp></li>
+    <li><samp>11 UNSUPPORTED_ENCODING</samp></li>
+    </ul>
+    <h1 id="rfc.section.13.3">
+    <a href="#rfc.section.13.3">13.3.</a> <a href="#clearblackboard" id="clearblackboard">CLEAR_BLACKBOARD</a>
+    </h1>
+    <p id="rfc.section.13.3.p.1">Clears the content of a blackboard without deleting the blackboard.</p>
+    <h1 id="rfc.section.13.3.1">
+    <a href="#rfc.section.13.3.1">13.3.1.</a> <a href="#request-fields-2" id="request-fields-2">Request Fields</a>
+    </h1>
+    <table cellpadding="3" cellspacing="0" class="tt full center">
+    <thead><tr>
+    <th class="left">Field</th>
+    <th class="right">Field ID</th>
+    <th class="left">Required</th>
+    </tr></thead>
+    <tbody><tr>
+    <td class="left">Blackboard name</td>
+    <td class="right"><samp>1</samp></td>
+    <td class="left">Yes</td>
+    </tr></tbody>
+    </table>
+    <h1 id="rfc.section.13.3.2">
+    <a href="#rfc.section.13.3.2">13.3.2.</a> <a href="#response-fields-2" id="response-fields-2">Response Fields</a>
+    </h1>
+    <table cellpadding="3" cellspacing="0" class="tt full center">
+    <thead><tr>
+    <th class="left">Field</th>
+    <th class="right">Field ID</th>
+    <th class="left">Required</th>
+    </tr></thead>
+    <tbody><tr>
+    <td class="left">Status code</td>
+    <td class="right"><samp>4</samp></td>
+    <td class="left">Yes</td>
+    </tr></tbody>
+    </table>
+    <h1 id="rfc.section.13.3.3">
+    <a href="#rfc.section.13.3.3">13.3.3.</a> <a href="#behavior-2" id="behavior-2">Behavior</a>
+    </h1>
+    <p id="rfc.section.13.3.3.p.1">The server MUST reject the request if the blackboard does not exist.</p>
+    <p id="rfc.section.13.3.3.p.2">A successful clear MUST remove the message, set <samp>is_filled = false</samp>, and preserve <samp>last_update_timestamp</samp>.</p>
+    <h1 id="rfc.section.13.3.4">
+    <a href="#rfc.section.13.3.4">13.3.4.</a> <a href="#possible-status-codes-2" id="possible-status-codes-2">Possible Status Codes</a>
+    </h1>
+    <p></p>
+
+    <ul>
+    <li><samp>0 OK</samp></li>
+    <li><samp>4 INVALID_PARAMETERS</samp></li>
+    <li><samp>6 BLACKBOARD_DOES_NOT_EXIST</samp></li>
+    <li><samp>10 INTERNAL_SERVER_ERROR</samp></li>
+    <li><samp>11 UNSUPPORTED_ENCODING</samp></li>
+    </ul>
+    <h1 id="rfc.section.13.4">
+    <a href="#rfc.section.13.4">13.4.</a> <a href="#readblackboard" id="readblackboard">READ_BLACKBOARD</a>
+    </h1>
+    <p id="rfc.section.13.4.p.1">Reads the current content of a blackboard.</p>
+    <h1 id="rfc.section.13.4.1">
+    <a href="#rfc.section.13.4.1">13.4.1.</a> <a href="#request-fields-3" id="request-fields-3">Request Fields</a>
+    </h1>
+    <table cellpadding="3" cellspacing="0" class="tt full center">
+    <thead><tr>
+    <th class="left">Field</th>
+    <th class="right">Field ID</th>
+    <th class="left">Required</th>
+    </tr></thead>
+    <tbody><tr>
+    <td class="left">Blackboard name</td>
+    <td class="right"><samp>1</samp></td>
+    <td class="left">Yes</td>
+    </tr></tbody>
+    </table>
+    <h1 id="rfc.section.13.4.2">
+    <a href="#rfc.section.13.4.2">13.4.2.</a> <a href="#response-fields-3" id="response-fields-3">Response Fields</a>
+    </h1>
+    <table cellpadding="3" cellspacing="0" class="tt full center">
+    <thead><tr>
+    <th class="left">Field</th>
+    <th class="right">Field ID</th>
+    <th class="left">Required</th>
+    <th class="left">Description</th>
+    </tr></thead>
+    <tbody>
+    <tr>
+    <td class="left">Status code</td>
+    <td class="right"><samp>4</samp></td>
+    <td class="left">Yes</td>
+    <td class="left">Result</td>
+    </tr>
+    <tr>
+    <td class="left">Message data</td>
+    <td class="right"><samp>2</samp></td>
+    <td class="left">See below</td>
+    <td class="left">Current message</td>
+    </tr>
+    <tr>
+    <td class="left">Valid flag</td>
+    <td class="right"><samp>5</samp></td>
+    <td class="left">Yes</td>
+    <td class="left">
+    <samp>1 = valid</samp>, <samp>0 = invalid</samp>
+    </td>
+    </tr>
+    <tr>
+    <td class="left">Filled flag</td>
+    <td class="right"><samp>6</samp></td>
+    <td class="left">Yes</td>
+    <td class="left">
+    <samp>1 = filled</samp>, <samp>0 = empty</samp>
+    </td>
+    </tr>
+    <tr>
+    <td class="left">Last update timestamp</td>
+    <td class="right"><samp>7</samp></td>
+    <td class="left">Yes</td>
+    <td class="left">Unix timestamp in seconds</td>
+    </tr>
+    </tbody>
+    </table>
+    <h1 id="rfc.section.13.4.3">
+    <a href="#rfc.section.13.4.3">13.4.3.</a> <a href="#behavior-3" id="behavior-3">Behavior</a>
+    </h1>
+    <p id="rfc.section.13.4.3.p.1">The server MUST return exactly one of the following response shapes when the blackboard exists:</p>
+    <table cellpadding="3" cellspacing="0" class="tt full center">
+    <thead><tr>
+    <th class="left">State</th>
+    <th class="left">Status code</th>
+    <th class="left">Message field</th>
+    <th class="right">Filled flag</th>
+    <th class="right">Valid flag</th>
+    </tr></thead>
+    <tbody>
+    <tr>
+    <td class="left">Empty</td>
+    <td class="left"><samp>7 BLACKBOARD_IS_EMPTY</samp></td>
+    <td class="left">Not included</td>
+    <td class="right"><samp>0</samp></td>
+    <td class="right"><samp>0</samp></td>
+    </tr>
+    <tr>
+    <td class="left">Filled and expired</td>
+    <td class="left"><samp>8 BLACKBOARD_MESSAGE_EXPIRED</samp></td>
+    <td class="left">Included</td>
+    <td class="right"><samp>1</samp></td>
+    <td class="right"><samp>0</samp></td>
+    </tr>
+    <tr>
+    <td class="left">Filled and valid</td>
+    <td class="left"><samp>0 OK</samp></td>
+    <td class="left">Included</td>
+    <td class="right"><samp>1</samp></td>
+    <td class="right"><samp>1</samp></td>
+    </tr>
+    </tbody>
+    </table>
+    <p id="rfc.section.13.4.3.p.2">Read operations MUST NOT modify blackboard state.</p>
+    <h1 id="rfc.section.13.4.4">
+    <a href="#rfc.section.13.4.4">13.4.4.</a> <a href="#possible-status-codes-3" id="possible-status-codes-3">Possible Status Codes</a>
+    </h1>
+    <p></p>
+
+    <ul>
+    <li><samp>0 OK</samp></li>
+    <li><samp>4 INVALID_PARAMETERS</samp></li>
+    <li><samp>6 BLACKBOARD_DOES_NOT_EXIST</samp></li>
+    <li><samp>7 BLACKBOARD_IS_EMPTY</samp></li>
+    <li><samp>8 BLACKBOARD_MESSAGE_EXPIRED</samp></li>
+    <li><samp>10 INTERNAL_SERVER_ERROR</samp></li>
+    <li><samp>11 UNSUPPORTED_ENCODING</samp></li>
+    </ul>
+    <h1 id="rfc.section.13.5">
+    <a href="#rfc.section.13.5">13.5.</a> <a href="#getblackboardstatus" id="getblackboardstatus">GET_BLACKBOARD_STATUS</a>
+    </h1>
+    <p id="rfc.section.13.5.p.1">Returns metadata about a blackboard without returning the message content.</p>
+    <h1 id="rfc.section.13.5.1">
+    <a href="#rfc.section.13.5.1">13.5.1.</a> <a href="#request-fields-4" id="request-fields-4">Request Fields</a>
+    </h1>
+    <table cellpadding="3" cellspacing="0" class="tt full center">
+    <thead><tr>
+    <th class="left">Field</th>
+    <th class="right">Field ID</th>
+    <th class="left">Required</th>
+    </tr></thead>
+    <tbody><tr>
+    <td class="left">Blackboard name</td>
+    <td class="right"><samp>1</samp></td>
+    <td class="left">Yes</td>
+    </tr></tbody>
+    </table>
+    <h1 id="rfc.section.13.5.2">
+    <a href="#rfc.section.13.5.2">13.5.2.</a> <a href="#response-fields-4" id="response-fields-4">Response Fields</a>
+    </h1>
+    <table cellpadding="3" cellspacing="0" class="tt full center">
+    <thead><tr>
+    <th class="left">Field</th>
+    <th class="right">Field ID</th>
+    <th class="left">Required</th>
+    <th class="left">Description</th>
+    </tr></thead>
+    <tbody>
+    <tr>
+    <td class="left">Status code</td>
+    <td class="right"><samp>4</samp></td>
+    <td class="left">Yes</td>
+    <td class="left">Result</td>
+    </tr>
+    <tr>
+    <td class="left">TTL seconds</td>
+    <td class="right"><samp>3</samp></td>
+    <td class="left">Yes</td>
+    <td class="left">Configured TTL</td>
+    </tr>
+    <tr>
+    <td class="left">Valid flag</td>
+    <td class="right"><samp>5</samp></td>
+    <td class="left">Yes</td>
+    <td class="left">
+    <samp>1 = valid</samp>, <samp>0 = invalid</samp>
+    </td>
+    </tr>
+    <tr>
+    <td class="left">Filled flag</td>
+    <td class="right"><samp>6</samp></td>
+    <td class="left">Yes</td>
+    <td class="left">
+    <samp>1 = filled</samp>, <samp>0 = empty</samp>
+    </td>
+    </tr>
+    <tr>
+    <td class="left">Last update timestamp</td>
+    <td class="right"><samp>7</samp></td>
+    <td class="left">Yes</td>
+    <td class="left">Unix timestamp in seconds</td>
+    </tr>
+    </tbody>
+    </table>
+    <h1 id="rfc.section.13.5.3">
+    <a href="#rfc.section.13.5.3">13.5.3.</a> <a href="#behavior-4" id="behavior-4">Behavior</a>
+    </h1>
+    <p id="rfc.section.13.5.3.p.1">The server MUST reject the request if the blackboard does not exist.</p>
+    <p id="rfc.section.13.5.3.p.2">The status response MUST report validity using the rules in the Blackboard State Model section. It MUST include <samp>last_update_timestamp = 0</samp> if the blackboard has never been written.</p>
+    <p id="rfc.section.13.5.3.p.3">Status operations MUST NOT modify blackboard state.</p>
+    <h1 id="rfc.section.13.5.4">
+    <a href="#rfc.section.13.5.4">13.5.4.</a> <a href="#possible-status-codes-4" id="possible-status-codes-4">Possible Status Codes</a>
+    </h1>
+    <p></p>
+
+    <ul>
+    <li><samp>0 OK</samp></li>
+    <li><samp>4 INVALID_PARAMETERS</samp></li>
+    <li><samp>6 BLACKBOARD_DOES_NOT_EXIST</samp></li>
+    <li><samp>10 INTERNAL_SERVER_ERROR</samp></li>
+    <li><samp>11 UNSUPPORTED_ENCODING</samp></li>
+    </ul>
+    <h1 id="rfc.section.13.6">
+    <a href="#rfc.section.13.6">13.6.</a> <a href="#listblackboards" id="listblackboards">LIST_BLACKBOARDS</a>
+    </h1>
+    <p id="rfc.section.13.6.p.1">Returns all existing blackboard names.</p>
+    <h1 id="rfc.section.13.6.1">
+    <a href="#rfc.section.13.6.1">13.6.1.</a> <a href="#request-fields-5" id="request-fields-5">Request Fields</a>
+    </h1>
+    <p id="rfc.section.13.6.1.p.1">The request payload MUST be empty.</p>
+    <h1 id="rfc.section.13.6.2">
+    <a href="#rfc.section.13.6.2">13.6.2.</a> <a href="#response-fields-5" id="response-fields-5">Response Fields</a>
+    </h1>
+    <table cellpadding="3" cellspacing="0" class="tt full center">
+    <thead><tr>
+    <th class="left">Field</th>
+    <th class="right">Field ID</th>
+    <th class="left">Required</th>
+    <th class="left">Description</th>
+    </tr></thead>
+    <tbody>
+    <tr>
+    <td class="left">Status code</td>
+    <td class="right"><samp>4</samp></td>
+    <td class="left">Yes</td>
+    <td class="left">Result</td>
+    </tr>
+    <tr>
+    <td class="left">Blackboard count</td>
+    <td class="right"><samp>8</samp></td>
+    <td class="left">Yes</td>
+    <td class="left">Number of blackboards</td>
+    </tr>
+    <tr>
+    <td class="left">Blackboard name</td>
+    <td class="right"><samp>1</samp></td>
+    <td class="left">Repeated</td>
+    <td class="left">One field per blackboard, if any</td>
+    </tr>
+    </tbody>
+    </table>
+    <h1 id="rfc.section.13.6.3">
+    <a href="#rfc.section.13.6.3">13.6.3.</a> <a href="#behavior-5" id="behavior-5">Behavior</a>
+    </h1>
+    <p id="rfc.section.13.6.3.p.1">The server MUST include exactly one blackboard count field. The server MUST include exactly one repeated blackboard name field for each existing blackboard.</p>
+    <p id="rfc.section.13.6.3.p.2">The protocol does not require a specific ordering for listed names. An implementation MAY choose a deterministic order, such as lexicographic byte order.</p>
+    <p id="rfc.section.13.6.3.p.3">List operations MUST NOT modify blackboard state.</p>
+    <h1 id="rfc.section.13.6.4">
+    <a href="#rfc.section.13.6.4">13.6.4.</a> <a href="#possible-status-codes-5" id="possible-status-codes-5">Possible Status Codes</a>
+    </h1>
+    <p></p>
+
+    <ul>
+    <li><samp>0 OK</samp></li>
+    <li><samp>4 INVALID_PARAMETERS</samp></li>
+    <li><samp>10 INTERNAL_SERVER_ERROR</samp></li>
+    <li><samp>11 UNSUPPORTED_ENCODING</samp></li>
+    </ul>
+    <h1 id="rfc.section.13.7">
+    <a href="#rfc.section.13.7">13.7.</a> <a href="#deleteblackboard" id="deleteblackboard">DELETE_BLACKBOARD</a>
+    </h1>
+    <p id="rfc.section.13.7.p.1">Deletes one blackboard completely.</p>
+    <h1 id="rfc.section.13.7.1">
+    <a href="#rfc.section.13.7.1">13.7.1.</a> <a href="#request-fields-6" id="request-fields-6">Request Fields</a>
+    </h1>
+    <table cellpadding="3" cellspacing="0" class="tt full center">
+    <thead><tr>
+    <th class="left">Field</th>
+    <th class="right">Field ID</th>
+    <th class="left">Required</th>
+    </tr></thead>
+    <tbody><tr>
+    <td class="left">Blackboard name</td>
+    <td class="right"><samp>1</samp></td>
+    <td class="left">Yes</td>
+    </tr></tbody>
+    </table>
+    <h1 id="rfc.section.13.7.2">
+    <a href="#rfc.section.13.7.2">13.7.2.</a> <a href="#response-fields-6" id="response-fields-6">Response Fields</a>
+    </h1>
+    <table cellpadding="3" cellspacing="0" class="tt full center">
+    <thead><tr>
+    <th class="left">Field</th>
+    <th class="right">Field ID</th>
+    <th class="left">Required</th>
+    </tr></thead>
+    <tbody><tr>
+    <td class="left">Status code</td>
+    <td class="right"><samp>4</samp></td>
+    <td class="left">Yes</td>
+    </tr></tbody>
+    </table>
+    <h1 id="rfc.section.13.7.3">
+    <a href="#rfc.section.13.7.3">13.7.3.</a> <a href="#behavior-6" id="behavior-6">Behavior</a>
+    </h1>
+    <p id="rfc.section.13.7.3.p.1">The server MUST reject the request if the blackboard does not exist.</p>
+    <p id="rfc.section.13.7.3.p.2">A successful delete MUST remove the blackboard, its message, and its metadata.</p>
+    <h1 id="rfc.section.13.7.4">
+    <a href="#rfc.section.13.7.4">13.7.4.</a> <a href="#possible-status-codes-6" id="possible-status-codes-6">Possible Status Codes</a>
+    </h1>
+    <p></p>
+
+    <ul>
+    <li><samp>0 OK</samp></li>
+    <li><samp>4 INVALID_PARAMETERS</samp></li>
+    <li><samp>6 BLACKBOARD_DOES_NOT_EXIST</samp></li>
+    <li><samp>10 INTERNAL_SERVER_ERROR</samp></li>
+    <li><samp>11 UNSUPPORTED_ENCODING</samp></li>
+    </ul>
+    <h1 id="rfc.section.13.8">
+    <a href="#rfc.section.13.8">13.8.</a> <a href="#deleteallblackboards" id="deleteallblackboards">DELETE_ALL_BLACKBOARDS</a>
+    </h1>
+    <p id="rfc.section.13.8.p.1">Deletes all blackboards.</p>
+    <h1 id="rfc.section.13.8.1">
+    <a href="#rfc.section.13.8.1">13.8.1.</a> <a href="#request-fields-7" id="request-fields-7">Request Fields</a>
+    </h1>
+    <p id="rfc.section.13.8.1.p.1">The request payload MUST be empty.</p>
+    <h1 id="rfc.section.13.8.2">
+    <a href="#rfc.section.13.8.2">13.8.2.</a> <a href="#response-fields-7" id="response-fields-7">Response Fields</a>
+    </h1>
+    <table cellpadding="3" cellspacing="0" class="tt full center">
+    <thead><tr>
+    <th class="left">Field</th>
+    <th class="right">Field ID</th>
+    <th class="left">Required</th>
+    </tr></thead>
+    <tbody><tr>
+    <td class="left">Status code</td>
+    <td class="right"><samp>4</samp></td>
+    <td class="left">Yes</td>
+    </tr></tbody>
+    </table>
+    <h1 id="rfc.section.13.8.3">
+    <a href="#rfc.section.13.8.3">13.8.3.</a> <a href="#behavior-7" id="behavior-7">Behavior</a>
+    </h1>
+    <p id="rfc.section.13.8.3.p.1">A successful delete-all operation MUST leave the blackboard map empty. Deleting zero blackboards is successful and MUST return <samp>0 OK</samp>.</p>
+    <h1 id="rfc.section.13.8.4">
+    <a href="#rfc.section.13.8.4">13.8.4.</a> <a href="#possible-status-codes-7" id="possible-status-codes-7">Possible Status Codes</a>
+    </h1>
+    <p></p>
+
+    <ul>
+    <li><samp>0 OK</samp></li>
+    <li><samp>4 INVALID_PARAMETERS</samp></li>
+    <li><samp>10 INTERNAL_SERVER_ERROR</samp></li>
+    <li><samp>11 UNSUPPORTED_ENCODING</samp></li>
+    </ul>
+    <h1 id="rfc.section.14">
+    <a href="#rfc.section.14">14.</a> <a href="#validation-and-error-handling" id="validation-and-error-handling">Validation and Error Handling</a>
+    </h1>
+    <p id="rfc.section.14.p.1">The server MUST validate:</p>
+    <p></p>
+
+    <ul>
+    <li>Magic value</li>
+    <li>Protocol version</li>
+    <li>Packet type</li>
+    <li>Operation code</li>
+    <li>Payload length</li>
+    <li>Packet flags</li>
+    <li>TLV field structure</li>
+    <li>Required payload fields</li>
+    <li>Duplicate singleton fields</li>
+    <li>Fixed-size field lengths</li>
+    <li>Field value ranges</li>
+    <li>String length limits</li>
+    <li>Character encoding constraints</li>
+    </ul>
+    <h1 id="rfc.section.14.1">
+    <a href="#rfc.section.14.1">14.1.</a> <a href="#error-precedence" id="error-precedence">Error Precedence</a>
+    </h1>
+    <p id="rfc.section.14.1.p.1">If more than one error applies, the server MUST use the first applicable error class from this list:</p>
+    <p></p>
+
+    <ol>
+    <li>Incomplete or unreadable header: close the connection without a response.</li>
+    <li>Invalid magic value, packet type, or payload length: <samp>1 INVALID_PACKET</samp>.</li>
+    <li>Unsupported protocol version: <samp>2 UNSUPPORTED_VERSION</samp>.</li>
+    <li>Unknown operation code: <samp>3 UNKNOWN_OPERATION</samp>.</li>
+    <li>Invalid packet flags: <samp>4 INVALID_PARAMETERS</samp>.</li>
+    <li>Unsupported UTF8_MESSAGE flag: <samp>11 UNSUPPORTED_ENCODING</samp>.</li>
+    <li>Malformed TLV payload or invalid operation parameters: <samp>4 INVALID_PARAMETERS</samp>.</li>
+    <li>Operation-specific state errors, such as missing or duplicate blackboards.</li>
+    <li>Internal server error: <samp>10 INTERNAL_SERVER_ERROR</samp>.</li>
+    </ol>
+    <h1 id="rfc.section.14.2">
+    <a href="#rfc.section.14.2">14.2.</a> <a href="#error-response-construction" id="error-response-construction">Error Response Construction</a>
+    </h1>
+    <p id="rfc.section.14.2.p.1">Invalid requests SHOULD receive a response if the server can safely construct one.</p>
+    <p id="rfc.section.14.2.p.2">An error response MUST use packet type <samp>2</samp>. The server MUST echo the request ID if the request ID was readable; otherwise, the server MAY close the connection without a response.</p>
+    <p id="rfc.section.14.2.p.3">The server SHOULD echo the received operation code if the operation field was readable. If the operation code is unknown, the server SHOULD still copy the received operation code into the response header.</p>
+    <p id="rfc.section.14.2.p.4">If request flags are valid and supported, the server MUST copy them into the response. If request flags are invalid or unsupported, the server MUST send response flags <samp>0x0000</samp>.</p>
+    <p id="rfc.section.14.2.p.5">An error response payload MUST contain at least field <samp>4</samp> (<samp>Status code</samp>). It MAY contain additional fields only if the operation explicitly defines them for that status code.</p>
+    <p id="rfc.section.14.2.p.6">Internal errors SHOULD return <samp>10 INTERNAL_SERVER_ERROR</samp> if a response can be sent.</p>
+    <h1 id="rfc.section.15">
+    <a href="#rfc.section.15">15.</a> <a href="#example-packet" id="example-packet">Example Packet</a>
+    </h1>
+    <p id="rfc.section.15.p.1">This example creates a blackboard named <samp>MESSAGE_1</samp> with a TTL of 60 seconds.</p>
+    <h1 id="rfc.section.15.1">
+    <a href="#rfc.section.15.1">15.1.</a> <a href="#request" id="request">Request</a>
+    </h1>
+    <pre>
+    Header:
+    Magic:            DBbP
+    Version:          1
+    Packet type:      1 (request)
+    Operation:        1 (CREATE_BLACKBOARD)
+    Request ID:       42
+    Payload length:   25
+    Flags:            0
+
+    Payload:
+    Field 1: Blackboard name = "MESSAGE_1"
+    Field 3: TTL seconds = 60
+    </pre>
+    <p id="rfc.section.15.1.p.1">The payload fields are:</p>
+    <table cellpadding="3" cellspacing="0" class="tt full center">
+    <thead><tr>
+    <th class="right">Field ID</th>
+    <th class="right">Length</th>
+    <th class="left">Value</th>
+    </tr></thead>
+    <tbody>
+    <tr>
+    <td class="right"><samp>1</samp></td>
+    <td class="right"><samp>9</samp></td>
+    <td class="left"><samp>MESSAGE_1</samp></td>
+    </tr>
+    <tr>
+    <td class="right"><samp>3</samp></td>
+    <td class="right"><samp>4</samp></td>
+    <td class="left"><samp>60</samp></td>
+    </tr>
+    </tbody>
+    </table>
+    <p id="rfc.section.15.1.p.2">The total payload size is:</p>
+    <pre>
+    (2 + 4 + 9) + (2 + 4 + 4) = 25 bytes
+    </pre>
+    <p id="rfc.section.15.1.p.3">Hex representation:</p>
+    <pre>
+    Header:
+    44 42 62 50 01 01 00 01 00 00 00 2a 00 00 00 19 00 00
+    ^           ^  ^  ^     ^           ^           ^
+    Magic       V  PT Op    Req. ID     Payl. Len.  Flags
+
+    Payload message field:
+    00 01 00 00 00 09 4d 45 53 53 41 47 45 5f 31
+    ^     ^           ^
+    Type  Length      Value
+
+    Payload TTL field:
+    00 03 00 00 00 04 00 00 00 3c
+    ^     ^           ^
+    Type Length       Value
+    </pre>
+    <h1 id="rfc.section.15.2">
+    <a href="#rfc.section.15.2">15.2.</a> <a href="#response" id="response">Response</a>
+    </h1>
+    <p id="rfc.section.15.2.p.1">If the blackboard was created successfully, the response is:</p>
+    <pre>
+    Header:
+    Magic:            DBbP
+    Version:          1
+    Packet type:      2 (response)
+    Operation:        1 (CREATE_BLACKBOARD)
+    Request ID:       42
+    Payload length:   8
+    Flags:            0
+
+    Payload:
+    Field 4: Status code = 0 (OK)
+    </pre>
+    <p id="rfc.section.15.2.p.2">The payload fields are:</p>
+    <table cellpadding="3" cellspacing="0" class="tt full center">
+    <thead><tr>
+    <th class="right">Field ID</th>
+    <th class="right">Length</th>
+    <th class="left">Value</th>
+    </tr></thead>
+    <tbody><tr>
+    <td class="right"><samp>4</samp></td>
+    <td class="right"><samp>2</samp></td>
+    <td class="left"><samp>0 OK</samp></td>
+    </tr></tbody>
+    </table>
+    <p id="rfc.section.15.2.p.3">The total payload size is:</p>
+    <pre>
+    2 + 4 + 2 = 8 bytes
+    </pre>
+    <p id="rfc.section.15.2.p.4">Hex representation:</p>
+    <pre>
+    Header:
+    44 42 62 50 01 02 00 01 00 00 00 2a 00 00 00 08 00 00
+    ^           ^  ^  ^     ^           ^           ^
+    Magic       V  PT Op    Req. ID     Payl. Len.  Flags
+
+    Payload status code field:
+    00 04 00 00 00 02 00 00
+    ^     ^           ^
+    Type  Length      Value
+    </pre>
+    <h1 id="rfc.section.16">
+    <a href="#rfc.section.16">16.</a> <a href="#interoperability-requirements" id="interoperability-requirements">Interoperability Requirements</a>
+    </h1>
+    <p id="rfc.section.16.p.1">A compliant DBbP v1 client MUST:</p>
+    <p></p>
+
+    <ul>
+    <li>Send packets with magic value <samp>DBbP</samp>, version <samp>1</samp>, packet type <samp>1</samp>, and a valid operation code.</li>
+    <li>Encode all multi-byte integers in network byte order.</li>
+    <li>Respect the request payload size limit.</li>
+    <li>Encode payloads as complete TLV fields.</li>
+    <li>Use printable ASCII blackboard names.</li>
+    <li>Treat EOF before a complete response as an incomplete response.</li>
+    </ul>
+    <p id="rfc.section.16.p.3">A compliant DBbP v1 server MUST:</p>
+    <p></p>
+
+    <ul>
+    <li>Accept valid DBbP v1 request packets.</li>
+    <li>Send DBbP v1 response packets with packet type <samp>2</samp>.</li>
+    <li>Echo readable request IDs.</li>
+    <li>Implement all operation codes listed in Section 10.</li>
+    <li>Enforce the limits and validation rules in this document.</li>
+    <li>Close the TCP connection after sending one response.</li>
+    </ul>
+    <h1 id="rfc.section.17">
+    <a href="#rfc.section.17">17.</a> <a href="#implementation-considerations" id="implementation-considerations">Implementation Considerations</a>
+    </h1>
+    <p id="rfc.section.17.p.1">The server listens on a configurable TCP port. Each accepted client connection can be handled independently, for example by using one thread per connection or an asynchronous event loop.</p>
+    <p id="rfc.section.17.p.2">The blackboard registry needs synchronization. An implementation can use one global lock or a combination of registry and per-blackboard locks. Read operations SHOULD use shared locks to allow for concurrent reads. Operations that create, write, clear, or delete state MUST have exclusive access to the affected state.</p>
+    <p id="rfc.section.17.p.3">The server SHOULD log every request it processes. The log format is implementation-defined, but it SHOULD include at least:</p>
+    <pre>
+    timestamp=&lt;unix_seconds&gt; source=&lt;ip:port&gt;
+    request_id=&lt;id&gt; operation=&lt;op&gt; status=&lt;status&gt;
+    </pre>
+    <p id="rfc.section.17.p.4">If message data or blackboard names are logged, the implementation SHOULD escape control characters and invalid byte sequences before writing them to logs.</p>
+    <h1 id="rfc.section.18">
+    <a href="#rfc.section.18">18.</a> <a href="#security-considerations" id="security-considerations">Security Considerations</a>
+    </h1>
+    <p id="rfc.section.18.p.1">DBbP v1 provides no authentication, authorization, confidentiality, replay protection, or application-level integrity protection beyond TCP transport behavior.</p>
+    <p id="rfc.section.18.p.2">Any client that can connect to the server can create, overwrite, clear, list, or delete blackboards. Deployments that require access control or confidentiality MUST provide those properties outside DBbP v1, for example with network isolation or a protected transport tunnel.</p>
+    <p id="rfc.section.18.p.3">Payload limits and strict TLV parsing are required to reduce malformed-input and memory-exhaustion risks. Implementations SHOULD apply connection timeouts and SHOULD avoid allocating memory proportional to untrusted length fields before validating configured limits.</p>
+    <p id="rfc.section.18.p.4">Logs can contain untrusted data. Implementations SHOULD escape control characters, invalid byte sequences, and non-printable bytes before writing request data to logs.</p>
+    <h1 id="rfc.section.19">
+    <a href="#rfc.section.19">19.</a> <a href="#iana-considerations" id="iana-considerations">IANA Considerations</a>
+    </h1>
+    <p id="rfc.section.19.p.1">This document has no IANA actions.</p>
+    <p id="rfc.section.19.p.2">DBbP v1 defines local protocol registries for packet flags, field IDs, operation codes, and status codes. Unassigned values are reserved for future versions of this protocol.</p>
+    <h1 id="rfc.references">
+    <a href="#rfc.references">20.</a> Normative References</h1>
+    <table><tbody>
+    <tr>
+    <td class="reference"><b id="RFC2119">[RFC2119]</b></td>
+    <td class="top">
+    <a title="Harvard University">Bradner, S.</a>, "<a href="https://tools.ietf.org/html/rfc2119">Key words for use in RFCs to Indicate Requirement Levels</a>", RFC 2119, DOI 10.17487/RFC2119, March 1997.</td>
+    </tr>
+    <tr>
+    <td class="reference"><b id="RFC3629">[RFC3629]</b></td>
+    <td class="top">
+    <a>Yergeau, F.</a>, "<a href="https://tools.ietf.org/html/rfc3629">UTF-8, a transformation format of ISO 10646</a>", RFC 3629, DOI 10.17487/RFC3629, November 2003.</td>
+    </tr>
+    <tr>
+    <td class="reference"><b id="RFC8174">[RFC8174]</b></td>
+    <td class="top">
+    <a>Leiba, B.</a>, "<a href="https://tools.ietf.org/html/rfc8174">Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words</a>", RFC 8174, DOI 10.17487/RFC8174, May 2017.</td>
+    </tr>
+    </tbody></table>
+    <h1 id="rfc.authors"><a href="#rfc.authors">Author's Address</a></h1>
+    <div class="avoidbreak">
+      <address class="vcard">
+      <span class="vcardline">
+        <span class="fn">Simon</span> 
+        <span class="n hidden">
+        <span class="family-name">Blum</span>
+        </span>
+      </span>
+      <span class="org vcardline"></span>
+      <span class="adr">
+        
+        <span class="vcardline">
+        <span class="locality"></span> 
+        <span class="region"></span>
+        <span class="code"></span>
+        </span>
+        <span class="country-name vcardline"></span>
+      </span>
+      
+      </address>
+    </div>
+
+    </body>
+    </html>
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dev-static
+  namespace: dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dev-static
+  template:
+    metadata:
+      labels:
+        app: dev-static
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:alpine
+          ports:
+            - name: http
+              containerPort: 80
+          volumeMounts:
+            - name: html
+              mountPath: /usr/share/nginx/html/DBbPv1
+              subPath: DBbPv1
+              readOnly: true
+      volumes:
+        - name: html
+          configMap:
+            name: dbbpv1-html
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dev-static
+  namespace: dev
+spec:
+  selector:
+    app: dev-static
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: dev-static
+  namespace: dev
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`dev.hauptspeicher.com`) && Path(`/DBbPv1`)
+      kind: Rule
+      services:
+        - name: dev-static
+          port: 80
+  tls:
+    certResolver: myresolver
