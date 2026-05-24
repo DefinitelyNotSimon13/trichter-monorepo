@@ -47,7 +47,7 @@ fun RunCard(
             run.image?.let {
                 AsyncImage(
                     //TODO: Hardcoded URL
-                    model = "https://next.trichter.hauptspeicher.com/api/v2/runs/${run.id}/image",
+                    model = "https://trichter.hauptspeicher.com/api/v2/runs/${run.id}/image",
                     contentDescription = null,
                     contentScale = ContentScale.FillWidth,
                     modifier = Modifier.fillMaxWidth(),

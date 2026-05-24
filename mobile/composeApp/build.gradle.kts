@@ -168,7 +168,7 @@ android {
         }
         create("prod") {
             dimension = "env"
-            buildConfigField("String", "BASE_URL", "\"https://next.trichter.hauptspeicher.com\"")
+            buildConfigField("String", "BASE_URL", "\"https://trichter.hauptspeicher.com\"")
         }
         create("dev") {
             dimension = "type"

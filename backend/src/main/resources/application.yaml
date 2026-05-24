@@ -7,8 +7,8 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: ${BETTERAUTH_URL}
-          jwk-set-uri: ${BETTERAUTH_URL}/.well-known/jwks.json
+          issuer-uri: ${BETTERAUTH_PUBLIC_URL}
+          jwk-set-uri: ${BETTERAUTH_INTERNAL_URL}/.well-known/jwks.json
           jws-algorithms:
             - ES512
   jpa:

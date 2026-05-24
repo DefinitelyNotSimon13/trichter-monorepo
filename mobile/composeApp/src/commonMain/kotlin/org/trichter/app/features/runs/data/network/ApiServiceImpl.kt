@@ -7,7 +7,7 @@ import org.trichter.app.features.runs.domain.model.PagedResult
 import org.trichter.app.features.runs.domain.model.Run
 
 class ApiServiceImpl(private val httpClient: HttpClient) : ApiService {
-    private val baseUrl = "https://next.trichter.hauptspeicher.com/api/v2"
+    private val baseUrl = "https://trichter.hauptspeicher.com/api/v2"
 
     override suspend fun getRuns(page: Int, size: Int): PagedResult<Run> {
         return httpClient.get("$baseUrl/runs") {

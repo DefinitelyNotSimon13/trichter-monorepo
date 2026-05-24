@@ -48,7 +48,19 @@ export default defineConfig({
       prerender: {
         enabled: true,
         crawlLinks: true,
-        filter: ({ path }) => !path.startsWith("/api"),
+        filter: ({ path }) => {
+          const url = new URL(path, "https://dummy.local");
+
+          const pathname = url.pathname.replace(/\/+$/, "") || "/";
+
+          if (pathname.startsWith("/api")) return false;
+          if (pathname.includes("/app")) return false;
+          if (pathname.endsWith("/login")) return false;
+          if (pathname.endsWith("/signup")) return false;
+          if (url.searchParams.has("redirectTo")) return false;
+
+          return true;
+        },
         onSuccess: ({ page }) => {
           console.log(`Rendered ${page.path}!`);
         },
@@ -72,7 +84,7 @@ export default defineConfig({
         },
       ],
     }),
-    // nitro({ compressPublicAssets: { gzip: true, brotli: true } }),
+    nitro({ compressPublicAssets: { gzip: true, brotli: true } }),
     viteReact({
       babel: {
         plugins: ["babel-plugin-react-compiler"],

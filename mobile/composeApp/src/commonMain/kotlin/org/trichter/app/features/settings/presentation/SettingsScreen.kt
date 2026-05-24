@@ -24,7 +24,7 @@ import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 
-private const val ACCOUNT_SETTINGS_URL = "https://next.trichter.hauptspeicher.com/app/profile"
+private const val ACCOUNT_SETTINGS_URL = "https://trichter.hauptspeicher.com/app/profile"
 
 @Composable
 fun SettingsScreen(
