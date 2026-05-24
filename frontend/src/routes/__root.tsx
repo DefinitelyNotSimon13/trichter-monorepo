@@ -2,7 +2,6 @@ import interLatinFont from "@fontsource-variable/inter/files/inter-latin-wght-no
 import { TanStackDevtools } from "@tanstack/react-devtools";
 import type { QueryClient } from "@tanstack/react-query";
 import {
-  ClientOnly,
   createRootRouteWithContext,
   HeadContent,
   Outlet,
@@ -18,11 +17,11 @@ import { TooltipProvider } from "#/components/ui/tooltip";
 import { clientEnv } from "#/env/client";
 import TanStackQueryDevtools from "#/integrations/tanstack-query/devtools";
 import TanstackQueryProvider from "#/integrations/tanstack-query/root-provider";
-import { createOauthClients } from "#/lib/auth.functions";
 import { initI18n } from "#/lib/i18n/config";
 import { normalizeLocale } from "#/lib/i18n/locale";
 import appCss from "#/styles.css?url";
 import "#/lib/api-setup";
+import { RootDevtools } from "#/integrations/tanstack-devtools/root-devtools";
 
 interface RouterContext {
   queryClient: QueryClient;
@@ -174,18 +173,7 @@ function RootDocument() {
           </I18nextProvider>
         </TanstackQueryProvider>
 
-        {import.meta.env.DEV ? (
-          <TanStackDevtools
-            config={{ position: "bottom-right" }}
-            plugins={[
-              {
-                name: "TanStack Router",
-                render: <TanStackRouterDevtoolsPanel />,
-              },
-              TanStackQueryDevtools,
-            ]}
-          />
-        ) : null}
+        {import.meta.env.DEV ? <RootDevtools /> : null}
 
         <Scripts />
       </body>
