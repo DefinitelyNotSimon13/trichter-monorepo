@@ -1,0 +1,35 @@
+apiVersion: monitoring.coreos.com/v1
+kind: Probe
+metadata:
+  name: trichter-frontend
+  namespace: monitoring
+  labels:
+    app.kubernetes.io/name: trichter-frontend
+    app.kubernetes.io/part-of: trichter
+spec:
+  interval: 30s
+  module: http_2xx
+  prober:
+    url: prometheus-blackbox-exporter.monitoring.svc.cluster.local:9115
+  targets:
+    staticConfig:
+      static:
+        - https://trichter.hauptspeicher.com/
+---
+apiVersion: monitoring.coreos.com/v1
+kind: Probe
+metadata:
+  name: trichter-api
+  namespace: monitoring
+  labels:
+    app.kubernetes.io/name: trichter-api
+    app.kubernetes.io/part-of: trichter
+spec:
+  interval: 30s
+  module: http_2xx
+  prober:
+    url: prometheus-blackbox-exporter.monitoring.svc.cluster.local:9115
+  targets:
+    staticConfig:
+      static:
+        - https://trichter.hauptspeicher.com/actuator/health

@@ -22,15 +22,34 @@ spec:
             sidecar:
               dashboards:
                 enabled: true
+                label: grafana_dashboard
+                labelValue: "1"
           prometheus:
             prometheusSpec:
-              additionalScrapeConfigs:
-                - job_name: synapse
-                  scrape_interval: 15s
-                  metrics_path: /_synapse/metrics
-                  static_configs:
-                    - targets:
-                        - synapse.matrix.svc.cluster.local:9000
+              serviceMonitorSelectorNilUsesHelmValues: false
+              podMonitorSelectorNilUsesHelmValues: false
+              probeSelectorNilUsesHelmValues: false
+              ruleSelectorNilUsesHelmValues: false
+              serviceMonitorNamespaceSelector: {}
+              podMonitorNamespaceSelector: {}
+              probeNamespaceSelector: {}
+              ruleNamespaceSelector: {}
+              additionalScrapeConfigsSecret:
+                name: monitoring-secret
+                key: additional-scrape-configs.yaml
+    - repoURL: https://prometheus-community.github.io/helm-charts
+      chart: prometheus-blackbox-exporter
+      targetRevision: "*"
+      helm:
+        releaseName: prometheus-blackbox-exporter
+        valuesObject:
+          serviceMonitor:
+            enabled: true
+            defaults:
+              labels:
+                app.kubernetes.io/part-of: monitoring
+          prometheusRule:
+            enabled: false
     - repoURL: https://github.com/DefinitelyNotSimon13/trichter-monorepo.git
       targetRevision: HEAD
       path: deployment/overlays/monitoring

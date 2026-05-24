@@ -3,3 +3,7 @@ kind: Kustomization
 resources:
   - namespace.yaml
   - grafana-ingress.yaml
+  - azure-metrics-exporter.yaml
+  - trichter-service-monitor.yaml
+  - trichter-probes.yaml
+  - grafana-dashboards.yaml
