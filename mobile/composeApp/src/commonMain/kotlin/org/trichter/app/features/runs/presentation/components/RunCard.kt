@@ -35,7 +35,6 @@ fun RunCard(
     run: Run,
     modifier: Modifier = Modifier,
 ) {
-    Log.i("TEST", "run.image: ${run.image}")
     Card(
         modifier = modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(

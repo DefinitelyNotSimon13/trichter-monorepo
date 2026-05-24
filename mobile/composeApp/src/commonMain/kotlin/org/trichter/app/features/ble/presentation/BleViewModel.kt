@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.juul.kable.PlatformAdvertisement
 import dev.icerock.moko.permissions.PermissionState
+import kotlinx.collections.immutable.persistentMapOf
 import kotlinx.collections.immutable.toPersistentMap
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -27,7 +28,7 @@ import kotlinx.coroutines.launch
 import org.trichter.app.features.ble.data.BleServiceController
 import org.trichter.app.features.ble.domain.models.Connection
 import org.trichter.app.features.ble.domain.models.ConnectionState
-import org.trichter.app.features.ble.domain.models.ResultMeta
+import org.trichter.app.features.ble.domain.models.ImageStatus
 import org.trichter.app.features.ble.domain.models.SessionStatus
 import org.trichter.app.features.ble.domain.models.UserDto
 import org.trichter.app.features.ble.domain.models.id
@@ -46,7 +47,6 @@ import org.trichter.app.features.ble.domain.usecases.SendFakeRun
 import org.trichter.app.features.ble.domain.usecases.SendReset
 import org.trichter.app.features.ble.domain.usecases.StartScan
 import org.trichter.app.features.ble.domain.usecases.StopScan
-import kotlin.collections.emptyList
 
 
 @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
@@ -71,6 +71,9 @@ class BleViewModel(
 
     private var _state = MutableStateFlow(BleUiState())
     val state: StateFlow<BleUiState> get() = _state
+
+    private val _snackbar = MutableSharedFlow<String>()
+    val snackbar = _snackbar.asSharedFlow()
 
     private val _disconnectEvent = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
     val disconnectEvent: SharedFlow<Unit> = _disconnectEvent.asSharedFlow()
@@ -117,19 +120,42 @@ class BleViewModel(
 
     fun onOpenSettings() = openAppSettingsUseCase()
 
-    fun startScan() = viewModelScope.launch { startScanUseCase() }
+    fun startScan() {
+        _state.update { it.copy(advertisements = persistentMapOf()) }
+        viewModelScope.launch { startScanUseCase() }
+    }
+
     fun stopScan() = stopScanUseCase()
 
-    fun sendAck() = viewModelScope.launch { sendAckUseCase() }
+    fun sendAck() = viewModelScope.launch {
+        sendAckUseCase()
+        _state.update {
+            it.copy(
+                trichterState = it.trichterState?.copy(
+                    imageStatus = ImageStatus.NONE,
+                    lastResultMeta = null,
+                    lastImage = null,
+                    imageTransferState = null,
+                )
+            )
+        }
+    }
+
     fun onReset() = viewModelScope.launch { sendResetUseCase() }
     fun onFakeRun() = viewModelScope.launch { sendFakeRunUseCase() }
 
-    fun saveRun(meta: ResultMeta) = viewModelScope.launch {
+    fun saveRun() = viewModelScope.launch {
+        _state.update { it.copy(isSaving = true) }
         val imageBytes = _state.value.trichterState?.lastImage
+        val meta = _state.value.trichterState?.lastResultMeta
+            ?: error("Tried to save run, but no data exists.")
         val userId = _searchUserState.value.selectedUser?.id
+
         saveRunUseCase(meta, imageBytes, userId).onSuccess {
             sendAckUseCase()
-            _state.update { it.copy(runSaved = true) }
+            _state.update { it.copy(isSaving = false, runSaved = true) }
+        }.onFailure {
+            _state.update { it.copy(isSaving = false, error = Exception("Failed to save run")) }
         }
     }
 
@@ -142,7 +168,11 @@ class BleViewModel(
     fun connect(advertisement: PlatformAdvertisement) {
         lastAdvertisement = advertisement
         intentionalDisconnect = false
-        _state.value = _state.value.copy(connectionState = ConnectionState.Connecting, error = null)
+        _state.value = _state.value.copy(
+            connectionState = ConnectionState.Connecting,
+            advertisements = persistentMapOf(),
+            error = null
+        )
         bleServiceController.start()
         viewModelScope.launch {
             val res = connectUseCase(advertisement)
@@ -186,15 +216,37 @@ class BleViewModel(
                     if (q.isBlank()) flowOf(Result.success(emptyList()))
                     else flow { emit(searchUsersUseCase(q)) }
                 }
-                .onStart { _searchUserState.update { it.copy(loading = true, results = emptyList(), error = null) } }
-                .catch { e -> _searchUserState.update { it.copy(loading = false, error = e.message) } }
+                .onStart {
+                    _searchUserState.update {
+                        it.copy(
+                            loading = true,
+                            results = emptyList(),
+                            error = null
+                        )
+                    }
+                }
+                .catch { e ->
+                    _searchUserState.update {
+                        it.copy(
+                            loading = false,
+                            error = e.message
+                        )
+                    }
+                }
                 .collect { result ->
                     result.fold(
                         onSuccess = { list ->
-                            _searchUserState.update { it.copy(loading = false, results = list, error = null) }
+                            _searchUserState.update {
+                                it.copy(
+                                    loading = false,
+                                    results = list,
+                                    error = null
+                                )
+                            }
                         },
                         onFailure = { e ->
                             _searchUserState.update { it.copy(loading = false, error = e.message) }
+                            _snackbar.emit("Failed to save run")
                         }
                     )
                 }
@@ -220,7 +272,14 @@ class BleViewModel(
             _searchUserState.update { it.copy(loading = true, error = null) }
             getCurrentUserUseCase().fold(
                 onSuccess = { user ->
-                    _searchUserState.update { it.copy(selectedUser = user, loading = false, query = "", results = emptyList()) }
+                    _searchUserState.update {
+                        it.copy(
+                            selectedUser = user,
+                            loading = false,
+                            query = "",
+                            results = emptyList()
+                        )
+                    }
                     query.value = ""
                 },
                 onFailure = { e ->

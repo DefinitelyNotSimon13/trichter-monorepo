@@ -11,6 +11,7 @@ import com.juul.kable.characteristicOf
 import com.juul.kable.logs.Logging
 import com.juul.kable.logs.SystemLogEngine
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -68,7 +69,9 @@ class KableBleRepository(
     private val ackEveryChunks =8
 
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     override suspend fun startScan() {
+        _scanResults.resetReplayCache()
         if (scanJob?.isActive == true) return
         scanJob = scope.launch {
             scanner.advertisements
@@ -78,8 +81,10 @@ class KableBleRepository(
     }
 
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     override fun stopScan() {
         scanJob?.cancel(); scanJob = null
+        _scanResults.resetReplayCache()
     }
 
 

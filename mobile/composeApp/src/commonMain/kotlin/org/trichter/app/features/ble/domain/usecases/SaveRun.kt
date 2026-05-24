@@ -23,17 +23,19 @@ class SaveRun(
 
         val runResponse = runsApi.createRun(CreateRunRequest(
             userId = userId,
-            duration = resultMeta.durationMs.toDouble(),
+            duration = resultMeta.durationMs.toDouble() / 1000,
             rate = resultMeta.rateLpm.toDouble(),
             volume = resultMeta.volumeL.toDouble()
         ), "dev-secret");
 
+
         if(!runResponse.success) {
-            Log.e("SAVE", "Failed to save run");
             return Result.failure(RuntimeException("Failed to save image"))
         }
 
+
         imageBytes?.let {
+
             val imageResponse = runsApi.uploadRunImage(runResponse.body().id ?: error("Run wasn't created properly (no id)"),
                 imageFormPart(it))
 
@@ -53,13 +55,10 @@ fun imageFormPart(
     contentType: ContentType = ContentType.Image.JPEG,
 ): FormPart<InputProvider> =
     FormPart(
-        key = "image",
+        key = "file",
         value = InputProvider { ByteReadPacket(bytes) },
         headers = Headers.build {
             append(HttpHeaders.ContentType, contentType.toString())
-            append(
-                HttpHeaders.ContentDisposition,
-                "form-data; name=\"image\"; filename=\"$fileName\""
-            )
+            append(HttpHeaders.ContentDisposition, "filename=\"image.jpg\"")
         }
     )

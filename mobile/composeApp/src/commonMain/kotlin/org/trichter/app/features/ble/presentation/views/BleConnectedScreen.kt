@@ -10,19 +10,66 @@ import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Download
-import androidx.compose.material.icons.outlined.*
-import androidx.compose.material3.*
+import androidx.compose.material.icons.outlined.Check
+import androidx.compose.material.icons.outlined.CheckCircle
+import androidx.compose.material.icons.outlined.Close
+import androidx.compose.material.icons.outlined.Face
+import androidx.compose.material.icons.outlined.Person
+import androidx.compose.material.icons.outlined.PlayArrow
+import androidx.compose.material.icons.outlined.Refresh
+import androidx.compose.material.icons.outlined.RemoveCircle
+import androidx.compose.material.icons.outlined.Search
+import androidx.compose.material.icons.outlined.Send
+import androidx.compose.material.icons.outlined.Warning
+import androidx.compose.material.icons.outlined.WaterDrop
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.AssistChip
+import androidx.compose.material3.AssistChipDefaults
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.LinearWavyProgressIndicator
+import androidx.compose.material3.LoadingIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedCard
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SuggestionChip
+import androidx.compose.material3.SuggestionChipDefaults
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -37,19 +84,21 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.trichter.app.features.ble.domain.models.Connection
 import org.trichter.app.features.ble.domain.models.ImageStatus
-import org.trichter.app.features.ble.domain.models.ImageTransferState
 import org.trichter.app.features.ble.domain.models.ResultMeta
 import org.trichter.app.features.ble.domain.models.SessionStatus
 import org.trichter.app.features.ble.domain.models.TrichterState
 import org.trichter.app.features.ble.domain.models.UserDto
 import org.trichter.app.features.ble.presentation.SearchUserState
-import org.trichter.app.isDevMode
 import kotlin.math.pow
 import kotlin.math.round
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
+
 
 @Composable
 fun BleConnectedScreen(
     trichterState: TrichterState,
+    isSaving: Boolean,
     runSaved: Boolean,
     searchUserState: SearchUserState,
     onQueryChange: (String) -> Unit,
@@ -67,22 +116,20 @@ fun BleConnectedScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Trichter") },
-                actions = {
-                    IconButton(onClick = onDisconnect) {
-                        Icon(Icons.Outlined.Close, contentDescription = "Disconnect")
-                    }
+                title = { Text("Trichter") }, actions = {
+                IconButton(onClick = onDisconnect) {
+                    Icon(Icons.Outlined.Close, contentDescription = "Disconnect")
                 }
+            }, colors = TopAppBarDefaults.topAppBarColors(
+                containerColor = Color.Transparent,
+                scrolledContainerColor = Color.Transparent,
+            ), modifier = modifier
             )
-        }
+        },
     ) { inner ->
         Column(
-            modifier
-                .padding(inner)
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .padding(16.dp, 0.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            Modifier.padding(inner).fillMaxSize().verticalScroll(rememberScrollState())
+                .padding(16.dp, 0.dp), verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                 ConnectionChip(trichterState.connection)
@@ -101,6 +148,7 @@ fun BleConnectedScreen(
                     if (meta != null) {
                         CompletePanel(
                             trichterState = trichterState,
+                            isSaving = isSaving,
                             runSaved = runSaved,
                             searchUserState = searchUserState,
                             onQueryChange = onQueryChange,
@@ -114,6 +162,7 @@ fun BleConnectedScreen(
                         IdlePanel(trichterState, modifier)
                     }
                 }
+
                 SessionStatus.ERROR -> ErrorPanel(onReset = onReset)
                 SessionStatus.IDLE, SessionStatus.UNKNOWN -> IdlePanel(trichterState, modifier)
             }
@@ -160,7 +209,7 @@ private fun IdlePanel(trichterState: TrichterState, modifier: Modifier = Modifie
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            when(trichterState.connection) {
+            when (trichterState.connection) {
                 Connection.Connected -> {
                     Icon(
                         Icons.Outlined.CheckCircle,
@@ -169,7 +218,11 @@ private fun IdlePanel(trichterState: TrichterState, modifier: Modifier = Modifie
                         modifier = Modifier.size(28.dp)
                     )
                     Column {
-                        Text("Device ready", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
+                        Text(
+                            "Device ready",
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.SemiBold
+                        )
                         Text(
                             "Waiting for session to start",
                             style = MaterialTheme.typography.bodyMedium,
@@ -177,7 +230,8 @@ private fun IdlePanel(trichterState: TrichterState, modifier: Modifier = Modifie
                         )
                     }
                 }
-                Connection.Disconnected , Connection.Connecting ->  {
+
+                Connection.Disconnected, Connection.Connecting -> {
                     Icon(
                         Icons.Outlined.RemoveCircle,
                         contentDescription = null,
@@ -185,7 +239,11 @@ private fun IdlePanel(trichterState: TrichterState, modifier: Modifier = Modifie
                         modifier = Modifier.size(28.dp)
                     )
                     Column {
-                        Text("Device not ready", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
+                        Text(
+                            "Device not ready",
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.SemiBold
+                        )
                         Text(
                             "Ensure Trichter is connected properly",
                             style = MaterialTheme.typography.bodyMedium,
@@ -231,34 +289,42 @@ private fun PulsingRingPanel(
     val transition = rememberInfiniteTransition(label = "pulse")
 
     val alpha1 by transition.animateFloat(
-        initialValue = 0.6f, targetValue = 0f,
-        animationSpec = infiniteRepeatable(tween(periodMs, easing = LinearEasing), RepeatMode.Restart),
-        label = "a1"
+        initialValue = 0.6f, targetValue = 0f, animationSpec = infiniteRepeatable(
+            tween(periodMs, easing = LinearEasing), RepeatMode.Restart
+        ), label = "a1"
     )
     val scale1 by transition.animateFloat(
-        initialValue = 0.3f, targetValue = 1f,
-        animationSpec = infiniteRepeatable(tween(periodMs, easing = LinearEasing), RepeatMode.Restart),
-        label = "s1"
+        initialValue = 0.3f, targetValue = 1f, animationSpec = infiniteRepeatable(
+            tween(periodMs, easing = LinearEasing), RepeatMode.Restart
+        ), label = "s1"
     )
     val alpha2 by transition.animateFloat(
-        initialValue = 0.6f, targetValue = 0f,
-        animationSpec = infiniteRepeatable(tween(periodMs, delayMillis = staggerMs, easing = LinearEasing), RepeatMode.Restart),
-        label = "a2"
+        initialValue = 0.6f, targetValue = 0f, animationSpec = infiniteRepeatable(
+            tween(
+                periodMs, delayMillis = staggerMs, easing = LinearEasing
+            ), RepeatMode.Restart
+        ), label = "a2"
     )
     val scale2 by transition.animateFloat(
-        initialValue = 0.3f, targetValue = 1f,
-        animationSpec = infiniteRepeatable(tween(periodMs, delayMillis = staggerMs, easing = LinearEasing), RepeatMode.Restart),
-        label = "s2"
+        initialValue = 0.3f, targetValue = 1f, animationSpec = infiniteRepeatable(
+            tween(
+                periodMs, delayMillis = staggerMs, easing = LinearEasing
+            ), RepeatMode.Restart
+        ), label = "s2"
     )
     val alpha3 by transition.animateFloat(
-        initialValue = 0.6f, targetValue = 0f,
-        animationSpec = infiniteRepeatable(tween(periodMs, delayMillis = staggerMs * 2, easing = LinearEasing), RepeatMode.Restart),
-        label = "a3"
+        initialValue = 0.6f, targetValue = 0f, animationSpec = infiniteRepeatable(
+            tween(
+                periodMs, delayMillis = staggerMs * 2, easing = LinearEasing
+            ), RepeatMode.Restart
+        ), label = "a3"
     )
     val scale3 by transition.animateFloat(
-        initialValue = 0.3f, targetValue = 1f,
-        animationSpec = infiniteRepeatable(tween(periodMs, delayMillis = staggerMs * 2, easing = LinearEasing), RepeatMode.Restart),
-        label = "s3"
+        initialValue = 0.3f, targetValue = 1f, animationSpec = infiniteRepeatable(
+            tween(
+                periodMs, delayMillis = staggerMs * 2, easing = LinearEasing
+            ), RepeatMode.Restart
+        ), label = "s3"
     )
 
     Column(
@@ -270,9 +336,24 @@ private fun PulsingRingPanel(
             Canvas(modifier = Modifier.fillMaxSize()) {
                 val maxRadius = size.minDimension / 2f
                 val strokePx = 3.dp.toPx()
-                drawCircle(color = color, radius = maxRadius * scale1, alpha = alpha1, style = Stroke(strokePx))
-                drawCircle(color = color, radius = maxRadius * scale2, alpha = alpha2, style = Stroke(strokePx))
-                drawCircle(color = color, radius = maxRadius * scale3, alpha = alpha3, style = Stroke(strokePx))
+                drawCircle(
+                    color = color,
+                    radius = maxRadius * scale1,
+                    alpha = alpha1,
+                    style = Stroke(strokePx)
+                )
+                drawCircle(
+                    color = color,
+                    radius = maxRadius * scale2,
+                    alpha = alpha2,
+                    style = Stroke(strokePx)
+                )
+                drawCircle(
+                    color = color,
+                    radius = maxRadius * scale3,
+                    alpha = alpha3,
+                    style = Stroke(strokePx)
+                )
             }
             Icon(
                 Icons.Outlined.WaterDrop,
@@ -281,14 +362,21 @@ private fun PulsingRingPanel(
                 modifier = Modifier.size(36.dp)
             )
         }
-        Text(label, style = MaterialTheme.typography.titleMedium, color = color, fontWeight = FontWeight.Medium)
+        Text(
+            label,
+            style = MaterialTheme.typography.titleMedium,
+            color = color,
+            fontWeight = FontWeight.Medium
+        )
     }
 }
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 private fun CompletePanel(
     trichterState: TrichterState,
     runSaved: Boolean,
+    isSaving: Boolean,
     searchUserState: SearchUserState,
     onQueryChange: (String) -> Unit,
     onUserClick: (UserDto) -> Unit,
@@ -314,8 +402,7 @@ private fun CompletePanel(
             },
             dismissButton = {
                 TextButton(onClick = { showAckDialog = false }) { Text("Cancel") }
-            }
-        )
+            })
     }
 
     Card(
@@ -326,7 +413,10 @@ private fun CompletePanel(
         val meta = trichterState.lastResultMeta!!
         val transferring = trichterState.imageStatus == ImageStatus.TRANSFERRING
 
-        Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+        Column(
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+            modifier = Modifier.background(color = Color.Transparent)
+        ) {
             // Image area
             if (imageBytes?.isNotEmpty() == true) {
                 val bitmap: ImageBitmap? = remember(imageBytes) { decodeImage(imageBytes) }
@@ -334,9 +424,7 @@ private fun CompletePanel(
                     Image(
                         bitmap = bitmap,
                         contentDescription = "Session image",
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .heightIn(min = 160.dp)
+                        modifier = Modifier.fillMaxWidth().heightIn(min = 160.dp)
                             .clip(MaterialTheme.shapes.extraLarge)
                     )
                 } else {
@@ -346,7 +434,10 @@ private fun CompletePanel(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Icon(Icons.Outlined.Face, contentDescription = null)
-                        Text("${imageBytes.size} bytes (preview unavailable)", color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        Text(
+                            "${imageBytes.size} bytes (preview unavailable)",
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
                     }
                 }
             } else {
@@ -357,7 +448,11 @@ private fun CompletePanel(
                 modifier = Modifier.padding(horizontal = 16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                Text("Result", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
+                Text(
+                    "Result",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.SemiBold
+                )
 
                 // Metrics
                 Row(
@@ -391,13 +486,23 @@ private fun CompletePanel(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        Icon(Icons.Outlined.Person, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
+                        Icon(
+                            Icons.Outlined.Person,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.primary
+                        )
                         AssistChip(
                             onClick = {},
-                            label = { Text(selected.displayUsername ?: selected.name ?: "Unknown") },
+                            label = {
+                                Text(
+                                    selected.displayUsername ?: selected.name ?: "Unknown"
+                                )
+                            },
                         )
                         Spacer(Modifier.weight(1f))
-                        TextButton(onClick = onClearUser) { Text("Change") }
+                        TextButton(
+                            onClick = onClearUser, enabled = !runSaved && !isSaving
+                        ) { Text("Change") }
                     }
                 } else {
                     UsersSearchScreen(
@@ -424,27 +529,22 @@ private fun CompletePanel(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
-                        Button(
-                            onClick = { onSaveRun(meta) },
-                            enabled = !transferring && !runSaved && selected != null,
-                            modifier = Modifier.weight(1f),
-                            shape = RoundedCornerShape(0),
-                        ) {
-                            if (runSaved) {
-                                Icon(Icons.Outlined.CheckCircle, contentDescription = null)
-                            } else {
-                                Icon(Icons.Outlined.Check, contentDescription = null)
-                            }
-                            Spacer(Modifier.width(6.dp))
-                            Text(if (runSaved) "Saved" else "Save Run")
-                        }
+                        SaveButton(
+                            onSaveRun,
+                            meta,
+                            transferring,
+                            isSaving,
+                            runSaved,
+                            selected,
+                            Modifier.weight(1f)
+                        )
                         OutlinedButton(
                             onClick = {
                                 if (!runSaved) showAckDialog = true else onAck()
                             },
                             enabled = !transferring,
                             modifier = Modifier.weight(1f),
-                                    shape = RoundedCornerShape(0),
+                            shape = RoundedCornerShape(0),
                         ) {
                             Icon(Icons.Outlined.Send, contentDescription = null)
                             Spacer(Modifier.width(6.dp))
@@ -464,6 +564,35 @@ private fun CompletePanel(
     }
 }
 
+@Composable
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+private fun SaveButton(
+    onSaveRun: (ResultMeta) -> Unit,
+    meta: ResultMeta,
+    transferring: Boolean,
+    isSaving: Boolean,
+    runSaved: Boolean,
+    selected: UserDto?,
+    modifier: Modifier = Modifier
+) {
+    Button(
+        onClick = { onSaveRun(meta) },
+        enabled = !transferring && !isSaving && !runSaved && selected != null,
+        modifier = modifier,
+        shape = RoundedCornerShape(0),
+    ) {
+        if (runSaved) {
+            Icon(Icons.Outlined.CheckCircle, contentDescription = null)
+        } else if (isSaving) {
+            LoadingIndicator(modifier = Modifier.size(20.dp))
+        } else {
+            Icon(Icons.Outlined.Check, contentDescription = null)
+        }
+        Spacer(Modifier.width(6.dp))
+        Text(if (runSaved) "Saved" else if (isSaving) "Saving..." else "Save Run")
+    }
+}
+
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 private fun NoImagePanel(
@@ -471,29 +600,33 @@ private fun NoImagePanel(
     modifier: Modifier = Modifier,
 ) {
     Row(
-        modifier = Modifier.padding(horizontal = 16.dp).padding(top = 16.dp),
+        modifier = modifier.padding(horizontal = 16.dp).padding(top = 16.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        if(trichterState.imageStatus == ImageStatus.NONE) {
-            Icon(
-                Icons.Default.Close,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-            Text("No image", color = MaterialTheme.colorScheme.onSurfaceVariant)
-        } else if(trichterState.imageStatus == ImageStatus.TRANSFERRING) {
-            Icon(
-                Icons.Default.Download,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-            Column {
-                Text("Retrieving Image\u2026", color = MaterialTheme.colorScheme.onSurfaceVariant)
-                LinearWavyProgressIndicator()
+        when (trichterState.imageStatus) {
+            ImageStatus.NONE -> {
+                Icon(
+                    Icons.Default.Close,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                Text("No image", color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
-        } else {
-            Text("WTF?", color = MaterialTheme.colorScheme.onSurfaceVariant)
+            ImageStatus.TRANSFERRING -> {
+                Icon(
+                    Icons.Default.Download,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                Column {
+                    Text("Retrieving Image\u2026", color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    LinearWavyProgressIndicator()
+                }
+            }
+            else -> {
+                Text("WTF?", color = MaterialTheme.colorScheme.onSurfaceVariant)
+            }
         }
     }
 }
@@ -505,8 +638,7 @@ private fun ErrorPanel(onReset: () -> Unit, modifier: Modifier = Modifier) {
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.errorContainer)
     ) {
         Column(
-            modifier = Modifier.padding(20.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            modifier = Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -555,8 +687,7 @@ private fun ConnectionChip(connection: Connection, modifier: Modifier = Modifier
         enabled = false,
         modifier = modifier,
         colors = AssistChipDefaults.assistChipColors(
-            disabledContainerColor = color.copy(alpha = 0.16f),
-            disabledLabelColor = color
+            disabledContainerColor = color.copy(alpha = 0.16f), disabledLabelColor = color
         )
     )
 }
@@ -577,28 +708,22 @@ private fun StatusChip(status: SessionStatus, modifier: Modifier = Modifier) {
         enabled = false,
         modifier = modifier,
         colors = SuggestionChipDefaults.suggestionChipColors(
-            disabledContainerColor = color.copy(alpha = 0.16f),
-            disabledLabelColor = color
+            disabledContainerColor = color.copy(alpha = 0.16f), disabledLabelColor = color
         )
     )
 }
 
 @Composable
 private fun Metric(
-    title: String,
-    value: String,
-    supporting: String,
-    modifier: Modifier = Modifier
+    title: String, value: String, supporting: String, modifier: Modifier = Modifier
 ) {
     ElevatedCard(
-        modifier = modifier,
-        colors = CardDefaults.elevatedCardColors(
+        modifier = modifier, colors = CardDefaults.elevatedCardColors(
             containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
         )
     ) {
         Column(
-            Modifier.padding(12.dp),
-            verticalArrangement = Arrangement.spacedBy(4.dp)
+            Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             Text(
                 title,
@@ -606,9 +731,7 @@ private fun Metric(
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
             Text(
-                value,
-                style = MaterialTheme.typography.headlineSmall,
-                fontWeight = FontWeight.Bold
+                value, style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold
             )
             Text(
                 supporting,
@@ -638,9 +761,12 @@ fun UsersSearchScreen(
                 modifier = Modifier.weight(1f),
                 label = { Text("Search users") },
                 singleLine = true,
-                leadingIcon = { Icon(Icons.Outlined.Search, null) }
-            )
-            FilledTonalButton(onClick = onSelectSelf, shape = RoundedCornerShape(0), modifier = Modifier.padding(vertical = 0.dp).fillMaxHeight()) {
+                leadingIcon = { Icon(Icons.Outlined.Search, null) })
+            FilledTonalButton(
+                onClick = onSelectSelf,
+                shape = RoundedCornerShape(0),
+                modifier = Modifier.padding(vertical = 0.dp).fillMaxHeight()
+            ) {
                 Icon(Icons.Outlined.Person, contentDescription = null)
                 Spacer(Modifier.width(4.dp))
                 Text("Me")
@@ -665,8 +791,7 @@ fun UsersSearchScreen(
         ) {
             searchUserState.results.forEach { user ->
                 ElevatedCard(
-                    onClick = { onUserClick(user) },
-                    modifier = Modifier.fillMaxWidth()
+                    onClick = { onUserClick(user) }, modifier = Modifier.fillMaxWidth()
                 ) {
                     Column(Modifier.padding(12.dp)) {
                         Text(
@@ -688,45 +813,17 @@ fun UsersSearchScreen(
     }
 }
 
-@Preview(showBackground = true)
+
+@OptIn(ExperimentalUuidApi::class)
+@Preview
 @Composable
-private fun NoImagePanelPreview() {
-    var transferred by remember { mutableIntStateOf(0) }
-    val total = 100
-
-    LaunchedEffect(Unit) {
-        while (true) {
-            transferred = (transferred + 1) % (total + 1)
-            kotlinx.coroutines.delay(50)
-        }
-    }
-
-    CompletePanel(
-        trichterState = TrichterState(
-            connection = Connection.Connected,
-            status = SessionStatus.IDLE,
-            imageStatus = ImageStatus.TRANSFERRING,
-            lastResultMeta = ResultMeta(
-                durationMs = 1000,
-                rateLpm = 5.5f,
-                volumeL = 1.4f,
-                hasImage = true,
-                imageSize = 5000,
-            ),
-            lastImage = null,
-            imageTransferState = ImageTransferState(
-                total,
-                transferred
-            )
-        ),
-        runSaved = false,
-        searchUserState = SearchUserState(),
-        onQueryChange = {},
-        onUserClick = {},
-        onClearUser = {},
-        onSelectSelf = {},
-        onSaveRun = {},
-        onAck = {},
+private fun SaveButtonPreview() {
+    SaveButton(
+        onSaveRun = { }, meta = ResultMeta(
+            durationMs = 5000, rateLpm = 5f, volumeL = 5f, hasImage = false, imageSize = 0
+        ), transferring = false, isSaving = true, runSaved = false, selected = UserDto(
+            id = Uuid.NIL.toString(), name = "Hi", username = "Hi", displayUsername = "Hi"
+        )
     )
 }
 
@@ -750,3 +847,4 @@ fun Double.clean(digits: Int): String = formatFloatCommon(this, digits)
 fun Float.clean(digits: Int): String = formatFloatCommon(this.toDouble(), digits)
 
 expect fun decodeImage(bytes: ByteArray): ImageBitmap?
+

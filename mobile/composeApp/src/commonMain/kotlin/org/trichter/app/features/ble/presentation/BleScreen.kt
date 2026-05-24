@@ -31,14 +31,21 @@ import org.trichter.app.features.ble.presentation.views.BleConnectScreen
 import org.trichter.app.features.ble.presentation.views.BleConnectedScreen
 import org.trichter.app.features.ble.presentation.views.BlePermissionsScreen
 import kotlin.collections.mapOf
+import kotlin.io.encoding.Base64
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
 @Composable
 fun BleScreen(viewModel: BleViewModel) {
-   val uiState by viewModel.state.collectAsStateWithLifecycle()
+    val uiState by viewModel.state.collectAsStateWithLifecycle()
     val searchUserState by viewModel.searchUserState.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
+
+    LaunchedEffect(Unit) {
+        viewModel.snackbar.collect { message ->
+            snackbarHostState.showSnackbar(message)
+        }
+    }
 
     LaunchedEffect(uiState.permissionState) {
         if (uiState.permissionState == PermissionState.Granted) viewModel.startScan()
@@ -63,19 +70,20 @@ fun BleScreen(viewModel: BleViewModel) {
 
                 uiState.connectionState == ConnectionState.Disconnected -> BleConnectScreen(
                     advertisements = uiState.advertisements.values.toList(),
-                    onConnectClick = { viewModel.connect(it) }
+                    onConnectClick = { viewModel.stopScan(); viewModel.connect(it) }
                 )
 
                 uiState.connectionState == ConnectionState.Connecting -> BleConnectingScreen()
 
                 uiState.connectionState == ConnectionState.Connected -> BleConnectedScreen(
                     trichterState = uiState.trichterState!!,
+                    isSaving = uiState.isSaving,
                     runSaved = uiState.runSaved,
                     onDisconnect = { viewModel.disconnect() },
                     onAck = { viewModel.sendAck() },
                     onReset = { viewModel.onReset() },
                     onFakeRun = { viewModel.onFakeRun() },
-                    onSaveRun = { meta: ResultMeta -> viewModel.saveRun(meta) },
+                    onSaveRun = {  viewModel.saveRun() },
                     searchUserState = searchUserState,
                     onQueryChange = viewModel::onQueryChange,
                     onUserClick = { viewModel.onUserClick(it) },

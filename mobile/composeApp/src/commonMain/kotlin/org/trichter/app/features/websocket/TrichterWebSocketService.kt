@@ -49,11 +49,11 @@ class TrichterWebSocketServiceImpl(
 
     init {
         serviceScope.launch {
-            authRepository.authState
-                .filterIsInstance<AuthState.Authenticated>()
-                .collectLatest { auth ->
-                    connectWithBackoff(auth.session.accessToken)
-                }
+//            authRepository.authState
+//                .filterIsInstance<AuthState.Authenticated>()
+//                .collectLatest { auth ->
+//                    connectWithBackoff(auth.session.accessToken)
+//                }
         }
     }
 
