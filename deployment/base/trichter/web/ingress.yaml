@@ -1,4 +1,15 @@
 apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: redirect-next-to-root
+  namespace: trichter
+spec:
+  redirectRegex:
+    regex: ^https://next\.trichter\.hauptspeicher\.com/(.*)
+    replacement: https://trichter.hauptspeicher.com/$1
+    permanent: true
+---
+apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
 metadata:
   name: web
@@ -6,21 +17,41 @@ metadata:
 spec:
   entryPoints:
     - websecure
+
   routes:
+    - match: Host(`trichter.hauptspeicher.com`)
+      kind: Rule
+      services:
+        - name: web
+          port: 3000
+
+    - match: Host(`trichter.hauptspeicher.com`) && PathPrefix(`/api/auth`)
+      kind: Rule
+      services:
+        - name: web
+          port: 3000
+
     - match: Host(`next.trichter.hauptspeicher.com`)
       kind: Rule
+      middlewares:
+        - name: redirect-next-to-root
       services:
         - name: web
           port: 3000
+
     - match: Host(`next.trichter.hauptspeicher.com`) && PathPrefix(`/api/auth`)
       kind: Rule
+      middlewares:
+        - name: redirect-next-to-root
       services:
         - name: web
           port: 3000
+
     - match: Host(`oidc.trichter.hauptspeicher.com`) && PathPrefix(`/.well-known/assetlinks.json`)
       kind: Rule
       services:
         - name: web
           port: 3000
+
   tls:
     certResolver: myresolver

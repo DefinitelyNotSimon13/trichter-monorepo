@@ -39,10 +39,10 @@ function RouteComponent() {
           <p className="mt-4 text-base leading-7 text-muted-foreground">
             This Impressum applies to{" "}
             <a
-              href="https://next.trichter.hauptspeicher.com"
+              href="https://trichter.hauptspeicher.com"
               className="font-medium text-primary underline-offset-4 hover:underline"
             >
-              https://next.trichter.hauptspeicher.com
+              https://trichter.hauptspeicher.com
             </a>
           </p>
         </header>

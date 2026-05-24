@@ -15,5 +15,5 @@
   <!-- Tagline -->
   <text x="100" y="376" font-family="system-ui, -apple-system, sans-serif" font-size="38" font-weight="500" fill="#94a3b8" letter-spacing="1">Competitive drinking. Tracked.</text>
   <!-- URL -->
-  <text x="100" y="560" font-family="system-ui, -apple-system, sans-serif" font-size="24" fill="#475569">next.trichter.hauptspeicher.com</text>
+  <text x="100" y="560" font-family="system-ui, -apple-system, sans-serif" font-size="24" fill="#475569">trichter.hauptspeicher.com</text>
 </svg>

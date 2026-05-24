@@ -261,8 +261,8 @@ function Terms() {
 
       <p>
         Please review our Privacy Policy:{" "}
-        <a href="https://next.trichter.hauptspeicher.com/policy/privacy">
-          https://next.trichter.hauptspeicher.com/policy/privacy
+        <a href="https://trichter.hauptspeicher.com/policy/privacy">
+          https://trichter.hauptspeicher.com/policy/privacy
         </a>
         .
       </p>

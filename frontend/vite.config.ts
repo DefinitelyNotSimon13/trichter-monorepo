@@ -55,7 +55,7 @@ export default defineConfig({
       },
       sitemap: {
         enabled: true,
-        host: "https://next.trichter.hauptspeicher.com",
+        host: "https://trichter.hauptspeicher.com",
       },
       pages: [
         {

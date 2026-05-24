@@ -6,11 +6,21 @@ metadata:
 spec:
   entryPoints:
     - websecure
+
   routes:
-    - match: Host(`next.trichter.hauptspeicher.com`) && (PathPrefix(`/api/v2`) || PathPrefix(`/actuator`))
+    - match: Host(`trichter.hauptspeicher.com`) && (PathPrefix(`/api/v2`) || PathPrefix(`/actuator`))
       kind: Rule
       services:
         - name: api
           port: 8080
+
+    - match: Host(`next.trichter.hauptspeicher.com`) && (PathPrefix(`/api/v2`) || PathPrefix(`/actuator`))
+      kind: Rule
+      middlewares:
+        - name: redirect-next-to-root
+      services:
+        - name: api
+          port: 8080
+
   tls:
     certResolver: myresolver

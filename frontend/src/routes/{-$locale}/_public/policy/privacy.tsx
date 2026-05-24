@@ -253,8 +253,8 @@ function PrivacyPolicy() {
       <p>
         You can review, update, or delete your data at:
         <br />
-        <a href="https://next.trichter.hauptspeicher.com/data-service">
-          https://next.trichter.hauptspeicher.com/data-service
+        <a href="https://trichter.hauptspeicher.com/data-service">
+          https://trichter.hauptspeicher.com/data-service
         </a>
       </p>
     </div>

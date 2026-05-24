@@ -36,7 +36,7 @@ app:
       container-name: trichter-image
       key-prefix: runs/images
   cors:
-    allowed-origins: "https://next.trichter.hauptspeicher.com"
+    allowed-origins: "https://trichter.hauptspeicher.com"
 
 springdoc:
   swagger-ui:
@@ -52,4 +52,3 @@ logging:
     org.springframework.security: warn
     org.springframework.security.oauth2: warn
     org.springframework.web.cors: warn
-

@@ -8,4 +8,4 @@ Allow: /
 User-agent: Facebot
 Allow: /
 
-Sitemap: https://next.trichter.hauptspeicher.com/sitemap.xml
+Sitemap: https://trichter.hauptspeicher.com/sitemap.xml
