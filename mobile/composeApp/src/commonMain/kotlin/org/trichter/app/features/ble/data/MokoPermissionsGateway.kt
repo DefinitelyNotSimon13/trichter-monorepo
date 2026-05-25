@@ -7,6 +7,7 @@ import dev.icerock.moko.permissions.PermissionState
 import dev.icerock.moko.permissions.PermissionsController
 import dev.icerock.moko.permissions.bluetooth.BLUETOOTH_CONNECT
 import dev.icerock.moko.permissions.bluetooth.BLUETOOTH_SCAN
+import dev.icerock.moko.permissions.notifications.REMOTE_NOTIFICATION
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -15,6 +16,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import org.trichter.app.features.ble.domain.PermissionsGateway
+import org.trichter.app.util.Log
 
 
 class MokoPermissionsGateway(
@@ -31,7 +33,7 @@ class MokoPermissionsGateway(
     }
 
 
-    override suspend fun requestRequiredPermissions() {
+    override suspend fun requestBlePermissions() {
         try {
             REQUIRED.forEach { controller.providePermission(it) }
             refresh()
@@ -39,6 +41,17 @@ class MokoPermissionsGateway(
             _permissionState.value = PermissionState.DeniedAlways
         } catch (_: DeniedException) {
             _permissionState.value = PermissionState.Denied
+        }
+    }
+
+    override suspend fun requestNotificationPermissions() {
+        try {
+            controller.providePermission(Permission.REMOTE_NOTIFICATION)
+            refresh()
+        } catch (_: DeniedAlwaysException) {
+            Log.i("PERMISSIONS", "Always denied notifications")
+        } catch (_: DeniedException) {
+            Log.i("PERMISSIONS", "Denied notifications")
         }
     }
 

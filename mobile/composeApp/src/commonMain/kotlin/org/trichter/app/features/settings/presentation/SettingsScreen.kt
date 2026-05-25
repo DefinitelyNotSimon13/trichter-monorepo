@@ -7,11 +7,10 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.Logout
 import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material.icons.outlined.ChevronRight
-import androidx.compose.material.icons.outlined.Logout
 import androidx.compose.material.icons.outlined.OpenInBrowser
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -29,6 +28,7 @@ private const val ACCOUNT_SETTINGS_URL = "https://trichter.hauptspeicher.com/app
 @Composable
 fun SettingsScreen(
     onLogout: () -> Unit,
+    onNavigateToLocalRuns: () -> Unit = {},
     modifier: Modifier = Modifier,
 ) {
     val uriHandler = LocalUriHandler.current
@@ -44,6 +44,26 @@ fun SettingsScreen(
             fontWeight = FontWeight.Black,
             modifier = Modifier.padding(vertical = 16.dp),
         )
+
+        // Data section header
+        Text(
+            text = "DATA",
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.padding(horizontal = 4.dp, vertical = 8.dp),
+        )
+
+        HorizontalDivider()
+
+        SettingsRow(
+            icon = { Icon(Icons.Outlined.AccountCircle, contentDescription = null) },
+            label = "Local Runs",
+            description = "View and manage offline runs",
+            trailing = { Icon(Icons.Outlined.ChevronRight, contentDescription = null) },
+            onClick = onNavigateToLocalRuns,
+        )
+
+        HorizontalDivider()
 
         // Account section header
         Text(
@@ -68,7 +88,7 @@ fun SettingsScreen(
         SettingsRow(
             icon = {
                 Icon(
-                    Icons.Outlined.Logout,
+                    Icons.AutoMirrored.Outlined.Logout,
                     contentDescription = null,
                     tint = MaterialTheme.colorScheme.error,
                 )

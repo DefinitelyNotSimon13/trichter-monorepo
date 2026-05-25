@@ -6,7 +6,9 @@ import kotlinx.coroutines.flow.Flow
 interface PermissionsGateway {
     val permissionState: Flow<PermissionState>
 
-    suspend fun requestRequiredPermissions()
+    suspend fun requestBlePermissions()
+
+    suspend fun requestNotificationPermissions()
 
     fun openSettings()
 }
