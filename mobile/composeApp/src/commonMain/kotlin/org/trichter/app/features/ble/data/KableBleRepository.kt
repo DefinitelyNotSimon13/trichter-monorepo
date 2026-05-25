@@ -22,12 +22,12 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.trichter.app.features.ble.domain.BleRepository
-import org.trichter.app.features.ble.domain.models.TrichterState
 import org.trichter.app.features.ble.domain.models.Connection
 import org.trichter.app.features.ble.domain.models.ImageStatus
 import org.trichter.app.features.ble.domain.models.ImageTransferState
 import org.trichter.app.features.ble.domain.models.ResultMeta
 import org.trichter.app.features.ble.domain.models.SessionStatus
+import org.trichter.app.features.ble.domain.models.TrichterState
 import org.trichter.app.features.ble.domain.models.parseImageChunk
 import org.trichter.app.util.Log
 import kotlin.uuid.ExperimentalUuidApi
@@ -66,7 +66,7 @@ class KableBleRepository(
     private var currentImageSize: Int = 0
     private var currentTransferId: Long? = null
     private var chunksSinceAck = 0
-    private val ackEveryChunks =8
+    private val ackEveryChunks = 8
 
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -141,8 +141,7 @@ class KableBleRepository(
                         Log.d("BLE", "Requesting image transfer size=${res.imageSize}")
                         sendImageStart()
                     } else {
-                        _state.update { it.copy(imageStatus = ImageStatus.NONE)}
-                        sendAck()
+                        _state.update { it.copy(imageStatus = ImageStatus.NONE) }
                     }
                 }
             }
@@ -166,25 +165,46 @@ class KableBleRepository(
                     currentImageSize = expectedSize
                     currentTransferId = chunk.transferId
 
-                    Log.d("BLE", "Starting image assembly transferId=${chunk.transferId} size=$expectedSize")
+                    Log.d(
+                        "BLE",
+                        "Starting image assembly transferId=${chunk.transferId} size=$expectedSize"
+                    )
                 }
 
                 val buf = currentImageBuffer ?: return@collect
 
                 if (chunk.offset + chunk.payload.size > buf.size) {
-                    Log.e("BLE", "Chunk out of bounds: offset=${chunk.offset} len=${chunk.payload.size} size=${buf.size}")
+                    Log.e(
+                        "BLE",
+                        "Chunk out of bounds: offset=${chunk.offset} len=${chunk.payload.size} size=${buf.size}"
+                    )
                     return@collect
                 }
 
                 chunk.payload.copyInto(buf, destinationOffset = chunk.offset)
-                _state.update { it.copy(imageTransferState = ImageTransferState(it.lastResultMeta?.imageSize ?: 0,  this@KableBleRepository.currentImageBuffer?.size ?: 0)) }
-                Log.d("BLE", "Image chunk received: offset=${chunk.offset} len=${chunk.payload.size}")
+                _state.update {
+                    it.copy(
+                        imageTransferState = ImageTransferState(
+                            it.lastResultMeta?.imageSize ?: 0,
+                            this@KableBleRepository.currentImageBuffer?.size ?: 0
+                        )
+                    )
+                }
+                Log.d(
+                    "BLE",
+                    "Image chunk received: offset=${chunk.offset} len=${chunk.payload.size}"
+                )
 
                 chunksSinceAck++
 
                 if (chunk.isEnd) {
                     Log.d("BLE", "Image transfer complete")
-                    _state.update { it.copy(lastImage = buf.copyOf(), imageStatus = ImageStatus.DONE) }
+                    _state.update {
+                        it.copy(
+                            lastImage = buf.copyOf(),
+                            imageStatus = ImageStatus.DONE
+                        )
+                    }
                     currentImageBuffer = null
                     currentImageSize = 0
                     currentTransferId = null
@@ -202,30 +222,37 @@ class KableBleRepository(
 
     override suspend fun disconnect() {
         observeJobs.forEach { it.cancel() }; runCatching { peripheral.disconnect() }
+        _state.update { TrichterState() }
     }
 
     override suspend fun sendAck() {
+        Log.i("BLE_DEBUG", "Sending ack...");
         peripheral.write(chControl, byteArrayOf(0x02))
     }
 
     override suspend fun sendReset() {
+        Log.i("BLE_DEBUG", "Sending reset...");
         peripheral.write(chControl, byteArrayOf(0x03))
     }
 
     override suspend fun sendFakeRun() {
+        Log.i("BLE_DEBUG", "Sending fake run request...");
         peripheral.write(chControl, byteArrayOf(0x04))
     }
 
     suspend fun sendImageStart() {
+        Log.i("BLE_DEBUG", "Sending image start request...");
         _state.update { it.copy(imageStatus = ImageStatus.TRANSFERRING) }
         peripheral.write(chControl, byteArrayOf(0x05))
     }
 
     suspend fun sendImageAck() {
+        Log.i("BLE_DEBUG", "Sending image ack...");
         peripheral.write(chControl, byteArrayOf(0x07))
     }
 
     suspend fun sendImageReceived() {
+        Log.i("BLE_DEBUG", "Sending image received...");
         peripheral.write(chControl, byteArrayOf(0x08))
     }
 

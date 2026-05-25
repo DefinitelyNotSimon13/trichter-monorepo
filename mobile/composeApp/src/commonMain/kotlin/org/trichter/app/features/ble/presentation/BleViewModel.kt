@@ -87,7 +87,13 @@ class BleViewModel(
     init {
         observePermissionsStateUseCase().onEach { ps ->
             _state.value = _state.value.copy(permissionState = ps)
-            if (ps == PermissionState.Granted) startScan() else stopScan()
+            if (ps == PermissionState.Granted) {
+                if (_state.value.connectionState != ConnectionState.Connected) {
+                    startScan()
+                }
+            } else {
+                stopScan()
+            }
         }.catch { e -> _state.value = _state.value.copy(error = e) }.launchIn(viewModelScope)
 
         observeScanResultsUseCase().onEach { onAdvertisement(it) }
@@ -95,23 +101,40 @@ class BleViewModel(
 
         observeTrichterStateUseCase().onEach { trichterState ->
             val prev = _state.value.trichterState
-            val wasConnected = prev?.connection == Connection.Connected ||
-                    _state.value.connectionState == ConnectionState.Connected
+
+            val runSaved =
+                if (prev?.status == SessionStatus.COMPLETE && trichterState.status != SessionStatus.COMPLETE) {
+                    false
+                } else {
+                    _state.value.runSaved
+                }
+
+            _state.update {
+                it.copy(
+                    trichterState = trichterState,
+                    runSaved = runSaved,
+                    connectionState = when (trichterState.connection) {
+                        Connection.Connected -> ConnectionState.Connected
+                        Connection.Disconnected -> ConnectionState.Disconnected
+                        else -> it.connectionState
+                    }
+                )
+            }
+
+            if (trichterState.connection == Connection.Connected) {
+                stopScan()
+            }
+
+            val wasConnected =
+                prev?.connection == Connection.Connected || _state.value.connectionState == ConnectionState.Connected
+
             val isNowDisconnected = trichterState.connection == Connection.Disconnected
 
-            // Reset runSaved when a new run cycle starts (status leaves COMPLETE)
-            val runSaved = if (prev?.status == SessionStatus.COMPLETE &&
-                trichterState.status != SessionStatus.COMPLETE
-            ) false else _state.value.runSaved
-
-            _state.update { it.copy(trichterState = trichterState, runSaved = runSaved) }
-
             if (wasConnected && isNowDisconnected && !intentionalDisconnect) {
-                _state.update { it.copy(connectionState = ConnectionState.Disconnected) }
                 bleServiceController.stop()
                 _disconnectEvent.tryEmit(Unit)
             }
-        }.catch { e -> _state.value = _state.value.copy(error = e) }.launchIn(viewModelScope)
+        }.catch { e -> _state.update { it.copy(error = e) } }.launchIn(viewModelScope)
     }
 
     fun onRequestPermissions() {
@@ -129,16 +152,6 @@ class BleViewModel(
 
     fun sendAck() = viewModelScope.launch {
         sendAckUseCase()
-        _state.update {
-            it.copy(
-                trichterState = it.trichterState?.copy(
-                    imageStatus = ImageStatus.NONE,
-                    lastResultMeta = null,
-                    lastImage = null,
-                    imageTransferState = null,
-                )
-            )
-        }
     }
 
     fun onReset() = viewModelScope.launch { sendResetUseCase() }
@@ -193,12 +206,12 @@ class BleViewModel(
             disconnectUseCase()
             bleServiceController.stop()
             _state.value = _state.value.copy(connectionState = ConnectionState.Disconnected)
+            startScan()
         }
     }
 
     override fun onCleared() {
         stopScan()
-        bleServiceController.stop()
         super.onCleared()
     }
 
@@ -208,48 +221,33 @@ class BleViewModel(
 
     init {
         viewModelScope.launch {
-            query
-                .debounce(300)
-                .map { it.trim() }
-                .distinctUntilChanged()
-                .flatMapLatest { q ->
-                    if (q.isBlank()) flowOf(Result.success(emptyList()))
-                    else flow { emit(searchUsersUseCase(q)) }
-                }
-                .onStart {
-                    _searchUserState.update {
-                        it.copy(
-                            loading = true,
-                            results = emptyList(),
-                            error = null
-                        )
-                    }
-                }
-                .catch { e ->
-                    _searchUserState.update {
-                        it.copy(
-                            loading = false,
-                            error = e.message
-                        )
-                    }
-                }
-                .collect { result ->
-                    result.fold(
-                        onSuccess = { list ->
-                            _searchUserState.update {
-                                it.copy(
-                                    loading = false,
-                                    results = list,
-                                    error = null
-                                )
-                            }
-                        },
-                        onFailure = { e ->
-                            _searchUserState.update { it.copy(loading = false, error = e.message) }
-                            _snackbar.emit("Failed to save run")
-                        }
+            query.debounce(300).map { it.trim() }.distinctUntilChanged().flatMapLatest { q ->
+                if (q.isBlank()) flowOf(Result.success(emptyList()))
+                else flow { emit(searchUsersUseCase(q)) }
+            }.onStart {
+                _searchUserState.update {
+                    it.copy(
+                        loading = true, results = emptyList(), error = null
                     )
                 }
+            }.catch { e ->
+                _searchUserState.update {
+                    it.copy(
+                        loading = false, error = e.message
+                    )
+                }
+            }.collect { result ->
+                result.fold(onSuccess = { list ->
+                    _searchUserState.update {
+                        it.copy(
+                            loading = false, results = list, error = null
+                        )
+                    }
+                }, onFailure = { e ->
+                    _searchUserState.update { it.copy(loading = false, error = e.message) }
+                    _snackbar.emit("Failed to save run")
+                })
+            }
         }
     }
 
@@ -270,22 +268,16 @@ class BleViewModel(
     fun onSelectSelf() {
         viewModelScope.launch {
             _searchUserState.update { it.copy(loading = true, error = null) }
-            getCurrentUserUseCase().fold(
-                onSuccess = { user ->
-                    _searchUserState.update {
-                        it.copy(
-                            selectedUser = user,
-                            loading = false,
-                            query = "",
-                            results = emptyList()
-                        )
-                    }
-                    query.value = ""
-                },
-                onFailure = { e ->
-                    _searchUserState.update { it.copy(loading = false, error = e.message) }
+            getCurrentUserUseCase().fold(onSuccess = { user ->
+                _searchUserState.update {
+                    it.copy(
+                        selectedUser = user, loading = false, query = "", results = emptyList()
+                    )
                 }
-            )
+                query.value = ""
+            }, onFailure = { e ->
+                _searchUserState.update { it.copy(loading = false, error = e.message) }
+            })
         }
     }
 }

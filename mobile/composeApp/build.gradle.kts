@@ -15,7 +15,7 @@ val appVersionMajor = 1
 val appVersionMinor = 0
 val appVersionPatch = 0
 
-val suffixVersion: Int = 3
+val suffixVersion: Int = 4
 
 val appVersionName = "$appVersionMajor.$appVersionMinor.$appVersionPatch"
 val appVersionCode = appVersionMajor * 1000000 + appVersionMinor * 10000 + appVersionPatch * 100 + suffixVersion
