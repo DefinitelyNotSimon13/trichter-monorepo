@@ -17,4 +17,5 @@ data class BleUiState(
     val error: Throwable? = null,
     val isSaving: Boolean = false,
     val runSaved: Boolean = false,
+    val runSavedLocally: Boolean = false,
 )

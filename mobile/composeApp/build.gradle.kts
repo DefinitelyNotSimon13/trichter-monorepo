@@ -9,13 +9,14 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.openapiGenerator)
+    alias(libs.plugins.ksp)
 }
 
 val appVersionMajor = 1
 val appVersionMinor = 0
 val appVersionPatch = 0
 
-val suffixVersion: Int = 4
+val suffixVersion: Int = 5
 
 val appVersionName = "$appVersionMajor.$appVersionMinor.$appVersionPatch"
 val appVersionCode = appVersionMajor * 1000000 + appVersionMinor * 10000 + appVersionPatch * 100 + suffixVersion
@@ -100,6 +101,7 @@ kotlin {
             implementation(libs.koin.androidx.compose)
             implementation(libs.kable.permissions)
             implementation(libs.androidx.core.splashscreen)
+            implementation(libs.androidx.room.runtime)
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
@@ -219,6 +221,7 @@ android {
 
 dependencies {
     debugImplementation(libs.compose.uiTooling)
+    add("kspAndroid", libs.androidx.room.compiler)
 }
 
 val generatedDir = rootProject.file("api-client/generated")

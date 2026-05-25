@@ -22,12 +22,14 @@ import coil3.Uri
 import coil3.compose.setSingletonImageLoaderFactory
 import coil3.request.crossfade
 import kotlinx.coroutines.flow.StateFlow
+import org.koin.compose.KoinApplication
 import org.koin.compose.KoinMultiplatformApplication
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.annotation.KoinExperimentalAPI
+import org.koin.core.logger.Level
 import org.koin.dsl.KoinConfiguration
 import org.koin.dsl.module
-import org.publicvalue.multiplatform.oidc.appsupport.CodeAuthFlowFactory
+import org.publicvalue.multiplatform.oidc.flows.CodeAuthFlowFactory
 import org.trichter.app.di.getComposableAppModules
 import org.trichter.app.di.regularAppModules
 import org.trichter.app.features.auth.domain.model.AuthState
@@ -39,6 +41,7 @@ import org.trichter.app.features.ble.presentation.BleScreen
 import org.trichter.app.features.ble.presentation.BleViewModel
 import org.trichter.app.features.runs.presentation.RunsScreen
 import org.trichter.app.features.runs.presentation.RunsViewModel
+import org.trichter.app.features.settings.presentation.LocalRunsScreen
 import org.trichter.app.features.settings.presentation.SettingsScreen
 import org.trichter.app.navigation.Routes
 import org.trichter.app.ui.theme.TrichterTheme
@@ -56,21 +59,19 @@ fun App(
     val composableAppModules = getComposableAppModules()
     val deepLinkUri by deepLinkUriFlow.collectAsState()
 
-    KoinMultiplatformApplication(
-        config = KoinConfiguration {
-            modules(
-                regularAppModules() +
-                        composableAppModules +
-                        module {
-                            single<CodeAuthFlowFactory> { codeAuthFlowFactory }
-                        }
-            )
-        }
-    ) {
-        TrichterTheme {
-            AppRoot(deepLinkUri.toString())
-        }
-    }
+    KoinApplication(configuration = KoinConfiguration {
+                modules(
+                    regularAppModules() +
+                            composableAppModules +
+                            module {
+                                single<CodeAuthFlowFactory> { codeAuthFlowFactory }
+                            }
+                )
+            }, logLevel = Level.INFO, content = {
+            TrichterTheme {
+                AppRoot(deepLinkUri.toString())
+            }
+        })
 }
 
 @Composable
@@ -122,7 +123,20 @@ private fun MainAppScreen(
             }
 
             composable(route = Routes.SETTINGS.route) {
-                SettingsScreen(onLogout = onLogout)
+                SettingsScreen(
+                    onLogout = onLogout,
+                    onNavigateToLocalRuns = {
+                        navController.navigate("local_runs")
+                    }
+                )
+            }
+
+            composable(route = "local_runs") {
+                LocalRunsScreen(
+                    onNavigateBack = {
+                        navController.popBackStack()
+                    }
+                )
             }
         }
     }

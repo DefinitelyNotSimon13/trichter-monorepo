@@ -136,7 +136,7 @@ fun BleConnectedScreen(
                 StatusChip(trichterState.status)
             }
 
-            if (true) {
+            if (false) {
                 DevPanel(onFakeRun = onFakeRun)
             }
 

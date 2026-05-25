@@ -40,13 +40,17 @@ import org.trichter.app.features.ble.domain.usecases.ObserveScanResults
 import org.trichter.app.features.ble.domain.usecases.ObserveTrichterState
 import org.trichter.app.features.ble.domain.usecases.OpenAppSettings
 import org.trichter.app.features.ble.domain.usecases.RequestBluetoothPermissions
+import org.trichter.app.features.ble.domain.usecases.RequestNotificationPermissions
 import org.trichter.app.features.ble.domain.usecases.SaveRun
+import org.trichter.app.features.ble.domain.usecases.SaveRunLocally
 import org.trichter.app.features.ble.domain.usecases.SearchUsers
 import org.trichter.app.features.ble.domain.usecases.SendAck
 import org.trichter.app.features.ble.domain.usecases.SendFakeRun
 import org.trichter.app.features.ble.domain.usecases.SendReset
 import org.trichter.app.features.ble.domain.usecases.StartScan
 import org.trichter.app.features.ble.domain.usecases.StopScan
+import org.trichter.app.features.ble.domain.usecases.UpdateLocalRunSyncStatus
+import org.trichter.app.features.ble.domain.usecases.UpdateLocalRunUser
 
 
 @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
@@ -64,9 +68,13 @@ class BleViewModel(
     private val sendResetUseCase: SendReset,
     private val sendFakeRunUseCase: SendFakeRun,
     private val saveRunUseCase: SaveRun,
+    private val saveRunLocallyUseCase: SaveRunLocally,
+    private val updateLocalRunSyncStatusUseCase: UpdateLocalRunSyncStatus,
+    private val updateLocalRunUserUseCase: UpdateLocalRunUser,
     private val searchUsersUseCase: SearchUsers,
     private val getCurrentUserUseCase: GetCurrentUser,
     private val bleServiceController: BleServiceController,
+    private val requestNotificationPermissionsUseCase: RequestNotificationPermissions,
 ) : ViewModel() {
 
     private var _state = MutableStateFlow(BleUiState())
@@ -84,9 +92,17 @@ class BleViewModel(
     // Stored so reconnect doesn't need to re-scan
     private var lastAdvertisement: PlatformAdvertisement? = null
 
+    private var lastLocallyStoredRunId: Long = -1
+
+    // User search state
+    private val query = MutableStateFlow("")
+    private val _searchUserState = MutableStateFlow(SearchUserState())
+    val searchUserState: StateFlow<SearchUserState> = _searchUserState
+
+
     init {
         observePermissionsStateUseCase().onEach { ps ->
-            _state.value = _state.value.copy(permissionState = ps)
+            _state.update { it.copy(permissionState = ps) }
             if (ps == PermissionState.Granted) {
                 if (_state.value.connectionState != ConnectionState.Connected) {
                     startScan()
@@ -94,10 +110,10 @@ class BleViewModel(
             } else {
                 stopScan()
             }
-        }.catch { e -> _state.value = _state.value.copy(error = e) }.launchIn(viewModelScope)
+        }.catch { e -> _state.update { it.copy(error = e) } }.launchIn(viewModelScope)
 
         observeScanResultsUseCase().onEach { onAdvertisement(it) }
-            .catch { e -> _state.value = _state.value.copy(error = e) }.launchIn(viewModelScope)
+            .catch { e -> _state.update { it.copy(error = e) } }.launchIn(viewModelScope)
 
         observeTrichterStateUseCase().onEach { trichterState ->
             val prev = _state.value.trichterState
@@ -134,6 +150,30 @@ class BleViewModel(
                 bleServiceController.stop()
                 _disconnectEvent.tryEmit(Unit)
             }
+
+            val resultMeta = trichterState.lastResultMeta
+
+            val isRunComplete = trichterState.status == SessionStatus.COMPLETE
+
+            val imageTransferComplete =
+                trichterState.imageStatus == ImageStatus.DONE || (trichterState.imageTransferState == null && resultMeta?.hasImage == false)
+
+            if (isRunComplete && imageTransferComplete && !_state.value.runSavedLocally && resultMeta != null) {
+                viewModelScope.launch {
+                    val selectedUser = _searchUserState.value.selectedUser
+                    saveRunLocallyUseCase(
+                        resultMeta = resultMeta,
+                        imageBytes = trichterState.lastImage,
+                        userId = selectedUser?.id,
+                        userDisplayName = selectedUser?.displayName(),
+                    ).onSuccess { localRunId ->
+                        lastLocallyStoredRunId = localRunId
+                        _state.update { it.copy(runSavedLocally = true) }
+                    }.onFailure { error ->
+                        _snackbar.emit("Failed to save run locally: ${error.message}")
+                    }
+                }
+            }
         }.catch { e -> _state.update { it.copy(error = e) } }.launchIn(viewModelScope)
     }
 
@@ -165,38 +205,61 @@ class BleViewModel(
         val userId = _searchUserState.value.selectedUser?.id
 
         saveRunUseCase(meta, imageBytes, userId).onSuccess {
+            // Update local run sync status if it exists
+            if (lastLocallyStoredRunId != -1L) {
+                updateLocalRunSyncStatusUseCase(
+                    localRunId = lastLocallyStoredRunId,
+                    syncStatus = "SYNCED",
+                    serverId = null,
+                    errorMessage = null
+                )
+            }
             sendAckUseCase()
+            lastLocallyStoredRunId = -1L
             _state.update { it.copy(isSaving = false, runSaved = true) }
-        }.onFailure {
+            _snackbar.emit("Run saved to server")
+        }.onFailure { it ->
+            // Update local run sync status to FAILED
+            if (lastLocallyStoredRunId != -1L) {
+                updateLocalRunSyncStatusUseCase(
+                    localRunId = lastLocallyStoredRunId,
+                    syncStatus = "FAILED",
+                    errorMessage = it.message ?: "Unknown error"
+                )
+            }
             _state.update { it.copy(isSaving = false, error = Exception("Failed to save run")) }
+            _snackbar.emit("Failed to save run to server")
         }
     }
 
     fun onAdvertisement(advertisement: PlatformAdvertisement) {
         val next = _state.value.advertisements.toMutableMap()
         next[advertisement.id()] = advertisement
-        _state.value = _state.value.copy(advertisements = next.toPersistentMap())
+        _state.update { it.copy(advertisements = next.toPersistentMap()) }
     }
 
     fun connect(advertisement: PlatformAdvertisement) {
         lastAdvertisement = advertisement
         intentionalDisconnect = false
-        _state.value = _state.value.copy(
-            connectionState = ConnectionState.Connecting,
-            advertisements = persistentMapOf(),
-            error = null
-        )
+        _state.update {
+            it.copy(
+                connectionState = ConnectionState.Connecting,
+                advertisements = persistentMapOf(),
+                error = null
+            )
+        }
         bleServiceController.start()
         viewModelScope.launch {
+            requestNotificationPermissionsUseCase()
             val res = connectUseCase(advertisement)
-            _state.value = res.fold(
-                onSuccess = { _state.value.copy(connectionState = ConnectionState.Connected) },
-                onFailure = { ex ->
-                    bleServiceController.stop()
-                    _state.value.copy(
-                        connectionState = ConnectionState.Failed(ex.message ?: "Error")
-                    )
-                })
+            res.fold(onSuccess = {
+                _state.update { it.copy(connectionState = ConnectionState.Connected) }
+            }, onFailure = { ex ->
+                bleServiceController.stop()
+                _state.update {
+                    it.copy(connectionState = ConnectionState.Failed(ex.message ?: "Error"))
+                }
+            })
         }
     }
 
@@ -205,7 +268,7 @@ class BleViewModel(
         viewModelScope.launch {
             disconnectUseCase()
             bleServiceController.stop()
-            _state.value = _state.value.copy(connectionState = ConnectionState.Disconnected)
+            _state.update { it.copy(connectionState = ConnectionState.Disconnected) }
             startScan()
         }
     }
@@ -214,10 +277,6 @@ class BleViewModel(
         stopScan()
         super.onCleared()
     }
-
-    private val query = MutableStateFlow("")
-    private val _searchUserState = MutableStateFlow(SearchUserState())
-    val searchUserState: StateFlow<SearchUserState> = _searchUserState
 
     init {
         viewModelScope.launch {
@@ -259,6 +318,7 @@ class BleViewModel(
     fun onUserClick(user: UserDto) {
         _searchUserState.update { it.copy(selectedUser = user, query = "", results = emptyList()) }
         query.value = ""
+        persistSelectedUser(user)
     }
 
     fun onClearUser() {
@@ -275,10 +335,24 @@ class BleViewModel(
                     )
                 }
                 query.value = ""
+                persistSelectedUser(user)
             }, onFailure = { e ->
                 _searchUserState.update { it.copy(loading = false, error = e.message) }
             })
         }
+    }
+
+    private fun persistSelectedUser(user: UserDto) {
+        val localRunId = lastLocallyStoredRunId
+        if (localRunId == -1L) return
+
+        viewModelScope.launch {
+            updateLocalRunUserUseCase(localRunId, user.id, user.displayName())
+        }
+    }
+
+    private fun UserDto.displayName(): String {
+        return name ?: displayUsername ?: username ?: id
     }
 }
 

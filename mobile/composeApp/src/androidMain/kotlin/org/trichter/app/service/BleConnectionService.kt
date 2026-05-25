@@ -13,28 +13,40 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
+import org.koin.core.context.GlobalContext
 import org.trichter.app.MainActivity
 import org.trichter.app.features.ble.domain.BleRepository
 import org.trichter.app.features.ble.domain.models.Connection
 import org.trichter.app.features.ble.domain.models.SessionStatus
 import org.trichter.app.features.ble.domain.models.TrichterState
+import android.util.Log
 
-class BleConnectionService : Service(), KoinComponent {
+class BleConnectionService : Service() {
 
-    private val repo: BleRepository by inject()
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
 
+    @androidx.annotation.RequiresPermission(android.Manifest.permission.POST_NOTIFICATIONS)
     override fun onCreate() {
         super.onCreate()
         createNotificationChannel()
         startForeground(NOTIFICATION_ID, buildNotification(TrichterState()))
-        scope.launch {
-            repo.trichterState.collect { state ->
-                NotificationManagerCompat.from(this@BleConnectionService)
-                    .notify(NOTIFICATION_ID, buildNotification(state))
+
+        // Try to get BleRepository from Koin, handling the case where it might not be initialized
+        try {
+            val koin = GlobalContext.getOrNull()
+            if (koin != null) {
+                val repo = koin.get<BleRepository>()
+                scope.launch {
+                    repo.trichterState.collect  { state ->
+                        NotificationManagerCompat.from(this@BleConnectionService)
+                            .notify(NOTIFICATION_ID, buildNotification(state))
+                    }
+                }
+            } else {
+                Log.d("BleConnectionService", "Koin context not available")
             }
+        } catch (e: Exception) {
+            Log.w("BleConnectionService", "Failed to get BleRepository from Koin", e)
         }
     }
 
@@ -50,25 +62,31 @@ class BleConnectionService : Service(), KoinComponent {
     private fun createNotificationChannel() {
         val channel = NotificationChannel(
             CHANNEL_ID,
-            "BLE Connection",
-            NotificationManager.IMPORTANCE_LOW,
+            "Device connection",
+            NotificationManager.IMPORTANCE_HIGH,
         ).apply {
-            description = "Shows Trichter device connection status"
+            description = "Shows the active Trichter device connection"
             setShowBadge(false)
+            enableVibration(false)
+            setSound(null, null)
+            lockscreenVisibility = android.app.Notification.VISIBILITY_PUBLIC
         }
-        getSystemService(NotificationManager::class.java).createNotificationChannel(channel)
+
+        getSystemService(NotificationManager::class.java)
+            .createNotificationChannel(channel)
     }
 
     private fun buildNotification(state: TrichterState): android.app.Notification {
         val contentText = when (state.connection) {
             Connection.Connected -> when (state.status) {
-                SessionStatus.WAITING  -> "Waiting for flow\u2026"
-                SessionStatus.RUNNING  -> "Measuring\u2026"
-                SessionStatus.COMPLETE -> "Run complete \u2014 open app to save"
-                SessionStatus.ERROR    -> "Device error"
-                else                   -> "Connected \u00b7 Ready"
+                SessionStatus.WAITING -> "Connected · Waiting for flow..."
+                SessionStatus.RUNNING -> "Connected · Measuring..."
+                SessionStatus.COMPLETE -> "Run complete · Open app to save"
+                SessionStatus.ERROR -> "Connected · Device error"
+                else -> "Connected · Ready"
             }
-            Connection.Connecting  -> "Connecting\u2026"
+
+            Connection.Connecting -> "Connecting"
             Connection.Disconnected -> "Disconnected"
         }
 
@@ -76,18 +94,30 @@ class BleConnectionService : Service(), KoinComponent {
             this,
             0,
             Intent(this, MainActivity::class.java).apply {
-                flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+                flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP
             },
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
         )
 
         return NotificationCompat.Builder(this, CHANNEL_ID)
-            .setContentTitle("Trichter")
+            .setContentTitle("Trichter active")
             .setContentText(contentText)
             .setSmallIcon(android.R.drawable.stat_sys_data_bluetooth)
             .setContentIntent(tapIntent)
+
+            // Important bits
+            .setCategory(NotificationCompat.CATEGORY_SERVICE)
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setOngoing(true)
+            .setAutoCancel(false)
+            .setOnlyAlertOnce(true)
             .setSilent(true)
+            .setForegroundServiceBehavior(NotificationCompat.FOREGROUND_SERVICE_IMMEDIATE)
+
+            // Nice-to-have
+            .setShowWhen(false)
+            .setLocalOnly(true)
+            .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
             .build()
     }
 
