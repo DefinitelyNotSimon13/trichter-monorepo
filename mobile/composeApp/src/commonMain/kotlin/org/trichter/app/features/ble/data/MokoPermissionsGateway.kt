@@ -55,6 +55,17 @@ class MokoPermissionsGateway(
         }
     }
 
+    override suspend fun requestCameraPermissions() {
+        try {
+            controller.providePermission(Permission.CAMERA)
+            controller.providePermission(Permission.RECORD_AUDIO)
+        } catch (_: DeniedAlwaysException) {
+            Log.i("PERMISSIONS", "Always denied camera/audio")
+        } catch (_: DeniedException) {
+            Log.i("PERMISSIONS", "Denied camera/audio")
+        }
+    }
+
 
     override fun openSettings() {
         controller.openAppSettings()

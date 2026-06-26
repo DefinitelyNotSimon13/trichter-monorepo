@@ -39,6 +39,9 @@ import androidx.compose.material.icons.outlined.Refresh
 import androidx.compose.material.icons.outlined.RemoveCircle
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.outlined.Send
+import androidx.compose.material.icons.outlined.Stop
+import androidx.compose.material.icons.outlined.Videocam
+import androidx.compose.material.icons.outlined.VideocamOff
 import androidx.compose.material.icons.outlined.Warning
 import androidx.compose.material.icons.outlined.WaterDrop
 import androidx.compose.material3.AlertDialog
@@ -52,6 +55,7 @@ import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
@@ -89,6 +93,8 @@ import org.trichter.app.features.ble.domain.models.SessionStatus
 import org.trichter.app.features.ble.domain.models.TrichterState
 import org.trichter.app.features.ble.domain.models.UserDto
 import org.trichter.app.features.ble.presentation.SearchUserState
+import org.trichter.app.features.recording.domain.Recorder
+import org.trichter.app.features.recording.presentation.CameraPreviewSurface
 import kotlin.math.pow
 import kotlin.math.round
 import kotlin.uuid.ExperimentalUuidApi
@@ -101,6 +107,10 @@ fun BleConnectedScreen(
     isSaving: Boolean,
     runSaved: Boolean,
     searchUserState: SearchUserState,
+    cameraAvailable: Boolean,
+    isRecording: Boolean,
+    isProcessingVideo: Boolean,
+    recorder: Recorder?,
     onQueryChange: (String) -> Unit,
     onUserClick: (UserDto) -> Unit,
     onClearUser: () -> Unit,
@@ -110,6 +120,7 @@ fun BleConnectedScreen(
     onReset: () -> Unit,
     onFakeRun: () -> Unit,
     onSaveRun: (ResultMeta) -> Unit,
+    onToggleRecording: () -> Unit,
     onSaveImage: (ByteArray) -> Unit = {},
     modifier: Modifier = Modifier,
 ) {
@@ -126,48 +137,116 @@ fun BleConnectedScreen(
             ), modifier = modifier
             )
         },
+        floatingActionButton = {
+            if (recorder != null && trichterState.status != SessionStatus.IDLE) {
+                RecordFab(
+                    isRecording = isRecording,
+                    cameraAvailable = cameraAvailable,
+                    onToggleRecording = onToggleRecording,
+                )
+            }
+        },
     ) { inner ->
-        Column(
-            Modifier.padding(inner).fillMaxSize().verticalScroll(rememberScrollState())
-                .padding(16.dp, 0.dp), verticalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                ConnectionChip(trichterState.connection)
-                StatusChip(trichterState.status)
+        Box(Modifier.padding(inner).fillMaxSize()) {
+            if (recorder != null && cameraAvailable && trichterState.status != SessionStatus.IDLE) {
+                CameraPreviewSurface(
+                    recorder = recorder,
+                    modifier = Modifier.fillMaxSize(),
+                )
             }
 
-            if (false) {
-                DevPanel(onFakeRun = onFakeRun)
-            }
-
-            when (trichterState.status) {
-                SessionStatus.WAITING -> WaitingPanel()
-                SessionStatus.RUNNING -> RunningPanel()
-                SessionStatus.COMPLETE -> {
-                    val meta = trichterState.lastResultMeta
-                    if (meta != null) {
-                        CompletePanel(
-                            trichterState = trichterState,
-                            isSaving = isSaving,
-                            runSaved = runSaved,
-                            searchUserState = searchUserState,
-                            onQueryChange = onQueryChange,
-                            onUserClick = onUserClick,
-                            onClearUser = onClearUser,
-                            onSelectSelf = onSelectSelf,
-                            onSaveRun = onSaveRun,
-                            onAck = onAck,
-                        )
-                    } else {
-                        IdlePanel(trichterState, modifier)
-                    }
+            Column(
+                Modifier.fillMaxSize().verticalScroll(rememberScrollState())
+                    .padding(16.dp, 0.dp), verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                    ConnectionChip(trichterState.connection)
+                    StatusChip(trichterState.status)
+                    if (isRecording) RecordingChip()
+                    if (isProcessingVideo) ProcessingVideoChip()
                 }
 
-                SessionStatus.ERROR -> ErrorPanel(onReset = onReset)
-                SessionStatus.IDLE, SessionStatus.UNKNOWN -> IdlePanel(trichterState, modifier)
+                if (false) {
+                    DevPanel(onFakeRun = onFakeRun)
+                }
+
+                when (trichterState.status) {
+                    SessionStatus.WAITING -> WaitingPanel()
+                    SessionStatus.RUNNING -> RunningPanel()
+                    SessionStatus.COMPLETE -> {
+                        val meta = trichterState.lastResultMeta
+                        if (meta != null) {
+                            CompletePanel(
+                                trichterState = trichterState,
+                                isSaving = isSaving,
+                                runSaved = runSaved,
+                                searchUserState = searchUserState,
+                                onQueryChange = onQueryChange,
+                                onUserClick = onUserClick,
+                                onClearUser = onClearUser,
+                                onSelectSelf = onSelectSelf,
+                                onSaveRun = onSaveRun,
+                                onAck = onAck,
+                            )
+                        } else {
+                            IdlePanel(trichterState, modifier)
+                        }
+                    }
+
+                    SessionStatus.ERROR -> ErrorPanel(onReset = onReset)
+                    SessionStatus.IDLE, SessionStatus.UNKNOWN -> IdlePanel(trichterState, modifier)
+                }
             }
         }
     }
+}
+
+@Composable
+private fun RecordFab(
+    isRecording: Boolean,
+    cameraAvailable: Boolean,
+    onToggleRecording: () -> Unit,
+) {
+    FloatingActionButton(
+        onClick = onToggleRecording,
+        containerColor = if (isRecording) MaterialTheme.colorScheme.error
+        else MaterialTheme.colorScheme.primaryContainer,
+    ) {
+        val icon = when {
+            isRecording -> Icons.Outlined.Stop
+            !cameraAvailable -> Icons.Outlined.VideocamOff
+            else -> Icons.Outlined.Videocam
+        }
+        Icon(icon, contentDescription = if (isRecording) "Stop recording" else "Start recording")
+    }
+}
+
+@Composable
+private fun RecordingChip(modifier: Modifier = Modifier) {
+    AssistChip(
+        onClick = {},
+        label = { Text("Recording") },
+        enabled = false,
+        modifier = modifier,
+        colors = AssistChipDefaults.assistChipColors(
+            disabledContainerColor = MaterialTheme.colorScheme.error.copy(alpha = 0.16f),
+            disabledLabelColor = MaterialTheme.colorScheme.error,
+        )
+    )
+}
+
+@Composable
+private fun ProcessingVideoChip(modifier: Modifier = Modifier) {
+    AssistChip(
+        onClick = {},
+        label = { Text("Processing video…") },
+        enabled = false,
+        modifier = modifier,
+        colors = AssistChipDefaults.assistChipColors(
+            disabledContainerColor = MaterialTheme.colorScheme.secondary.copy(alpha = 0.16f),
+            disabledLabelColor = MaterialTheme.colorScheme.secondary,
+        )
+    )
 }
 
 @Composable

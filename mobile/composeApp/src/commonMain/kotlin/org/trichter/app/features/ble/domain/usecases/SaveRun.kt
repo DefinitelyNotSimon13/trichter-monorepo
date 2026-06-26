@@ -45,6 +45,12 @@ class SaveRun(
             }
         }
 
+        // TODO(media-endpoint): When the backend exposes POST /runs/{id}/media,
+        // iterate LocalMediaRepository.getForRun(localRunId) here and upload
+        // any pending VIDEO rows, flipping them to SYNCED. Until then videos
+        // live only on-device (see plan i-am-already-uploading-unified-storm.md
+        // slice 1).
+
         return Result.success(Unit)
     }
 }

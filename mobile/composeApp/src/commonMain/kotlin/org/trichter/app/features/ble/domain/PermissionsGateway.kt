@@ -10,5 +10,7 @@ interface PermissionsGateway {
 
     suspend fun requestNotificationPermissions()
 
+    suspend fun requestCameraPermissions()
+
     fun openSettings()
 }

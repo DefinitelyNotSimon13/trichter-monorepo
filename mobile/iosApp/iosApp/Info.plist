@@ -4,5 +4,9 @@
 <dict>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>Trichter uses the camera to record videos of your runs alongside the trichter picture.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Trichter records audio with your run video so you capture the moment.</string>
 </dict>
 </plist>

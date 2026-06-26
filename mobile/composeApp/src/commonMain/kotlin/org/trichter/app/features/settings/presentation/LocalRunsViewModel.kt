@@ -28,9 +28,12 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import org.trichter.app.features.ble.domain.models.UserDto
+import org.trichter.app.features.recording.domain.LocalMediaRepository
+import org.trichter.app.features.recording.domain.models.LocalMediaKind
 
 data class LocalRunsUiState(
     val runs: List<LocalRun> = emptyList(),
+    val videoCountByRunId: Map<Long, Int> = emptyMap(),
     val isLoading: Boolean = false,
     val error: String? = null,
     val message: String? = null,
@@ -52,6 +55,7 @@ class LocalRunsViewModel(
     private val searchUsersUseCase: SearchUsers,
     private val getCurrentUserUseCase: GetCurrentUser,
     private val updateLocalRunUserUseCase: UpdateLocalRunUser,
+    private val localMediaRepository: LocalMediaRepository,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(LocalRunsUiState())
@@ -62,6 +66,19 @@ class LocalRunsViewModel(
     init {
         loadLocalRuns()
         observeUserSearch()
+        observeMedia()
+    }
+
+    private fun observeMedia() {
+        localMediaRepository.observeAll()
+            .onEach { mediaList ->
+                val counts = mediaList
+                    .filter { it.kind == LocalMediaKind.VIDEO }
+                    .groupingBy { it.localRunId }
+                    .eachCount()
+                _state.update { it.copy(videoCountByRunId = counts) }
+            }
+            .launchIn(viewModelScope)
     }
 
     fun loadLocalRuns() {

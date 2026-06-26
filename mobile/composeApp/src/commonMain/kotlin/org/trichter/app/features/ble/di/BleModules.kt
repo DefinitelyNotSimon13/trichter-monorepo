@@ -27,6 +27,7 @@ import org.trichter.app.features.ble.domain.usecases.ObserveScanResults
 import org.trichter.app.features.ble.domain.usecases.ObserveTrichterState
 import org.trichter.app.features.ble.domain.usecases.OpenAppSettings
 import org.trichter.app.features.ble.domain.usecases.RequestBluetoothPermissions
+import org.trichter.app.features.ble.domain.usecases.RequestCameraPermissions
 import org.trichter.app.features.ble.domain.usecases.RequestNotificationPermissions
 import org.trichter.app.features.ble.domain.usecases.SaveRun
 import org.trichter.app.features.ble.domain.usecases.SaveRunLocally
@@ -60,6 +61,7 @@ val bleDomainModule = module {
     factoryOf(::ObserveScanResults)
     factoryOf(::RequestBluetoothPermissions)
     factoryOf(::RequestNotificationPermissions)
+    factoryOf(::RequestCameraPermissions)
     factoryOf(::OpenAppSettings)
     factoryOf(::StartScan)
     factoryOf(::StopScan)

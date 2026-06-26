@@ -18,4 +18,7 @@ data class BleUiState(
     val isSaving: Boolean = false,
     val runSaved: Boolean = false,
     val runSavedLocally: Boolean = false,
+    val cameraAvailable: Boolean = false,
+    val isRecording: Boolean = false,
+    val isProcessingVideo: Boolean = false,
 )

@@ -102,6 +102,16 @@ kotlin {
             implementation(libs.kable.permissions)
             implementation(libs.androidx.core.splashscreen)
             implementation(libs.androidx.room.runtime)
+
+            implementation(libs.androidx.camera.core)
+            implementation(libs.androidx.camera.camera2)
+            implementation(libs.androidx.camera.lifecycle)
+            implementation(libs.androidx.camera.video)
+            implementation(libs.androidx.camera.view)
+
+            implementation(libs.androidx.media3.transformer)
+            implementation(libs.androidx.media3.effect)
+            implementation(libs.androidx.media3.common)
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)

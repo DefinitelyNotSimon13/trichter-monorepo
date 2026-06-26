@@ -174,10 +174,12 @@ fun LocalRunsScreen(
                 items(state.value.runs) { run ->
                     val selectedUser = uiState.selectedUsers[run.id]
                     val canEditUser = run.syncStatus != LocalRunSyncStatus.SYNCED
+                    val videoCount = run.id?.let { uiState.videoCountByRunId[it] } ?: 0
                     LocalRunItem(
                         run = run,
                         selectedUser = selectedUser,
                         canEditUser = canEditUser,
+                        videoCount = videoCount,
                         onDelete = { pendingDelete = run },
                         onSelect = { viewModel.selectRun(run.id) },
                         onSync = { viewModel.syncRun(run) },
@@ -196,6 +198,7 @@ private fun LocalRunItem(
     run: LocalRun,
     selectedUser: UserDto?,
     canEditUser: Boolean,
+    videoCount: Int,
     onDelete: () -> Unit,
     onSelect: () -> Unit,
     onSync: () -> Unit,
@@ -281,6 +284,18 @@ private fun LocalRunItem(
                             style = MaterialTheme.typography.labelSmall,
                             modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
                         )
+                    }
+                    if (videoCount > 0) {
+                        Surface(
+                            color = MaterialTheme.colorScheme.secondaryContainer,
+                            shape = MaterialTheme.shapes.small
+                        ) {
+                            Text(
+                                text = "$videoCount video" + if (videoCount > 1) "s" else "",
+                                style = MaterialTheme.typography.labelSmall,
+                                modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                            )
+                        }
                     }
                 }
                 if (run.syncStatus == LocalRunSyncStatus.FAILED && !run.errorMessage.isNullOrBlank()) {

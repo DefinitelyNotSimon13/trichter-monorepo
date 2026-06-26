@@ -40,10 +40,15 @@ import org.trichter.app.features.ble.domain.usecases.ObserveScanResults
 import org.trichter.app.features.ble.domain.usecases.ObserveTrichterState
 import org.trichter.app.features.ble.domain.usecases.OpenAppSettings
 import org.trichter.app.features.ble.domain.usecases.RequestBluetoothPermissions
+import org.trichter.app.features.ble.domain.usecases.RequestCameraPermissions
 import org.trichter.app.features.ble.domain.usecases.RequestNotificationPermissions
 import org.trichter.app.features.ble.domain.usecases.SaveRun
 import org.trichter.app.features.ble.domain.usecases.SaveRunLocally
 import org.trichter.app.features.ble.domain.usecases.SearchUsers
+import kotlin.time.Clock
+import org.trichter.app.features.recording.domain.RecordedClip
+import org.trichter.app.features.recording.domain.Recorder
+import org.trichter.app.features.recording.domain.usecases.AttachRecordedVideoToRun
 import org.trichter.app.features.ble.domain.usecases.SendAck
 import org.trichter.app.features.ble.domain.usecases.SendFakeRun
 import org.trichter.app.features.ble.domain.usecases.SendReset
@@ -75,6 +80,9 @@ class BleViewModel(
     private val getCurrentUserUseCase: GetCurrentUser,
     private val bleServiceController: BleServiceController,
     private val requestNotificationPermissionsUseCase: RequestNotificationPermissions,
+    private val requestCameraPermissionsUseCase: RequestCameraPermissions,
+    val recorder: Recorder,
+    private val attachRecordedVideoToRunUseCase: AttachRecordedVideoToRun,
 ) : ViewModel() {
 
     private var _state = MutableStateFlow(BleUiState())
@@ -93,6 +101,9 @@ class BleViewModel(
     private var lastAdvertisement: PlatformAdvertisement? = null
 
     private var lastLocallyStoredRunId: Long = -1
+
+    private var runStartWallclockMs: Long? = null
+    private var runEndWallclockMs: Long? = null
 
     // User search state
     private val query = MutableStateFlow("")
@@ -115,6 +126,11 @@ class BleViewModel(
         observeScanResultsUseCase().onEach { onAdvertisement(it) }
             .catch { e -> _state.update { it.copy(error = e) } }.launchIn(viewModelScope)
 
+        _state.update { it.copy(cameraAvailable = recorder.isAvailable) }
+        recorder.isRecording.onEach { rec ->
+            _state.update { it.copy(isRecording = rec) }
+        }.launchIn(viewModelScope)
+
         observeTrichterStateUseCase().onEach { trichterState ->
             val prev = _state.value.trichterState
 
@@ -124,6 +140,21 @@ class BleViewModel(
                 } else {
                     _state.value.runSaved
                 }
+
+            // Capture wallclock anchors so we can burn an accurate timer into
+            // any concurrently recorded video. T=0 is the RUNNING transition.
+            if (prev?.status != SessionStatus.RUNNING && trichterState.status == SessionStatus.RUNNING) {
+                runStartWallclockMs = Clock.System.now().toEpochMilliseconds()
+                runEndWallclockMs = null
+            }
+            if (prev?.status == SessionStatus.RUNNING && trichterState.status == SessionStatus.COMPLETE) {
+                runEndWallclockMs = Clock.System.now().toEpochMilliseconds()
+            }
+            // New session: clear the previous anchors.
+            if (trichterState.status == SessionStatus.WAITING && prev?.status != SessionStatus.WAITING) {
+                runStartWallclockMs = null
+                runEndWallclockMs = null
+            }
 
             _state.update {
                 it.copy(
@@ -204,8 +235,15 @@ class BleViewModel(
             ?: error("Tried to save run, but no data exists.")
         val userId = _searchUserState.value.selectedUser?.id
 
+        // If we were recording video alongside the run, stop now and remember
+        // the clip so we can attach + transcode after the run is persisted.
+        val recordedClip: RecordedClip? = if (recorder.isRecording.value) {
+            recorder.stop().getOrNull()
+        } else {
+            null
+        }
+
         saveRunUseCase(meta, imageBytes, userId).onSuccess {
-            // Update local run sync status if it exists
             if (lastLocallyStoredRunId != -1L) {
                 updateLocalRunSyncStatusUseCase(
                     localRunId = lastLocallyStoredRunId,
@@ -215,11 +253,11 @@ class BleViewModel(
                 )
             }
             sendAckUseCase()
+            attachRecording(recordedClip, meta.durationMs, lastLocallyStoredRunId)
             lastLocallyStoredRunId = -1L
             _state.update { it.copy(isSaving = false, runSaved = true) }
             _snackbar.emit("Run saved to server")
         }.onFailure { it ->
-            // Update local run sync status to FAILED
             if (lastLocallyStoredRunId != -1L) {
                 updateLocalRunSyncStatusUseCase(
                     localRunId = lastLocallyStoredRunId,
@@ -227,9 +265,51 @@ class BleViewModel(
                     errorMessage = it.message ?: "Unknown error"
                 )
             }
+            // Even on server failure, keep the video locally attached to the
+            // local run so the user doesn't lose the recording.
+            attachRecording(recordedClip, meta.durationMs, lastLocallyStoredRunId)
             _state.update { it.copy(isSaving = false, error = Exception("Failed to save run")) }
             _snackbar.emit("Failed to save run to server")
         }
+    }
+
+    private fun attachRecording(clip: RecordedClip?, finalDurationMs: Long, runId: Long) {
+        if (clip == null || runId == -1L) return
+        _state.update { it.copy(isProcessingVideo = true) }
+        viewModelScope.launch {
+            attachRecordedVideoToRunUseCase(
+                clip = clip,
+                localRunId = runId,
+                runStartWallclockMs = runStartWallclockMs,
+                runEndWallclockMs = runEndWallclockMs,
+                finalDurationMs = finalDurationMs,
+            ).onFailure { e ->
+                _snackbar.emit("Video processing failed: ${e.message}")
+            }
+            _state.update { it.copy(isProcessingVideo = false) }
+        }
+    }
+
+    fun toggleRecording() = viewModelScope.launch {
+        if (recorder.isRecording.value) {
+            recorder.stop()
+        } else {
+            if (!recorder.isAvailable) {
+                requestCameraPermissionsUseCase()
+                _state.update { it.copy(cameraAvailable = recorder.isAvailable) }
+                if (!recorder.isAvailable) {
+                    _snackbar.emit("Camera permission denied")
+                    return@launch
+                }
+            }
+            recorder.start().onFailure { _snackbar.emit("Couldn't start recording: ${it.message}") }
+        }
+    }
+
+    fun requestCameraIfNeeded() = viewModelScope.launch {
+        if (recorder.isAvailable) return@launch
+        requestCameraPermissionsUseCase()
+        _state.update { it.copy(cameraAvailable = recorder.isAvailable) }
     }
 
     fun onAdvertisement(advertisement: PlatformAdvertisement) {
@@ -266,6 +346,7 @@ class BleViewModel(
     fun disconnect() {
         intentionalDisconnect = true
         viewModelScope.launch {
+            if (recorder.isRecording.value) recorder.cancel()
             disconnectUseCase()
             bleServiceController.stop()
             _state.update { it.copy(connectionState = ConnectionState.Disconnected) }

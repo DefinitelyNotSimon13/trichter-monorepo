@@ -34,6 +34,8 @@ core-splashscreen = "1.2.0"
 room = "2.8.4"
 ksp = "2.3.8"
 openapi-generator = "7.22.0"
+camerax = "1.5.0"
+media3 = "1.8.0"
 kotlinStdlib = "2.3.21"
 runner = "1.7.0"
 core = "1.7.0"
@@ -115,6 +117,16 @@ androidx-core = { group = "androidx.test", name = "core", version.ref = "core" }
 
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
+
+androidx-camera-core = { module = "androidx.camera:camera-core", version.ref = "camerax" }
+androidx-camera-camera2 = { module = "androidx.camera:camera-camera2", version.ref = "camerax" }
+androidx-camera-lifecycle = { module = "androidx.camera:camera-lifecycle", version.ref = "camerax" }
+androidx-camera-video = { module = "androidx.camera:camera-video", version.ref = "camerax" }
+androidx-camera-view = { module = "androidx.camera:camera-view", version.ref = "camerax" }
+
+androidx-media3-transformer = { module = "androidx.media3:media3-transformer", version.ref = "media3" }
+androidx-media3-effect = { module = "androidx.media3:media3-effect", version.ref = "media3" }
+androidx-media3-common = { module = "androidx.media3:media3-common", version.ref = "media3" }
 
 
 [plugins]

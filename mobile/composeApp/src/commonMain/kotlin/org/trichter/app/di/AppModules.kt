@@ -12,6 +12,7 @@ import org.trichter.app.appBaseUrl
 import org.trichter.app.di.configModule
 import org.trichter.app.features.auth.di.authModules
 import org.trichter.app.features.ble.di.bleModules
+import org.trichter.app.features.recording.di.recordingModules
 import org.trichter.app.features.runs.di.runsModule
 import org.trichter.app.features.settings.di.settingsModule
 import org.trichter.app.features.websocket.di.wsModules
@@ -22,7 +23,7 @@ data class ApiConfig(
 )
 
 fun regularAppModules() =
-    listOf(serviceModule, configModule) + bleModules() + settingsModule() + runsModule() + authModules() + wsModules()
+    listOf(serviceModule, configModule) + bleModules() + recordingModules() + settingsModule() + runsModule() + authModules() + wsModules()
 
 @Composable
 fun getComposableAppModules() = listOf(permissionsModule())
