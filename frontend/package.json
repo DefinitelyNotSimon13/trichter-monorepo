@@ -40,7 +40,7 @@
     "@tanstack/store": "latest",
     "@types/pg": "^8.20.0",
     "add": "^2.0.6",
-    "better-auth": "^1.6.11",
+    "better-auth": "^1.6.23",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "i18next": "^26.2.0",
