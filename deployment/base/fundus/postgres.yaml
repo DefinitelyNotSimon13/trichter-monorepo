@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fundus-postgres
+  namespace: fundus
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: fundus-postgres
+  template:
+    metadata:
+      labels:
+        app: fundus-postgres
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:18
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: POSTGRES_DB
+              value: fundus
+            - name: POSTGRES_USER
+              value: fundus
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: fundus-secret
+                  key: POSTGRES_PASSWORD
+          ports:
+            - containerPort: 5432
+          readinessProbe:
+            exec:
+              command: ["pg_isready", "-U", "fundus"]
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          volumeMounts:
+            - name: postgres-data
+              mountPath: /var/lib/postgresql
+      volumes:
+        - name: postgres-data
+          persistentVolumeClaim:
+            claimName: fundus-postgres-data
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fundus-postgres
+  namespace: fundus
+spec:
+  selector:
+    app: fundus-postgres
+  ports:
+    - name: postgres
+      port: 5432
+      targetPort: 5432

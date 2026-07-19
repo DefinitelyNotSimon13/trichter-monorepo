@@ -1,0 +1,91 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fundus-backend
+  namespace: fundus
+  labels:
+    app.kubernetes.io/name: backend
+    app.kubernetes.io/part-of: fundus
+    app.kubernetes.io/component: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fundus-backend
+  template:
+    metadata:
+      labels:
+        app: fundus-backend
+        app.kubernetes.io/name: backend
+        app.kubernetes.io/part-of: fundus
+        app.kubernetes.io/component: backend
+    spec:
+      containers:
+        - name: backend
+          image: ghcr.io/definitelynotsimon13/fundus/backend:latest
+          imagePullPolicy: Always
+          env:
+            # Defaults to 127.0.0.1, which would make the container unreachable
+            # from the kubelet and the Service.
+            - name: BACKEND_HOST
+              value: "0.0.0.0"
+            - name: BACKEND_PORT
+              value: "8080"
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: fundus-secret
+                  key: DATABASE_URL
+            - name: OIDC_ISSUER
+              value: https://auth.hauptspeicher.com/realms/fundus
+            - name: OIDC_AUDIENCE
+              value: fundus-api
+            # Frontend and API share an origin (Traefik splits them by path), so
+            # this only matters if the SPA is ever served from elsewhere.
+            - name: CORS_ORIGIN
+              value: https://fundus.hauptspeicher.com
+            - name: SWAGGER_UI
+              value: "false"
+            - name: RUST_LOG
+              value: info
+          ports:
+            - name: http
+              containerPort: 8080
+          # The backend fetches OIDC discovery from Keycloak at startup and
+          # exits if it is unreachable, so allow a generous startup window and
+          # let the Deployment restart it while Keycloak comes up.
+          startupProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            periodSeconds: 5
+            failureThreshold: 30
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            periodSeconds: 30
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              memory: 256Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fundus-backend
+  namespace: fundus
+spec:
+  selector:
+    app: fundus-backend
+  ports:
+    - name: http
+      port: 8080
+      targetPort: 8080

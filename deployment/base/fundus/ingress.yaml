@@ -1,0 +1,25 @@
+# One hostname, split by path: this keeps the SPA and the API same-origin, so
+# no CORS preflight and no second certificate.
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: fundus
+  namespace: fundus
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`fundus.hauptspeicher.com`) && PathPrefix(`/api`)
+      kind: Rule
+      priority: 20
+      services:
+        - name: fundus-backend
+          port: 8080
+    - match: Host(`fundus.hauptspeicher.com`)
+      kind: Rule
+      priority: 10
+      services:
+        - name: fundus-frontend
+          port: 80
+  tls:
+    certResolver: myresolver

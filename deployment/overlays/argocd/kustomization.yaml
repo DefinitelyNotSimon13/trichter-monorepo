@@ -13,6 +13,8 @@ resources:
   # - applications/matrix-application.yaml
   - applications/monitoring-application.yaml
   - applications/docmost-application.yaml
+  - applications/keycloak-application.yaml
+  - applications/fundus-application.yaml
   - applications/hetzner-infrastructure-application.yaml
   - applications/outline-application.yaml
   - applications/plane-application.yaml

@@ -1,0 +1,67 @@
+# Production counterpart of fundus/deployment/keycloak/fundus-realm.json.
+#
+# Differences from the development realm, deliberately:
+#   - sslRequired "all" instead of "none"
+#   - production redirect/web origins, no localhost
+#   - directAccessGrants disabled: the password grant exists in dev only so
+#     curl and test scripts can mint tokens; a public browser client in
+#     production has no business accepting passwords directly
+#   - no seeded user — create accounts in the admin console
+#
+# Keycloak imports a realm only if it does not already exist. Editing this file
+# will NOT update a live realm; change it in the admin console, or delete the
+# realm first (which destroys its users).
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: keycloak-realm-fundus
+  namespace: keycloak
+data:
+  fundus-realm.json: |
+    {
+      "realm": "fundus",
+      "enabled": true,
+      "displayName": "Fundus",
+      "registrationAllowed": false,
+      "loginTheme": "keycloak",
+      "sslRequired": "all",
+      "clients": [
+        {
+          "clientId": "fundus-frontend",
+          "name": "Fundus Frontend",
+          "enabled": true,
+          "protocol": "openid-connect",
+          "publicClient": true,
+          "standardFlowEnabled": true,
+          "implicitFlowEnabled": false,
+          "directAccessGrantsEnabled": false,
+          "serviceAccountsEnabled": false,
+          "fullScopeAllowed": true,
+          "rootUrl": "https://fundus.hauptspeicher.com",
+          "baseUrl": "https://fundus.hauptspeicher.com",
+          "redirectUris": [
+            "https://fundus.hauptspeicher.com/*"
+          ],
+          "webOrigins": [
+            "https://fundus.hauptspeicher.com"
+          ],
+          "attributes": {
+            "pkce.code.challenge.method": "S256",
+            "post.logout.redirect.uris": "https://fundus.hauptspeicher.com/*"
+          },
+          "protocolMappers": [
+            {
+              "name": "fundus-api-audience",
+              "protocol": "openid-connect",
+              "protocolMapper": "oidc-audience-mapper",
+              "consentRequired": false,
+              "config": {
+                "included.custom.audience": "fundus-api",
+                "access.token.claim": "true",
+                "id.token.claim": "false"
+              }
+            }
+          ]
+        }
+      ]
+    }

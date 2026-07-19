@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fundus-frontend
+  namespace: fundus
+  labels:
+    app.kubernetes.io/name: frontend
+    app.kubernetes.io/part-of: fundus
+    app.kubernetes.io/component: frontend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: fundus-frontend
+  template:
+    metadata:
+      labels:
+        app: fundus-frontend
+        app.kubernetes.io/name: frontend
+        app.kubernetes.io/part-of: fundus
+        app.kubernetes.io/component: frontend
+    spec:
+      containers:
+        # Static nginx serving a pre-built SPA. Its API and OIDC URLs are baked
+        # in at image build time (Vite inlines VITE_* vars), so there is nothing
+        # to configure here — changing a hostname means rebuilding the image.
+        - name: frontend
+          image: ghcr.io/definitelynotsimon13/fundus/frontend:latest
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 80
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 15
+            periodSeconds: 30
+          resources:
+            requests:
+              cpu: 10m
+              memory: 32Mi
+            limits:
+              memory: 128Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fundus-frontend
+  namespace: fundus
+spec:
+  selector:
+    app: fundus-frontend
+  ports:
+    - name: http
+      port: 80
+      targetPort: 80
