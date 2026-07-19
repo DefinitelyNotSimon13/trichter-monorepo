@@ -1,7 +1,9 @@
 # Production counterpart of fundus/deployment/keycloak/fundus-realm.json.
 #
 # Differences from the development realm, deliberately:
-#   - sslRequired "all" instead of "none"
+#   - sslRequired "external": HTTPS enforced for anything off-cluster, while
+#     in-cluster callers on private addresses may use plain HTTP. "all" makes
+#     Keycloak answer 403 to the backend's Service-to-Service calls
 #   - production redirect/web origins, no localhost
 #   - directAccessGrants disabled: the password grant exists in dev only so
 #     curl and test scripts can mint tokens; a public browser client in
@@ -24,7 +26,7 @@ data:
       "displayName": "Fundus",
       "registrationAllowed": false,
       "loginTheme": "keycloak",
-      "sslRequired": "all",
+      "sslRequired": "external",
       "clients": [
         {
           "clientId": "fundus-frontend",

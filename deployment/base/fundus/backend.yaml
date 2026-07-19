@@ -36,8 +36,16 @@ spec:
                 secretKeyRef:
                   name: fundus-secret
                   key: DATABASE_URL
+            # What tokens claim as their issuer, and what we validate against.
             - name: OIDC_ISSUER
               value: https://auth.hauptspeicher.com/realms/fundus
+            # Where we actually reach Keycloak. Resolving the public name from a
+            # pod hairpins out through DNS and Cloudflare only to come back to a
+            # Service in the next namespace — slow, and Cloudflare's bot
+            # protection answers 403 to a non-browser client. Tokens are still
+            # validated against OIDC_ISSUER above.
+            - name: OIDC_INTERNAL_URL
+              value: http://keycloak.keycloak.svc.cluster.local:8080/realms/fundus
             - name: OIDC_AUDIENCE
               value: fundus-api
             # Frontend and API share an origin (Traefik splits them by path), so
